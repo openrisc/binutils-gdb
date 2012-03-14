@@ -41,6 +41,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 #include "sim-io.h"
 #include "sim-assert.h"
 
+#include <math.h> /* for drem, remove when soft-float version is implemented */
 
 /* Debugging support.
    If digits is -1, then print all digits.  */
@@ -1547,6 +1548,71 @@ sim_fpu_div (sim_fpu *f,
     else
       return 0;
   }
+}
+
+
+INLINE_SIM_FPU (int)
+sim_fpu_rem (sim_fpu *f,
+	     const sim_fpu *l,
+	     const sim_fpu *r)
+{
+  if (sim_fpu_is_snan (l))
+    {
+      *f = *l;
+      f->class = sim_fpu_class_qnan;
+      return sim_fpu_status_invalid_snan;
+    }
+  if (sim_fpu_is_snan (r))
+    {
+      *f = *r;
+      f->class = sim_fpu_class_qnan;
+      return sim_fpu_status_invalid_snan;
+    }
+  if (sim_fpu_is_qnan (l))
+    {
+      *f = *l;
+      f->class = sim_fpu_class_qnan;
+      return 0;
+    }
+  if (sim_fpu_is_qnan (r))
+    {
+      *f = *r;
+      f->class = sim_fpu_class_qnan;
+      return 0;
+    }
+  if (sim_fpu_is_infinity (l))
+    {
+      *f = sim_fpu_qnan;
+      return sim_fpu_status_invalid_irx;
+    }
+  if (sim_fpu_is_zero (r))
+    {
+      *f = sim_fpu_qnan;
+      return sim_fpu_status_invalid_div0;
+    }
+  if (sim_fpu_is_zero (l))
+    {
+      *f = *l;
+      return 0;
+    }
+  if (sim_fpu_is_infinity (r))
+    {
+      *f = *l;
+      return 0;
+    }
+  
+  {
+    /* cheat for now */
+    /* TODO: don't use hard float */
+
+    sim_fpu_map lval, rval, fval;
+    lval.i = pack_fpu(l, 1);
+    rval.i = pack_fpu(r, 1);
+    fval.d = drem(lval.d, rval.d);
+    unpack_fpu(f, fval.i, 1);
+    return 0;
+    
+  }  
 }
 
 

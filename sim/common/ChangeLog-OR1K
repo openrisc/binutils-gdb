@@ -1,0 +1,6 @@
+2012-03-14  Peter Gavin  <pgavin@gmail.com>
+
+	* cgen-accfp.c: add rem (remainder) function (needed for OR1K lf.rem.[sd])
+	(remsf) new function
+	(remdf) ditto
+	(struct cgen_fp_ops) add fields for rem[sdxt]f functions
