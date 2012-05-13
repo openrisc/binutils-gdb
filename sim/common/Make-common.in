@@ -566,7 +566,7 @@ CGEN_FLAGS_TO_PASS = \
 cgen-arch: force
 	$(SHELL) $(srccom)/cgen.sh arch $(srcdir) \
 		$(CGEN) $(CGENDIR) "$(CGENFLAGS)" \
-		$(arch) "$(FLAGS)" ignored "$(isa)" $(mach) ignored \
+		$(arch) "$(FLAGS)" ignored "$(isa)" $(mach) "$(SUFFIX)" \
 		$(archfile) ignored
 
 cgen-cpu: force

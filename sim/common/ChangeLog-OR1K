@@ -1,3 +1,8 @@
+2012-05-13  Peter Gavin  <pgavin@gmail.com>
+
+	* Make-common.in: pass $(SUFFIX) to cgen.sh in cgen-arch target
+	* cgen.sh: append suffix to names of arch.[ch] and cpuall.h
+
 2012-03-14  Peter Gavin  <pgavin@gmail.com>
 
 	* add mul-o1flag (1's complement unsigned multiply overflow flag)

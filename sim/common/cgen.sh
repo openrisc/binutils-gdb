@@ -70,11 +70,11 @@ arch)
 		-B ${tmp}-arch.c1 \
 		-N ${tmp}-all.h1
 	sed $sedscript < ${tmp}-arch.h1 > ${tmp}-arch.h
-	${rootdir}/move-if-change ${tmp}-arch.h ${srcdir}/arch.h
+	${rootdir}/move-if-change ${tmp}-arch.h ${srcdir}/arch${suffix}.h
 	sed $sedscript < ${tmp}-arch.c1 > ${tmp}-arch.c
-	${rootdir}/move-if-change ${tmp}-arch.c ${srcdir}/arch.c
+	${rootdir}/move-if-change ${tmp}-arch.c ${srcdir}/arch${suffix}.c
 	sed $sedscript < ${tmp}-all.h1 > ${tmp}-all.h
-	${rootdir}/move-if-change ${tmp}-all.h ${srcdir}/cpuall.h
+	${rootdir}/move-if-change ${tmp}-all.h ${srcdir}/cpuall${suffix}.h
 
 	rm -f ${tmp}-arch.h1 ${tmp}-arch.c1 ${tmp}-all.h1
 	;;
