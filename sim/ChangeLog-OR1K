@@ -1,0 +1,45 @@
+2012-05-13  Peter Gavin  <pgavin@gmail.com>
+
+	* configure.tgt: add or1k target
+	* configure: regenerate
+	* or1k/Makefile.in: new file
+	* or1k/aclocal.m4: new file
+	* or1k/arch.h: new file
+	* or1k/arch32.c: new file
+	* or1k/arch32.h: new file
+	* or1k/arch64.c: new file
+	* or1k/arch64.h: new file
+	* or1k/config.in: new file
+	* or1k/configure: new file
+	* or1k/configure.ac: new file
+	* or1k/cpu.h: new file
+	* or1k/cpu32.c: new file
+	* or1k/cpu32.h: new file
+	* or1k/cpu64.c: new file
+	* or1k/cpu64.h: new file
+	* or1k/cpuall.h: new file
+	* or1k/cpuall32.h: new file
+	* or1k/cpuall64.h: new file
+	* or1k/decode.h: new file
+	* or1k/decode32.c: new file
+	* or1k/decode32.h: new file
+	* or1k/decode64.c: new file
+	* or1k/decode64.h: new file
+	* or1k/eng.h: new file
+	* or1k/mloop.in: new file
+	* or1k/model32.c: new file
+	* or1k/model64.c: new file
+	* or1k/or1k-sim.h: new file
+	* or1k/or1k.c: new file
+	* or1k/or1k.h: new file
+	* or1k/or1k32-opc.h: new file
+	* or1k/or1k64-opc.h: new file
+	* or1k/sem32-switch.c: new file
+	* or1k/sem32.c: new file
+	* or1k/sem64-switch.c: new file
+	* or1k/sem64.c: new file
+	* or1k/sim-if.c: new file
+	* or1k/sim-main.h: new file
+	* or1k/tconfig.in: new file
+	* or1k/traps-linux.c: new file
+	* or1k/traps.c: new file
