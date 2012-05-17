@@ -131,15 +131,25 @@ void or1k32bf_nop (sim_cpu *current_cpu, USI uimm16)
   SIM_DESC sd = CPU_STATE(current_cpu);
   
   switch (uimm16) {
+
+  case NOP_NOP:
+    break;
     
   case NOP_EXIT:
     sim_engine_halt (sd, current_cpu, NULL, CPU_PC_GET (current_cpu), sim_exited, GET_H_GPR (3));
+    break;
+
+  case NOP_REPORT:
+    sim_io_printf (CPU_STATE(current_cpu), "report(0x%08x);\n", GET_H_GPR(3));
     break;
     
   case NOP_PUTC:
     sim_io_printf (CPU_STATE(current_cpu), "%c", (char)(GET_H_GPR(3) & 0xff));
     break;
-    
+
+  default:
+    sim_io_eprintf(sd, "WARNING: l.nop with unsupported code 0x%08x\n", uimm16);
+    break;
   }
   
 }
