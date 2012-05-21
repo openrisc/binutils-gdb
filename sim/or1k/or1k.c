@@ -136,6 +136,9 @@ void or1k32bf_nop (sim_cpu *current_cpu, USI uimm16)
     break;
     
   case NOP_EXIT:
+    sim_io_printf (CPU_STATE(current_cpu), "exit(%d)\n", GET_H_GPR(3));
+    /* fall through */
+  case NOP_EXIT_SILENT:
     sim_engine_halt (sd, current_cpu, NULL, CPU_PC_GET (current_cpu), sim_exited, GET_H_GPR (3));
     break;
 

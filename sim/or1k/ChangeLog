@@ -1,3 +1,11 @@
+2012-05-21  Peter Gavin  <pgavin@gmail.com>
+
+	* or1k.c (or1k32bf_nop) make NOP_EXIT report exit code on
+	simulator output; add NOP_EXIT_SILENT which silently exits. This
+	is needed to maintain compatibility with existing testsuites, but
+	we need to be able to silently exit for the gcc testsuite.
+	Newlib's exit will use NOP_EXIT_SILENT.
+
 2012-05-17  Peter Gavin  <pgavin@gmail.com>
 
 	* or1k.c (or1k32bf_nop) handle NOP_NOP, NOP_REPORT; warn if
