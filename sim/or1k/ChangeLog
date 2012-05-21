@@ -1,0 +1,8 @@
+2012-05-17  Peter Gavin  <pgavin@gmail.com>
+
+	* or1k.c (or1k32bf_nop) handle NOP_NOP, NOP_REPORT; warn if
+	unknown l.nop code is unknown
+
+2012-05-13  Peter Gavin  <pgavin@gmail.com>
+
+	* initial commit
