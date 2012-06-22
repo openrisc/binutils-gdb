@@ -3775,7 +3775,7 @@ subdirs="$subdirs aarch64"
   subdirs="$subdirs or1k"
 
 
-       sim_testsuite==yes
+       sim_testsuite=yes
        ;;
    rl78-*-*)
 

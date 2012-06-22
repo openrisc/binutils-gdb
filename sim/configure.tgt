@@ -78,7 +78,7 @@ case "${target}" in
        ;;
    or1k-*-* | or1knd-*-*)
        SIM_ARCH(or1k)
-       sim_testsuite==yes
+       sim_testsuite=yes
        ;;
    rl78-*-*)
        SIM_ARCH(rl78)
