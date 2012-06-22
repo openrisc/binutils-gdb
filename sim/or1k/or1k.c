@@ -187,11 +187,6 @@ USI or1k32bf_make_load_store_addr (sim_cpu *current_cpu, USI base, SI offset, in
 {
   SIM_DESC sd = CPU_STATE(current_cpu);
 
-  if (!GET_H_SYS_SR_SM ()) {
-    sim_io_eprintf(sd, "WARNING: l.mfspr in user mode\n");
-    return;
-  }
-  
   USI addr = base + offset;
   
   if (GET_H_SYS_SR_LEE ()) {

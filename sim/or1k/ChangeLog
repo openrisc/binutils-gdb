@@ -1,5 +1,11 @@
 2012-06-22  Peter Gavin  <pgavin@gmail.com>
 
+	* or1k.c:
+	(or1k32bf_make_load_store_addr) remove stupid erroneous warning
+	message
+
+2012-06-22  Peter Gavin  <pgavin@gmail.com>
+
 	* configure: regenerated
 
 2012-06-22  Peter Gavin  <pgavin@gmail.com>
