@@ -94,22 +94,22 @@ This file is part of the GNU simulators.
     { OR1K64BF_INSN_L_EXTWS, && case_sem_INSN_L_EXTWS },
     { OR1K64BF_INSN_L_EXTWZ, && case_sem_INSN_L_EXTWZ },
     { OR1K64BF_INSN_L_CMOV, && case_sem_INSN_L_CMOV },
-    { OR1K64BF_INSN_L_SFGTU, && case_sem_INSN_L_SFGTU },
-    { OR1K64BF_INSN_L_SFGEU, && case_sem_INSN_L_SFGEU },
-    { OR1K64BF_INSN_L_SFLTU, && case_sem_INSN_L_SFLTU },
-    { OR1K64BF_INSN_L_SFLEU, && case_sem_INSN_L_SFLEU },
     { OR1K64BF_INSN_L_SFGTS, && case_sem_INSN_L_SFGTS },
-    { OR1K64BF_INSN_L_SFGES, && case_sem_INSN_L_SFGES },
-    { OR1K64BF_INSN_L_SFLTS, && case_sem_INSN_L_SFLTS },
-    { OR1K64BF_INSN_L_SFLES, && case_sem_INSN_L_SFLES },
-    { OR1K64BF_INSN_L_SFGTUI, && case_sem_INSN_L_SFGTUI },
-    { OR1K64BF_INSN_L_SFGEUI, && case_sem_INSN_L_SFGEUI },
-    { OR1K64BF_INSN_L_SFLTUI, && case_sem_INSN_L_SFLTUI },
-    { OR1K64BF_INSN_L_SFLEUI, && case_sem_INSN_L_SFLEUI },
     { OR1K64BF_INSN_L_SFGTSI, && case_sem_INSN_L_SFGTSI },
+    { OR1K64BF_INSN_L_SFGTU, && case_sem_INSN_L_SFGTU },
+    { OR1K64BF_INSN_L_SFGTUI, && case_sem_INSN_L_SFGTUI },
+    { OR1K64BF_INSN_L_SFGES, && case_sem_INSN_L_SFGES },
     { OR1K64BF_INSN_L_SFGESI, && case_sem_INSN_L_SFGESI },
+    { OR1K64BF_INSN_L_SFGEU, && case_sem_INSN_L_SFGEU },
+    { OR1K64BF_INSN_L_SFGEUI, && case_sem_INSN_L_SFGEUI },
+    { OR1K64BF_INSN_L_SFLTS, && case_sem_INSN_L_SFLTS },
     { OR1K64BF_INSN_L_SFLTSI, && case_sem_INSN_L_SFLTSI },
+    { OR1K64BF_INSN_L_SFLTU, && case_sem_INSN_L_SFLTU },
+    { OR1K64BF_INSN_L_SFLTUI, && case_sem_INSN_L_SFLTUI },
+    { OR1K64BF_INSN_L_SFLES, && case_sem_INSN_L_SFLES },
     { OR1K64BF_INSN_L_SFLESI, && case_sem_INSN_L_SFLESI },
+    { OR1K64BF_INSN_L_SFLEU, && case_sem_INSN_L_SFLEU },
+    { OR1K64BF_INSN_L_SFLEUI, && case_sem_INSN_L_SFLEUI },
     { OR1K64BF_INSN_L_SFEQ, && case_sem_INSN_L_SFEQ },
     { OR1K64BF_INSN_L_SFEQI, && case_sem_INSN_L_SFEQI },
     { OR1K64BF_INSN_L_SFNE, && case_sem_INSN_L_SFNE },
@@ -611,7 +611,7 @@ or1k64bf_exception (current_cpu, pc, EXCEPT_SYSCALL);
   IADDR UNUSED pc = abuf->addr;
   vpc = SEM_NEXT_VPC (sem_arg, pc, 4);
 
-or1k64bf_rfe (current_cpu, pc);
+or1k64bf_rfe (current_cpu);
 
 #undef FLD
 }
@@ -661,22 +661,18 @@ or1k64bf_nop (current_cpu, ZEXTSIDI (FLD (f_uimm16)));
   vpc = SEM_NEXT_VPC (sem_arg, pc, 4);
 
 {
-  UDI temp0;UDI temp1;UDI temp2;
-  temp0 = GET_H_MAC_MACLO ();
-  temp1 = 0;
-  temp2 = 0;
   {
-    UDI opval = temp0;
+    UDI opval = GET_H_MAC_MACLO ();
     SET_H_GPR (FLD (f_r1), opval);
     TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
   }
   {
-    UDI opval = temp1;
+    UDI opval = 0;
     SET_H_MAC_MACLO (opval);
     TRACE_RESULT (current_cpu, abuf, "mac-maclo", 'D', opval);
   }
   {
-    UDI opval = temp2;
+    UDI opval = 0;
     SET_H_MAC_MACHI (opval);
     TRACE_RESULT (current_cpu, abuf, "mac-machi", 'D', opval);
   }
@@ -696,7 +692,7 @@ or1k64bf_nop (current_cpu, ZEXTSIDI (FLD (f_uimm16)));
   vpc = SEM_NEXT_VPC (sem_arg, pc, 4);
 
   {
-    UDI opval = or1k64bf_mfspr (current_cpu, pc, FLD (f_r1), ORDI (GET_H_GPR (FLD (f_r2)), ZEXTSIDI (FLD (f_uimm16))));
+    UDI opval = or1k64bf_mfspr (current_cpu, ORDI (GET_H_GPR (FLD (f_r2)), ZEXTSIDI (FLD (f_uimm16))));
     SET_H_GPR (FLD (f_r1), opval);
     TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
   }
@@ -714,7 +710,7 @@ or1k64bf_nop (current_cpu, ZEXTSIDI (FLD (f_uimm16)));
   IADDR UNUSED pc = abuf->addr;
   vpc = SEM_NEXT_VPC (sem_arg, pc, 4);
 
-or1k64bf_mtspr (current_cpu, pc, ORDI (GET_H_GPR (FLD (f_r2)), ZEXTSIDI (FLD (f_uimm16_split))), GET_H_GPR (FLD (f_r3)));
+or1k64bf_mtspr (current_cpu, ORDI (GET_H_GPR (FLD (f_r2)), ZEXTSIDI (FLD (f_uimm16_split))), GET_H_GPR (FLD (f_r3)));
 
 #undef FLD
 }
@@ -1186,12 +1182,12 @@ or1k64bf_exception (current_cpu, pc, EXCEPT_RANGE);
   BI tmp_tmp_sys_sr_cy;
   tmp_tmp_sys_sr_cy = GET_H_SYS_SR_CY ();
   {
-    BI opval = ADDCFDI (GET_H_GPR (FLD (f_r2)), GET_H_GPR (FLD (f_r3)), GET_H_SYS_SR_CY ());
+    BI opval = ADDCFDI (GET_H_GPR (FLD (f_r2)), GET_H_GPR (FLD (f_r3)), tmp_tmp_sys_sr_cy);
     SET_H_SYS_SR_CY (opval);
     TRACE_RESULT (current_cpu, abuf, "sys-sr-cy", 'x', opval);
   }
   {
-    BI opval = ADDOFDI (GET_H_GPR (FLD (f_r2)), GET_H_GPR (FLD (f_r3)), GET_H_SYS_SR_CY ());
+    BI opval = ADDOFDI (GET_H_GPR (FLD (f_r2)), GET_H_GPR (FLD (f_r3)), tmp_tmp_sys_sr_cy);
     SET_H_SYS_SR_OV (opval);
     TRACE_RESULT (current_cpu, abuf, "sys-sr-ov", 'x', opval);
   }
@@ -1349,7 +1345,7 @@ if (NEDI (GET_H_GPR (FLD (f_r3)), 0)) {
     TRACE_RESULT (current_cpu, abuf, "sys-sr-cy", 'x', opval);
   }
   {
-    UDI opval = DIVDI (GET_H_GPR (FLD (f_r2)), GET_H_GPR (FLD (f_r3)));
+    UDI opval = UDIVDI (GET_H_GPR (FLD (f_r2)), GET_H_GPR (FLD (f_r3)));
     SET_H_GPR (FLD (f_r1), opval);
     written |= (1 << 5);
     TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
@@ -1523,12 +1519,12 @@ or1k64bf_exception (current_cpu, pc, EXCEPT_RANGE);
   BI tmp_tmp_sys_sr_cy;
   tmp_tmp_sys_sr_cy = GET_H_SYS_SR_CY ();
   {
-    BI opval = ADDCFDI (GET_H_GPR (FLD (f_r2)), EXTSIDI (FLD (f_simm16)), GET_H_SYS_SR_CY ());
+    BI opval = ADDCFDI (GET_H_GPR (FLD (f_r2)), EXTSIDI (FLD (f_simm16)), tmp_tmp_sys_sr_cy);
     SET_H_SYS_SR_CY (opval);
     TRACE_RESULT (current_cpu, abuf, "sys-sr-cy", 'x', opval);
   }
   {
-    BI opval = ADDOFDI (GET_H_GPR (FLD (f_r2)), EXTSIDI (FLD (f_simm16)), GET_H_SYS_SR_CY ());
+    BI opval = ADDOFDI (GET_H_GPR (FLD (f_r2)), EXTSIDI (FLD (f_simm16)), tmp_tmp_sys_sr_cy);
     SET_H_SYS_SR_OV (opval);
     TRACE_RESULT (current_cpu, abuf, "sys-sr-ov", 'x', opval);
   }
@@ -1727,6 +1723,44 @@ if (GET_H_SYS_SR_F ()) {
 }
   NEXT (vpc);
 
+  CASE (sem, INSN_L_SFGTS) : /* l.sfgts $rA,$rB */
+{
+  SEM_ARG sem_arg = SEM_SEM_ARG (vpc, sc);
+  ARGBUF *abuf = SEM_ARGBUF (sem_arg);
+#define FLD(f) abuf->fields.sfmt_l_sll.f
+  int UNUSED written = 0;
+  IADDR UNUSED pc = abuf->addr;
+  vpc = SEM_NEXT_VPC (sem_arg, pc, 4);
+
+  {
+    UDI opval = GTDI (GET_H_GPR (FLD (f_r2)), GET_H_GPR (FLD (f_r3)));
+    SET_H_SYS_SR_F (opval);
+    TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'D', opval);
+  }
+
+#undef FLD
+}
+  NEXT (vpc);
+
+  CASE (sem, INSN_L_SFGTSI) : /* l.sfgtsi $rA,$simm16 */
+{
+  SEM_ARG sem_arg = SEM_SEM_ARG (vpc, sc);
+  ARGBUF *abuf = SEM_ARGBUF (sem_arg);
+#define FLD(f) abuf->fields.sfmt_l_lwz.f
+  int UNUSED written = 0;
+  IADDR UNUSED pc = abuf->addr;
+  vpc = SEM_NEXT_VPC (sem_arg, pc, 4);
+
+  {
+    UDI opval = GTDI (GET_H_GPR (FLD (f_r2)), EXTSIDI (FLD (f_simm16)));
+    SET_H_SYS_SR_F (opval);
+    TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'D', opval);
+  }
+
+#undef FLD
+}
+  NEXT (vpc);
+
   CASE (sem, INSN_L_SFGTU) : /* l.sfgtu $rA,$rB */
 {
   SEM_ARG sem_arg = SEM_SEM_ARG (vpc, sc);
@@ -1746,74 +1780,17 @@ if (GET_H_SYS_SR_F ()) {
 }
   NEXT (vpc);
 
-  CASE (sem, INSN_L_SFGEU) : /* l.sfgeu $rA,$rB */
+  CASE (sem, INSN_L_SFGTUI) : /* l.sfgtui $rA,$simm16 */
 {
   SEM_ARG sem_arg = SEM_SEM_ARG (vpc, sc);
   ARGBUF *abuf = SEM_ARGBUF (sem_arg);
-#define FLD(f) abuf->fields.sfmt_l_sll.f
+#define FLD(f) abuf->fields.sfmt_l_lwz.f
   int UNUSED written = 0;
   IADDR UNUSED pc = abuf->addr;
   vpc = SEM_NEXT_VPC (sem_arg, pc, 4);
 
   {
-    UDI opval = GEUDI (GET_H_GPR (FLD (f_r2)), GET_H_GPR (FLD (f_r3)));
-    SET_H_SYS_SR_F (opval);
-    TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'D', opval);
-  }
-
-#undef FLD
-}
-  NEXT (vpc);
-
-  CASE (sem, INSN_L_SFLTU) : /* l.sfltu $rA,$rB */
-{
-  SEM_ARG sem_arg = SEM_SEM_ARG (vpc, sc);
-  ARGBUF *abuf = SEM_ARGBUF (sem_arg);
-#define FLD(f) abuf->fields.sfmt_l_sll.f
-  int UNUSED written = 0;
-  IADDR UNUSED pc = abuf->addr;
-  vpc = SEM_NEXT_VPC (sem_arg, pc, 4);
-
-  {
-    UDI opval = LTUDI (GET_H_GPR (FLD (f_r2)), GET_H_GPR (FLD (f_r3)));
-    SET_H_SYS_SR_F (opval);
-    TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'D', opval);
-  }
-
-#undef FLD
-}
-  NEXT (vpc);
-
-  CASE (sem, INSN_L_SFLEU) : /* l.sfleu $rA,$rB */
-{
-  SEM_ARG sem_arg = SEM_SEM_ARG (vpc, sc);
-  ARGBUF *abuf = SEM_ARGBUF (sem_arg);
-#define FLD(f) abuf->fields.sfmt_l_sll.f
-  int UNUSED written = 0;
-  IADDR UNUSED pc = abuf->addr;
-  vpc = SEM_NEXT_VPC (sem_arg, pc, 4);
-
-  {
-    UDI opval = LEUDI (GET_H_GPR (FLD (f_r2)), GET_H_GPR (FLD (f_r3)));
-    SET_H_SYS_SR_F (opval);
-    TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'D', opval);
-  }
-
-#undef FLD
-}
-  NEXT (vpc);
-
-  CASE (sem, INSN_L_SFGTS) : /* l.sfgts $rA,$rB */
-{
-  SEM_ARG sem_arg = SEM_SEM_ARG (vpc, sc);
-  ARGBUF *abuf = SEM_ARGBUF (sem_arg);
-#define FLD(f) abuf->fields.sfmt_l_sll.f
-  int UNUSED written = 0;
-  IADDR UNUSED pc = abuf->addr;
-  vpc = SEM_NEXT_VPC (sem_arg, pc, 4);
-
-  {
-    UDI opval = GTDI (GET_H_GPR (FLD (f_r2)), GET_H_GPR (FLD (f_r3)));
+    UDI opval = GTUDI (GET_H_GPR (FLD (f_r2)), EXTSIDI (FLD (f_simm16)));
     SET_H_SYS_SR_F (opval);
     TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'D', opval);
   }
@@ -1841,6 +1818,63 @@ if (GET_H_SYS_SR_F ()) {
 }
   NEXT (vpc);
 
+  CASE (sem, INSN_L_SFGESI) : /* l.sfgesi $rA,$simm16 */
+{
+  SEM_ARG sem_arg = SEM_SEM_ARG (vpc, sc);
+  ARGBUF *abuf = SEM_ARGBUF (sem_arg);
+#define FLD(f) abuf->fields.sfmt_l_lwz.f
+  int UNUSED written = 0;
+  IADDR UNUSED pc = abuf->addr;
+  vpc = SEM_NEXT_VPC (sem_arg, pc, 4);
+
+  {
+    UDI opval = GEDI (GET_H_GPR (FLD (f_r2)), EXTSIDI (FLD (f_simm16)));
+    SET_H_SYS_SR_F (opval);
+    TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'D', opval);
+  }
+
+#undef FLD
+}
+  NEXT (vpc);
+
+  CASE (sem, INSN_L_SFGEU) : /* l.sfgeu $rA,$rB */
+{
+  SEM_ARG sem_arg = SEM_SEM_ARG (vpc, sc);
+  ARGBUF *abuf = SEM_ARGBUF (sem_arg);
+#define FLD(f) abuf->fields.sfmt_l_sll.f
+  int UNUSED written = 0;
+  IADDR UNUSED pc = abuf->addr;
+  vpc = SEM_NEXT_VPC (sem_arg, pc, 4);
+
+  {
+    UDI opval = GEUDI (GET_H_GPR (FLD (f_r2)), GET_H_GPR (FLD (f_r3)));
+    SET_H_SYS_SR_F (opval);
+    TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'D', opval);
+  }
+
+#undef FLD
+}
+  NEXT (vpc);
+
+  CASE (sem, INSN_L_SFGEUI) : /* l.sfgeui $rA,$simm16 */
+{
+  SEM_ARG sem_arg = SEM_SEM_ARG (vpc, sc);
+  ARGBUF *abuf = SEM_ARGBUF (sem_arg);
+#define FLD(f) abuf->fields.sfmt_l_lwz.f
+  int UNUSED written = 0;
+  IADDR UNUSED pc = abuf->addr;
+  vpc = SEM_NEXT_VPC (sem_arg, pc, 4);
+
+  {
+    UDI opval = GEUDI (GET_H_GPR (FLD (f_r2)), EXTSIDI (FLD (f_simm16)));
+    SET_H_SYS_SR_F (opval);
+    TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'D', opval);
+  }
+
+#undef FLD
+}
+  NEXT (vpc);
+
   CASE (sem, INSN_L_SFLTS) : /* l.sflts $rA,$rB */
 {
   SEM_ARG sem_arg = SEM_SEM_ARG (vpc, sc);
@@ -1852,6 +1886,63 @@ if (GET_H_SYS_SR_F ()) {
 
   {
     UDI opval = LTDI (GET_H_GPR (FLD (f_r2)), GET_H_GPR (FLD (f_r3)));
+    SET_H_SYS_SR_F (opval);
+    TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'D', opval);
+  }
+
+#undef FLD
+}
+  NEXT (vpc);
+
+  CASE (sem, INSN_L_SFLTSI) : /* l.sfltsi $rA,$simm16 */
+{
+  SEM_ARG sem_arg = SEM_SEM_ARG (vpc, sc);
+  ARGBUF *abuf = SEM_ARGBUF (sem_arg);
+#define FLD(f) abuf->fields.sfmt_l_lwz.f
+  int UNUSED written = 0;
+  IADDR UNUSED pc = abuf->addr;
+  vpc = SEM_NEXT_VPC (sem_arg, pc, 4);
+
+  {
+    UDI opval = LTDI (GET_H_GPR (FLD (f_r2)), EXTSIDI (FLD (f_simm16)));
+    SET_H_SYS_SR_F (opval);
+    TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'D', opval);
+  }
+
+#undef FLD
+}
+  NEXT (vpc);
+
+  CASE (sem, INSN_L_SFLTU) : /* l.sfltu $rA,$rB */
+{
+  SEM_ARG sem_arg = SEM_SEM_ARG (vpc, sc);
+  ARGBUF *abuf = SEM_ARGBUF (sem_arg);
+#define FLD(f) abuf->fields.sfmt_l_sll.f
+  int UNUSED written = 0;
+  IADDR UNUSED pc = abuf->addr;
+  vpc = SEM_NEXT_VPC (sem_arg, pc, 4);
+
+  {
+    UDI opval = LTUDI (GET_H_GPR (FLD (f_r2)), GET_H_GPR (FLD (f_r3)));
+    SET_H_SYS_SR_F (opval);
+    TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'D', opval);
+  }
+
+#undef FLD
+}
+  NEXT (vpc);
+
+  CASE (sem, INSN_L_SFLTUI) : /* l.sfltui $rA,$simm16 */
+{
+  SEM_ARG sem_arg = SEM_SEM_ARG (vpc, sc);
+  ARGBUF *abuf = SEM_ARGBUF (sem_arg);
+#define FLD(f) abuf->fields.sfmt_l_lwz.f
+  int UNUSED written = 0;
+  IADDR UNUSED pc = abuf->addr;
+  vpc = SEM_NEXT_VPC (sem_arg, pc, 4);
+
+  {
+    UDI opval = LTUDI (GET_H_GPR (FLD (f_r2)), EXTSIDI (FLD (f_simm16)));
     SET_H_SYS_SR_F (opval);
     TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'D', opval);
   }
@@ -1879,140 +1970,7 @@ if (GET_H_SYS_SR_F ()) {
 }
   NEXT (vpc);
 
-  CASE (sem, INSN_L_SFGTUI) : /* l.sfgtui $rA,$uimm16 */
-{
-  SEM_ARG sem_arg = SEM_SEM_ARG (vpc, sc);
-  ARGBUF *abuf = SEM_ARGBUF (sem_arg);
-#define FLD(f) abuf->fields.sfmt_l_mfspr.f
-  int UNUSED written = 0;
-  IADDR UNUSED pc = abuf->addr;
-  vpc = SEM_NEXT_VPC (sem_arg, pc, 4);
-
-  {
-    UDI opval = GTUDI (GET_H_GPR (FLD (f_r2)), ZEXTSIDI (FLD (f_uimm16)));
-    SET_H_SYS_SR_F (opval);
-    TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'D', opval);
-  }
-
-#undef FLD
-}
-  NEXT (vpc);
-
-  CASE (sem, INSN_L_SFGEUI) : /* l.sfgeui $rA,$uimm16 */
-{
-  SEM_ARG sem_arg = SEM_SEM_ARG (vpc, sc);
-  ARGBUF *abuf = SEM_ARGBUF (sem_arg);
-#define FLD(f) abuf->fields.sfmt_l_mfspr.f
-  int UNUSED written = 0;
-  IADDR UNUSED pc = abuf->addr;
-  vpc = SEM_NEXT_VPC (sem_arg, pc, 4);
-
-  {
-    UDI opval = GEUDI (GET_H_GPR (FLD (f_r2)), ZEXTSIDI (FLD (f_uimm16)));
-    SET_H_SYS_SR_F (opval);
-    TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'D', opval);
-  }
-
-#undef FLD
-}
-  NEXT (vpc);
-
-  CASE (sem, INSN_L_SFLTUI) : /* l.sfltui $rA,$uimm16 */
-{
-  SEM_ARG sem_arg = SEM_SEM_ARG (vpc, sc);
-  ARGBUF *abuf = SEM_ARGBUF (sem_arg);
-#define FLD(f) abuf->fields.sfmt_l_mfspr.f
-  int UNUSED written = 0;
-  IADDR UNUSED pc = abuf->addr;
-  vpc = SEM_NEXT_VPC (sem_arg, pc, 4);
-
-  {
-    UDI opval = LTUDI (GET_H_GPR (FLD (f_r2)), ZEXTSIDI (FLD (f_uimm16)));
-    SET_H_SYS_SR_F (opval);
-    TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'D', opval);
-  }
-
-#undef FLD
-}
-  NEXT (vpc);
-
-  CASE (sem, INSN_L_SFLEUI) : /* l.sfleui $rA,$uimm16 */
-{
-  SEM_ARG sem_arg = SEM_SEM_ARG (vpc, sc);
-  ARGBUF *abuf = SEM_ARGBUF (sem_arg);
-#define FLD(f) abuf->fields.sfmt_l_mfspr.f
-  int UNUSED written = 0;
-  IADDR UNUSED pc = abuf->addr;
-  vpc = SEM_NEXT_VPC (sem_arg, pc, 4);
-
-  {
-    UDI opval = LEUDI (GET_H_GPR (FLD (f_r2)), ZEXTSIDI (FLD (f_uimm16)));
-    SET_H_SYS_SR_F (opval);
-    TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'D', opval);
-  }
-
-#undef FLD
-}
-  NEXT (vpc);
-
-  CASE (sem, INSN_L_SFGTSI) : /* l.sfgtsi $rA,${simm16} */
-{
-  SEM_ARG sem_arg = SEM_SEM_ARG (vpc, sc);
-  ARGBUF *abuf = SEM_ARGBUF (sem_arg);
-#define FLD(f) abuf->fields.sfmt_l_lwz.f
-  int UNUSED written = 0;
-  IADDR UNUSED pc = abuf->addr;
-  vpc = SEM_NEXT_VPC (sem_arg, pc, 4);
-
-  {
-    UDI opval = GTDI (GET_H_GPR (FLD (f_r2)), EXTSIDI (FLD (f_simm16)));
-    SET_H_SYS_SR_F (opval);
-    TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'D', opval);
-  }
-
-#undef FLD
-}
-  NEXT (vpc);
-
-  CASE (sem, INSN_L_SFGESI) : /* l.sfgesi $rA,${simm16} */
-{
-  SEM_ARG sem_arg = SEM_SEM_ARG (vpc, sc);
-  ARGBUF *abuf = SEM_ARGBUF (sem_arg);
-#define FLD(f) abuf->fields.sfmt_l_lwz.f
-  int UNUSED written = 0;
-  IADDR UNUSED pc = abuf->addr;
-  vpc = SEM_NEXT_VPC (sem_arg, pc, 4);
-
-  {
-    UDI opval = GEDI (GET_H_GPR (FLD (f_r2)), EXTSIDI (FLD (f_simm16)));
-    SET_H_SYS_SR_F (opval);
-    TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'D', opval);
-  }
-
-#undef FLD
-}
-  NEXT (vpc);
-
-  CASE (sem, INSN_L_SFLTSI) : /* l.sfltsi $rA,${simm16} */
-{
-  SEM_ARG sem_arg = SEM_SEM_ARG (vpc, sc);
-  ARGBUF *abuf = SEM_ARGBUF (sem_arg);
-#define FLD(f) abuf->fields.sfmt_l_lwz.f
-  int UNUSED written = 0;
-  IADDR UNUSED pc = abuf->addr;
-  vpc = SEM_NEXT_VPC (sem_arg, pc, 4);
-
-  {
-    UDI opval = LTDI (GET_H_GPR (FLD (f_r2)), EXTSIDI (FLD (f_simm16)));
-    SET_H_SYS_SR_F (opval);
-    TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'D', opval);
-  }
-
-#undef FLD
-}
-  NEXT (vpc);
-
-  CASE (sem, INSN_L_SFLESI) : /* l.sflesi $rA,${simm16} */
+  CASE (sem, INSN_L_SFLESI) : /* l.sflesi $rA,$simm16 */
 {
   SEM_ARG sem_arg = SEM_SEM_ARG (vpc, sc);
   ARGBUF *abuf = SEM_ARGBUF (sem_arg);
@@ -2023,6 +1981,44 @@ if (GET_H_SYS_SR_F ()) {
 
   {
     UDI opval = LEDI (GET_H_GPR (FLD (f_r2)), EXTSIDI (FLD (f_simm16)));
+    SET_H_SYS_SR_F (opval);
+    TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'D', opval);
+  }
+
+#undef FLD
+}
+  NEXT (vpc);
+
+  CASE (sem, INSN_L_SFLEU) : /* l.sfleu $rA,$rB */
+{
+  SEM_ARG sem_arg = SEM_SEM_ARG (vpc, sc);
+  ARGBUF *abuf = SEM_ARGBUF (sem_arg);
+#define FLD(f) abuf->fields.sfmt_l_sll.f
+  int UNUSED written = 0;
+  IADDR UNUSED pc = abuf->addr;
+  vpc = SEM_NEXT_VPC (sem_arg, pc, 4);
+
+  {
+    UDI opval = LEUDI (GET_H_GPR (FLD (f_r2)), GET_H_GPR (FLD (f_r3)));
+    SET_H_SYS_SR_F (opval);
+    TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'D', opval);
+  }
+
+#undef FLD
+}
+  NEXT (vpc);
+
+  CASE (sem, INSN_L_SFLEUI) : /* l.sfleui $rA,$simm16 */
+{
+  SEM_ARG sem_arg = SEM_SEM_ARG (vpc, sc);
+  ARGBUF *abuf = SEM_ARGBUF (sem_arg);
+#define FLD(f) abuf->fields.sfmt_l_lwz.f
+  int UNUSED written = 0;
+  IADDR UNUSED pc = abuf->addr;
+  vpc = SEM_NEXT_VPC (sem_arg, pc, 4);
+
+  {
+    UDI opval = LEUDI (GET_H_GPR (FLD (f_r2)), EXTSIDI (FLD (f_simm16)));
     SET_H_SYS_SR_F (opval);
     TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'D', opval);
   }
@@ -2167,11 +2163,11 @@ if (GET_H_SYS_SR_F ()) {
 }
   NEXT (vpc);
 
-  CASE (sem, INSN_L_MACI) : /* l.maci $rA,${simm16-split} */
+  CASE (sem, INSN_L_MACI) : /* l.maci $rA,${simm16} */
 {
   SEM_ARG sem_arg = SEM_SEM_ARG (vpc, sc);
   ARGBUF *abuf = SEM_ARGBUF (sem_arg);
-#define FLD(f) abuf->fields.sfmt_l_sw.f
+#define FLD(f) abuf->fields.sfmt_l_lwz.f
   int UNUSED written = 0;
   IADDR UNUSED pc = abuf->addr;
   vpc = SEM_NEXT_VPC (sem_arg, pc, 4);
@@ -2179,7 +2175,7 @@ if (GET_H_SYS_SR_F ()) {
 {
   DI tmp_prod;
   DI tmp_result;
-  tmp_prod = MULDI (EXTSIDI (FLD (f_simm16_split)), GET_H_GPR (FLD (f_r2)));
+  tmp_prod = MULDI (EXTSIDI (FLD (f_simm16)), GET_H_GPR (FLD (f_r2)));
   tmp_result = ADDDI (JOINSIDI (GET_H_MAC_MACHI (), GET_H_MAC_MACLO ()), EXTDIDI (tmp_prod));
   {
     SI opval = SUBWORDDISI (tmp_result, 0);

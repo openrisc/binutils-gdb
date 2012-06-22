@@ -2949,6 +2949,11 @@ SET_H_SPR (ORDI (SLLDI (SPR_GROUP_MAC, 11), SPR_INDEX_MAC_MACLO), (x));\
 do { \
 SET_H_SPR (ORDI (SLLDI (SPR_GROUP_MAC, 11), SPR_INDEX_MAC_MACHI), (x));\
 ;} while (0)
+#define GET_H_TICK_TTMR() GET_H_SPR (ORDI (SLLDI (SPR_GROUP_TICK, 11), SPR_INDEX_TICK_TTMR))
+#define SET_H_TICK_TTMR(x) \
+do { \
+SET_H_SPR (ORDI (SLLDI (SPR_GROUP_TICK, 11), SPR_INDEX_TICK_TTMR), (x));\
+;} while (0)
 #define GET_H_SYS_VR_REV() or1k64bf_h_spr_field_get_raw (current_cpu, ORDI (SLLDI (SPR_GROUP_SYS, 11), SPR_INDEX_SYS_VR), 5, 0)
 #define SET_H_SYS_VR_REV(x) \
 do { \
@@ -4371,6 +4376,8 @@ UDI or1k64bf_h_mac_maclo_get (SIM_CPU *);
 void or1k64bf_h_mac_maclo_set (SIM_CPU *, UDI);
 UDI or1k64bf_h_mac_machi_get (SIM_CPU *);
 void or1k64bf_h_mac_machi_set (SIM_CPU *, UDI);
+UDI or1k64bf_h_tick_ttmr_get (SIM_CPU *);
+void or1k64bf_h_tick_ttmr_set (SIM_CPU *, UDI);
 UDI or1k64bf_h_sys_vr_rev_get (SIM_CPU *);
 void or1k64bf_h_sys_vr_rev_set (SIM_CPU *, UDI);
 UDI or1k64bf_h_sys_vr_cfg_get (SIM_CPU *);
@@ -4821,33 +4828,20 @@ struct scache {
   f_resv_7_4 = EXTRACT_LSB0_UINT (insn, 32, 7, 4); \
   f_op_3_4 = EXTRACT_LSB0_UINT (insn, 32, 3, 4); \
 
-#define EXTRACT_IFMT_L_SFGTU_VARS \
+#define EXTRACT_IFMT_L_SFGTS_VARS \
   UINT f_opcode; \
   UINT f_op_25_5; \
   UINT f_r2; \
   UINT f_r3; \
   UINT f_resv_10_11; \
   unsigned int length;
-#define EXTRACT_IFMT_L_SFGTU_CODE \
+#define EXTRACT_IFMT_L_SFGTS_CODE \
   length = 4; \
   f_opcode = EXTRACT_LSB0_UINT (insn, 32, 31, 6); \
   f_op_25_5 = EXTRACT_LSB0_UINT (insn, 32, 25, 5); \
   f_r2 = EXTRACT_LSB0_UINT (insn, 32, 20, 5); \
   f_r3 = EXTRACT_LSB0_UINT (insn, 32, 15, 5); \
   f_resv_10_11 = EXTRACT_LSB0_UINT (insn, 32, 10, 11); \
-
-#define EXTRACT_IFMT_L_SFGTUI_VARS \
-  UINT f_opcode; \
-  UINT f_op_25_5; \
-  UINT f_r2; \
-  UINT f_uimm16; \
-  unsigned int length;
-#define EXTRACT_IFMT_L_SFGTUI_CODE \
-  length = 4; \
-  f_opcode = EXTRACT_LSB0_UINT (insn, 32, 31, 6); \
-  f_op_25_5 = EXTRACT_LSB0_UINT (insn, 32, 25, 5); \
-  f_r2 = EXTRACT_LSB0_UINT (insn, 32, 20, 5); \
-  f_uimm16 = EXTRACT_LSB0_UINT (insn, 32, 15, 16); \
 
 #define EXTRACT_IFMT_L_SFGTSI_VARS \
   UINT f_opcode; \
@@ -4881,20 +4875,16 @@ struct scache {
 
 #define EXTRACT_IFMT_L_MACI_VARS \
   UINT f_opcode; \
-  UINT f_resv_20_5; \
+  UINT f_resv_25_5; \
   UINT f_r2; \
-  UINT f_imm16_25_5; \
-  UINT f_imm16_10_11; \
-  INT f_simm16_split; \
+  INT f_simm16; \
   unsigned int length;
 #define EXTRACT_IFMT_L_MACI_CODE \
   length = 4; \
   f_opcode = EXTRACT_LSB0_UINT (insn, 32, 31, 6); \
-  f_resv_20_5 = EXTRACT_LSB0_UINT (insn, 32, 20, 5); \
+  f_resv_25_5 = EXTRACT_LSB0_UINT (insn, 32, 25, 5); \
   f_r2 = EXTRACT_LSB0_UINT (insn, 32, 20, 5); \
-  f_imm16_25_5 = EXTRACT_LSB0_UINT (insn, 32, 25, 5); \
-  f_imm16_10_11 = EXTRACT_LSB0_UINT (insn, 32, 10, 11); \
-  f_simm16_split = ((HI) (UINT) (((((f_imm16_25_5) << (11))) | (f_imm16_10_11))));\
+  f_simm16 = EXTRACT_LSB0_SINT (insn, 32, 15, 16); \
 
 #define EXTRACT_IFMT_LF_ADD_S_VARS \
   UINT f_opcode; \

@@ -1,5 +1,21 @@
 2012-06-22  Peter Gavin  <pgavin@gmail.com>
 
+	* cpu32.c: regenerate
+	* cpu32.h: ditto
+	* cpu64.c: ditto
+	* cpu64.h: ditto
+	* decode32.c: ditto
+	* decode32.h: ditto
+	* decode64.c: ditto
+	* decode64.h: ditto
+	* model32.c: ditto
+	* sem32.c: ditto
+	* sem32-switch.c: ditto
+	* sem64.c: ditto
+	* sem64-switch.c: ditto
+
+2012-06-22  Peter Gavin  <pgavin@gmail.com>
+
 	* or1k.c:
 	(or1k32bf_fl1) fix bug
 

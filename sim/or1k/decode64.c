@@ -54,7 +54,7 @@ static const struct insn_sem or1k64bf_insn_sem[] =
   { OR1K_INSN_L_BF, OR1K64BF_INSN_L_BF, OR1K64BF_SFMT_L_BNF },
   { OR1K_INSN_L_TRAP, OR1K64BF_INSN_L_TRAP, OR1K64BF_SFMT_L_TRAP },
   { OR1K_INSN_L_SYS, OR1K64BF_INSN_L_SYS, OR1K64BF_SFMT_L_TRAP },
-  { OR1K_INSN_L_RFE, OR1K64BF_INSN_L_RFE, OR1K64BF_SFMT_L_TRAP },
+  { OR1K_INSN_L_RFE, OR1K64BF_INSN_L_RFE, OR1K64BF_SFMT_L_RFE },
   { OR1K_INSN_L_NOP_IMM, OR1K64BF_INSN_L_NOP_IMM, OR1K64BF_SFMT_L_NOP_IMM },
   { OR1K_INSN_L_MOVHI, OR1K64BF_INSN_L_MOVHI, OR1K64BF_SFMT_L_MOVHI },
   { OR1K_INSN_L_MACRC, OR1K64BF_INSN_L_MACRC, OR1K64BF_SFMT_L_MACRC },
@@ -89,8 +89,8 @@ static const struct insn_sem or1k64bf_insn_sem[] =
   { OR1K_INSN_L_DIVU, OR1K64BF_INSN_L_DIVU, OR1K64BF_SFMT_L_DIV },
   { OR1K_INSN_L_FF1, OR1K64BF_INSN_L_FF1, OR1K64BF_SFMT_L_FF1 },
   { OR1K_INSN_L_FL1, OR1K64BF_INSN_L_FL1, OR1K64BF_SFMT_L_FF1 },
-  { OR1K_INSN_L_ANDI, OR1K64BF_INSN_L_ANDI, OR1K64BF_SFMT_L_ANDI },
-  { OR1K_INSN_L_ORI, OR1K64BF_INSN_L_ORI, OR1K64BF_SFMT_L_ANDI },
+  { OR1K_INSN_L_ANDI, OR1K64BF_INSN_L_ANDI, OR1K64BF_SFMT_L_MFSPR },
+  { OR1K_INSN_L_ORI, OR1K64BF_INSN_L_ORI, OR1K64BF_SFMT_L_MFSPR },
   { OR1K_INSN_L_XORI, OR1K64BF_INSN_L_XORI, OR1K64BF_SFMT_L_XORI },
   { OR1K_INSN_L_ADDI, OR1K64BF_INSN_L_ADDI, OR1K64BF_SFMT_L_ADDI },
   { OR1K_INSN_L_ADDIC, OR1K64BF_INSN_L_ADDIC, OR1K64BF_SFMT_L_ADDIC },
@@ -102,37 +102,37 @@ static const struct insn_sem or1k64bf_insn_sem[] =
   { OR1K_INSN_L_EXTWS, OR1K64BF_INSN_L_EXTWS, OR1K64BF_SFMT_L_EXTHS },
   { OR1K_INSN_L_EXTWZ, OR1K64BF_INSN_L_EXTWZ, OR1K64BF_SFMT_L_EXTHS },
   { OR1K_INSN_L_CMOV, OR1K64BF_INSN_L_CMOV, OR1K64BF_SFMT_L_CMOV },
-  { OR1K_INSN_L_SFGTU, OR1K64BF_INSN_L_SFGTU, OR1K64BF_SFMT_L_SFGTU },
-  { OR1K_INSN_L_SFGEU, OR1K64BF_INSN_L_SFGEU, OR1K64BF_SFMT_L_SFGTU },
-  { OR1K_INSN_L_SFLTU, OR1K64BF_INSN_L_SFLTU, OR1K64BF_SFMT_L_SFGTU },
-  { OR1K_INSN_L_SFLEU, OR1K64BF_INSN_L_SFLEU, OR1K64BF_SFMT_L_SFGTU },
-  { OR1K_INSN_L_SFGTS, OR1K64BF_INSN_L_SFGTS, OR1K64BF_SFMT_L_SFGTU },
-  { OR1K_INSN_L_SFGES, OR1K64BF_INSN_L_SFGES, OR1K64BF_SFMT_L_SFGTU },
-  { OR1K_INSN_L_SFLTS, OR1K64BF_INSN_L_SFLTS, OR1K64BF_SFMT_L_SFGTU },
-  { OR1K_INSN_L_SFLES, OR1K64BF_INSN_L_SFLES, OR1K64BF_SFMT_L_SFGTU },
-  { OR1K_INSN_L_SFGTUI, OR1K64BF_INSN_L_SFGTUI, OR1K64BF_SFMT_L_SFGTUI },
-  { OR1K_INSN_L_SFGEUI, OR1K64BF_INSN_L_SFGEUI, OR1K64BF_SFMT_L_SFGTUI },
-  { OR1K_INSN_L_SFLTUI, OR1K64BF_INSN_L_SFLTUI, OR1K64BF_SFMT_L_SFGTUI },
-  { OR1K_INSN_L_SFLEUI, OR1K64BF_INSN_L_SFLEUI, OR1K64BF_SFMT_L_SFGTUI },
+  { OR1K_INSN_L_SFGTS, OR1K64BF_INSN_L_SFGTS, OR1K64BF_SFMT_L_SFGTS },
   { OR1K_INSN_L_SFGTSI, OR1K64BF_INSN_L_SFGTSI, OR1K64BF_SFMT_L_SFGTSI },
+  { OR1K_INSN_L_SFGTU, OR1K64BF_INSN_L_SFGTU, OR1K64BF_SFMT_L_SFGTS },
+  { OR1K_INSN_L_SFGTUI, OR1K64BF_INSN_L_SFGTUI, OR1K64BF_SFMT_L_SFGTSI },
+  { OR1K_INSN_L_SFGES, OR1K64BF_INSN_L_SFGES, OR1K64BF_SFMT_L_SFGTS },
   { OR1K_INSN_L_SFGESI, OR1K64BF_INSN_L_SFGESI, OR1K64BF_SFMT_L_SFGTSI },
+  { OR1K_INSN_L_SFGEU, OR1K64BF_INSN_L_SFGEU, OR1K64BF_SFMT_L_SFGTS },
+  { OR1K_INSN_L_SFGEUI, OR1K64BF_INSN_L_SFGEUI, OR1K64BF_SFMT_L_SFGTSI },
+  { OR1K_INSN_L_SFLTS, OR1K64BF_INSN_L_SFLTS, OR1K64BF_SFMT_L_SFGTS },
   { OR1K_INSN_L_SFLTSI, OR1K64BF_INSN_L_SFLTSI, OR1K64BF_SFMT_L_SFGTSI },
+  { OR1K_INSN_L_SFLTU, OR1K64BF_INSN_L_SFLTU, OR1K64BF_SFMT_L_SFGTS },
+  { OR1K_INSN_L_SFLTUI, OR1K64BF_INSN_L_SFLTUI, OR1K64BF_SFMT_L_SFGTSI },
+  { OR1K_INSN_L_SFLES, OR1K64BF_INSN_L_SFLES, OR1K64BF_SFMT_L_SFGTS },
   { OR1K_INSN_L_SFLESI, OR1K64BF_INSN_L_SFLESI, OR1K64BF_SFMT_L_SFGTSI },
-  { OR1K_INSN_L_SFEQ, OR1K64BF_INSN_L_SFEQ, OR1K64BF_SFMT_L_SFGTU },
+  { OR1K_INSN_L_SFLEU, OR1K64BF_INSN_L_SFLEU, OR1K64BF_SFMT_L_SFGTS },
+  { OR1K_INSN_L_SFLEUI, OR1K64BF_INSN_L_SFLEUI, OR1K64BF_SFMT_L_SFGTSI },
+  { OR1K_INSN_L_SFEQ, OR1K64BF_INSN_L_SFEQ, OR1K64BF_SFMT_L_SFGTS },
   { OR1K_INSN_L_SFEQI, OR1K64BF_INSN_L_SFEQI, OR1K64BF_SFMT_L_SFGTSI },
-  { OR1K_INSN_L_SFNE, OR1K64BF_INSN_L_SFNE, OR1K64BF_SFMT_L_SFGTU },
+  { OR1K_INSN_L_SFNE, OR1K64BF_INSN_L_SFNE, OR1K64BF_SFMT_L_SFGTS },
   { OR1K_INSN_L_SFNEI, OR1K64BF_INSN_L_SFNEI, OR1K64BF_SFMT_L_SFGTSI },
   { OR1K_INSN_L_MAC, OR1K64BF_INSN_L_MAC, OR1K64BF_SFMT_L_MAC },
   { OR1K_INSN_L_MSB, OR1K64BF_INSN_L_MSB, OR1K64BF_SFMT_L_MAC },
   { OR1K_INSN_L_MACI, OR1K64BF_INSN_L_MACI, OR1K64BF_SFMT_L_MACI },
-  { OR1K_INSN_L_CUST1, OR1K64BF_INSN_L_CUST1, OR1K64BF_SFMT_L_CUST1 },
-  { OR1K_INSN_L_CUST2, OR1K64BF_INSN_L_CUST2, OR1K64BF_SFMT_L_CUST1 },
-  { OR1K_INSN_L_CUST3, OR1K64BF_INSN_L_CUST3, OR1K64BF_SFMT_L_CUST1 },
-  { OR1K_INSN_L_CUST4, OR1K64BF_INSN_L_CUST4, OR1K64BF_SFMT_L_CUST1 },
-  { OR1K_INSN_L_CUST5, OR1K64BF_INSN_L_CUST5, OR1K64BF_SFMT_L_CUST1 },
-  { OR1K_INSN_L_CUST6, OR1K64BF_INSN_L_CUST6, OR1K64BF_SFMT_L_CUST1 },
-  { OR1K_INSN_L_CUST7, OR1K64BF_INSN_L_CUST7, OR1K64BF_SFMT_L_CUST1 },
-  { OR1K_INSN_L_CUST8, OR1K64BF_INSN_L_CUST8, OR1K64BF_SFMT_L_CUST1 },
+  { OR1K_INSN_L_CUST1, OR1K64BF_INSN_L_CUST1, OR1K64BF_SFMT_L_RFE },
+  { OR1K_INSN_L_CUST2, OR1K64BF_INSN_L_CUST2, OR1K64BF_SFMT_L_RFE },
+  { OR1K_INSN_L_CUST3, OR1K64BF_INSN_L_CUST3, OR1K64BF_SFMT_L_RFE },
+  { OR1K_INSN_L_CUST4, OR1K64BF_INSN_L_CUST4, OR1K64BF_SFMT_L_RFE },
+  { OR1K_INSN_L_CUST5, OR1K64BF_INSN_L_CUST5, OR1K64BF_SFMT_L_RFE },
+  { OR1K_INSN_L_CUST6, OR1K64BF_INSN_L_CUST6, OR1K64BF_SFMT_L_RFE },
+  { OR1K_INSN_L_CUST7, OR1K64BF_INSN_L_CUST7, OR1K64BF_SFMT_L_RFE },
+  { OR1K_INSN_L_CUST8, OR1K64BF_INSN_L_CUST8, OR1K64BF_SFMT_L_RFE },
   { OR1K_INSN_LF_ADD_S, OR1K64BF_INSN_LF_ADD_S, OR1K64BF_SFMT_LF_ADD_S },
   { OR1K_INSN_LF_ADD_D, OR1K64BF_INSN_LF_ADD_D, OR1K64BF_SFMT_LF_ADD_D },
   { OR1K_INSN_LF_SUB_S, OR1K64BF_INSN_LF_SUB_S, OR1K64BF_SFMT_LF_ADD_S },
@@ -161,8 +161,8 @@ static const struct insn_sem or1k64bf_insn_sem[] =
   { OR1K_INSN_LF_LE_D, OR1K64BF_INSN_LF_LE_D, OR1K64BF_SFMT_LF_EQ_D },
   { OR1K_INSN_LF_MADD_S, OR1K64BF_INSN_LF_MADD_S, OR1K64BF_SFMT_LF_MADD_S },
   { OR1K_INSN_LF_MADD_D, OR1K64BF_INSN_LF_MADD_D, OR1K64BF_SFMT_LF_MADD_D },
-  { OR1K_INSN_LF_CUST1_S, OR1K64BF_INSN_LF_CUST1_S, OR1K64BF_SFMT_L_CUST1 },
-  { OR1K_INSN_LF_CUST1_D, OR1K64BF_INSN_LF_CUST1_D, OR1K64BF_SFMT_L_CUST1 },
+  { OR1K_INSN_LF_CUST1_S, OR1K64BF_INSN_LF_CUST1_S, OR1K64BF_SFMT_L_RFE },
+  { OR1K_INSN_LF_CUST1_D, OR1K64BF_INSN_LF_CUST1_D, OR1K64BF_SFMT_L_RFE },
 };
 
 static const struct insn_sem or1k64bf_insn_sem_invalid =
@@ -505,7 +505,7 @@ or1k64bf_decode (SIM_CPU *current_cpu, IADDR pc,
         }
       case 288 :
         if ((entire_insn & 0xffffffff) == 0x24000000)
-          { itype = OR1K64BF_INSN_L_RFE; goto extract_sfmt_l_trap; }
+          { itype = OR1K64BF_INSN_L_RFE; goto extract_sfmt_l_rfe; }
         itype = OR1K64BF_INSN_X_INVALID; goto extract_sfmt_empty;
       case 544 :
         if ((entire_insn & 0xffff07ff) == 0x44000000)
@@ -547,24 +547,24 @@ or1k64bf_decode (SIM_CPU *current_cpu, IADDR pc,
       case 637 : /* fall through */
       case 638 : /* fall through */
       case 639 :
-        if ((entire_insn & 0xfc1f0000) == 0x4c000000)
+        if ((entire_insn & 0xffe00000) == 0x4c000000)
           { itype = OR1K64BF_INSN_L_MACI; goto extract_sfmt_l_maci; }
         itype = OR1K64BF_INSN_X_INVALID; goto extract_sfmt_empty;
       case 896 :
         if ((entire_insn & 0xffffffff) == 0x70000000)
-          { itype = OR1K64BF_INSN_L_CUST1; goto extract_sfmt_l_cust1; }
+          { itype = OR1K64BF_INSN_L_CUST1; goto extract_sfmt_l_rfe; }
         itype = OR1K64BF_INSN_X_INVALID; goto extract_sfmt_empty;
       case 928 :
         if ((entire_insn & 0xffffffff) == 0x74000000)
-          { itype = OR1K64BF_INSN_L_CUST2; goto extract_sfmt_l_cust1; }
+          { itype = OR1K64BF_INSN_L_CUST2; goto extract_sfmt_l_rfe; }
         itype = OR1K64BF_INSN_X_INVALID; goto extract_sfmt_empty;
       case 960 :
         if ((entire_insn & 0xffffffff) == 0x78000000)
-          { itype = OR1K64BF_INSN_L_CUST3; goto extract_sfmt_l_cust1; }
+          { itype = OR1K64BF_INSN_L_CUST3; goto extract_sfmt_l_rfe; }
         itype = OR1K64BF_INSN_X_INVALID; goto extract_sfmt_empty;
       case 992 :
         if ((entire_insn & 0xffffffff) == 0x7c000000)
-          { itype = OR1K64BF_INSN_L_CUST4; goto extract_sfmt_l_cust1; }
+          { itype = OR1K64BF_INSN_L_CUST4; goto extract_sfmt_l_rfe; }
         itype = OR1K64BF_INSN_X_INVALID; goto extract_sfmt_empty;
       case 1056 : /* fall through */
       case 1057 : /* fall through */
@@ -853,7 +853,7 @@ or1k64bf_decode (SIM_CPU *current_cpu, IADDR pc,
       case 1340 : /* fall through */
       case 1341 : /* fall through */
       case 1342 : /* fall through */
-      case 1343 : itype = OR1K64BF_INSN_L_ANDI; goto extract_sfmt_l_andi;
+      case 1343 : itype = OR1K64BF_INSN_L_ANDI; goto extract_sfmt_l_mfspr;
       case 1344 : /* fall through */
       case 1345 : /* fall through */
       case 1346 : /* fall through */
@@ -885,7 +885,7 @@ or1k64bf_decode (SIM_CPU *current_cpu, IADDR pc,
       case 1372 : /* fall through */
       case 1373 : /* fall through */
       case 1374 : /* fall through */
-      case 1375 : itype = OR1K64BF_INSN_L_ORI; goto extract_sfmt_l_andi;
+      case 1375 : itype = OR1K64BF_INSN_L_ORI; goto extract_sfmt_l_mfspr;
       case 1376 : /* fall through */
       case 1377 : /* fall through */
       case 1378 : /* fall through */
@@ -1083,19 +1083,19 @@ or1k64bf_decode (SIM_CPU *current_cpu, IADDR pc,
             itype = OR1K64BF_INSN_X_INVALID; goto extract_sfmt_empty;
           case 2 :
             if ((entire_insn & 0xffe00000) == 0xbc400000)
-              { itype = OR1K64BF_INSN_L_SFGTUI; goto extract_sfmt_l_sfgtui; }
+              { itype = OR1K64BF_INSN_L_SFGTUI; goto extract_sfmt_l_sfgtsi; }
             itype = OR1K64BF_INSN_X_INVALID; goto extract_sfmt_empty;
           case 3 :
             if ((entire_insn & 0xffe00000) == 0xbc600000)
-              { itype = OR1K64BF_INSN_L_SFGEUI; goto extract_sfmt_l_sfgtui; }
+              { itype = OR1K64BF_INSN_L_SFGEUI; goto extract_sfmt_l_sfgtsi; }
             itype = OR1K64BF_INSN_X_INVALID; goto extract_sfmt_empty;
           case 4 :
             if ((entire_insn & 0xffe00000) == 0xbc800000)
-              { itype = OR1K64BF_INSN_L_SFLTUI; goto extract_sfmt_l_sfgtui; }
+              { itype = OR1K64BF_INSN_L_SFLTUI; goto extract_sfmt_l_sfgtsi; }
             itype = OR1K64BF_INSN_X_INVALID; goto extract_sfmt_empty;
           case 5 :
             if ((entire_insn & 0xffe00000) == 0xbca00000)
-              { itype = OR1K64BF_INSN_L_SFLEUI; goto extract_sfmt_l_sfgtui; }
+              { itype = OR1K64BF_INSN_L_SFLEUI; goto extract_sfmt_l_sfgtsi; }
             itype = OR1K64BF_INSN_X_INVALID; goto extract_sfmt_empty;
           case 10 :
             if ((entire_insn & 0xffe00000) == 0xbd400000)
@@ -1167,7 +1167,7 @@ or1k64bf_decode (SIM_CPU *current_cpu, IADDR pc,
             itype = OR1K64BF_INSN_X_INVALID; goto extract_sfmt_empty;
           case 7 :
             if ((entire_insn & 0xffe007ff) == 0xc80000e0)
-              { itype = OR1K64BF_INSN_LF_CUST1_D; goto extract_sfmt_l_cust1; }
+              { itype = OR1K64BF_INSN_LF_CUST1_D; goto extract_sfmt_l_rfe; }
             itype = OR1K64BF_INSN_X_INVALID; goto extract_sfmt_empty;
           default : itype = OR1K64BF_INSN_X_INVALID; goto extract_sfmt_empty;
           }
@@ -1235,7 +1235,7 @@ or1k64bf_decode (SIM_CPU *current_cpu, IADDR pc,
             itype = OR1K64BF_INSN_X_INVALID; goto extract_sfmt_empty;
           case 3 :
             if ((entire_insn & 0xffe007ff) == 0xc80000d0)
-              { itype = OR1K64BF_INSN_LF_CUST1_S; goto extract_sfmt_l_cust1; }
+              { itype = OR1K64BF_INSN_LF_CUST1_S; goto extract_sfmt_l_rfe; }
             itype = OR1K64BF_INSN_X_INVALID; goto extract_sfmt_empty;
           default : itype = OR1K64BF_INSN_X_INVALID; goto extract_sfmt_empty;
           }
@@ -1519,62 +1519,62 @@ or1k64bf_decode (SIM_CPU *current_cpu, IADDR pc,
           {
           case 0 :
             if ((entire_insn & 0xffe007ff) == 0xe4000000)
-              { itype = OR1K64BF_INSN_L_SFEQ; goto extract_sfmt_l_sfgtu; }
+              { itype = OR1K64BF_INSN_L_SFEQ; goto extract_sfmt_l_sfgts; }
             itype = OR1K64BF_INSN_X_INVALID; goto extract_sfmt_empty;
           case 1 :
             if ((entire_insn & 0xffe007ff) == 0xe4200000)
-              { itype = OR1K64BF_INSN_L_SFNE; goto extract_sfmt_l_sfgtu; }
+              { itype = OR1K64BF_INSN_L_SFNE; goto extract_sfmt_l_sfgts; }
             itype = OR1K64BF_INSN_X_INVALID; goto extract_sfmt_empty;
           case 2 :
             if ((entire_insn & 0xffe007ff) == 0xe4400000)
-              { itype = OR1K64BF_INSN_L_SFGTU; goto extract_sfmt_l_sfgtu; }
+              { itype = OR1K64BF_INSN_L_SFGTU; goto extract_sfmt_l_sfgts; }
             itype = OR1K64BF_INSN_X_INVALID; goto extract_sfmt_empty;
           case 3 :
             if ((entire_insn & 0xffe007ff) == 0xe4600000)
-              { itype = OR1K64BF_INSN_L_SFGEU; goto extract_sfmt_l_sfgtu; }
+              { itype = OR1K64BF_INSN_L_SFGEU; goto extract_sfmt_l_sfgts; }
             itype = OR1K64BF_INSN_X_INVALID; goto extract_sfmt_empty;
           case 4 :
             if ((entire_insn & 0xffe007ff) == 0xe4800000)
-              { itype = OR1K64BF_INSN_L_SFLTU; goto extract_sfmt_l_sfgtu; }
+              { itype = OR1K64BF_INSN_L_SFLTU; goto extract_sfmt_l_sfgts; }
             itype = OR1K64BF_INSN_X_INVALID; goto extract_sfmt_empty;
           case 5 :
             if ((entire_insn & 0xffe007ff) == 0xe4a00000)
-              { itype = OR1K64BF_INSN_L_SFLEU; goto extract_sfmt_l_sfgtu; }
+              { itype = OR1K64BF_INSN_L_SFLEU; goto extract_sfmt_l_sfgts; }
             itype = OR1K64BF_INSN_X_INVALID; goto extract_sfmt_empty;
           case 10 :
             if ((entire_insn & 0xffe007ff) == 0xe5400000)
-              { itype = OR1K64BF_INSN_L_SFGTS; goto extract_sfmt_l_sfgtu; }
+              { itype = OR1K64BF_INSN_L_SFGTS; goto extract_sfmt_l_sfgts; }
             itype = OR1K64BF_INSN_X_INVALID; goto extract_sfmt_empty;
           case 11 :
             if ((entire_insn & 0xffe007ff) == 0xe5600000)
-              { itype = OR1K64BF_INSN_L_SFGES; goto extract_sfmt_l_sfgtu; }
+              { itype = OR1K64BF_INSN_L_SFGES; goto extract_sfmt_l_sfgts; }
             itype = OR1K64BF_INSN_X_INVALID; goto extract_sfmt_empty;
           case 12 :
             if ((entire_insn & 0xffe007ff) == 0xe5800000)
-              { itype = OR1K64BF_INSN_L_SFLTS; goto extract_sfmt_l_sfgtu; }
+              { itype = OR1K64BF_INSN_L_SFLTS; goto extract_sfmt_l_sfgts; }
             itype = OR1K64BF_INSN_X_INVALID; goto extract_sfmt_empty;
           case 13 :
             if ((entire_insn & 0xffe007ff) == 0xe5a00000)
-              { itype = OR1K64BF_INSN_L_SFLES; goto extract_sfmt_l_sfgtu; }
+              { itype = OR1K64BF_INSN_L_SFLES; goto extract_sfmt_l_sfgts; }
             itype = OR1K64BF_INSN_X_INVALID; goto extract_sfmt_empty;
           default : itype = OR1K64BF_INSN_X_INVALID; goto extract_sfmt_empty;
           }
         }
       case 1920 :
         if ((entire_insn & 0xffffffff) == 0xf0000000)
-          { itype = OR1K64BF_INSN_L_CUST5; goto extract_sfmt_l_cust1; }
+          { itype = OR1K64BF_INSN_L_CUST5; goto extract_sfmt_l_rfe; }
         itype = OR1K64BF_INSN_X_INVALID; goto extract_sfmt_empty;
       case 1952 :
         if ((entire_insn & 0xffffffff) == 0xf4000000)
-          { itype = OR1K64BF_INSN_L_CUST6; goto extract_sfmt_l_cust1; }
+          { itype = OR1K64BF_INSN_L_CUST6; goto extract_sfmt_l_rfe; }
         itype = OR1K64BF_INSN_X_INVALID; goto extract_sfmt_empty;
       case 1984 :
         if ((entire_insn & 0xffffffff) == 0xf8000000)
-          { itype = OR1K64BF_INSN_L_CUST7; goto extract_sfmt_l_cust1; }
+          { itype = OR1K64BF_INSN_L_CUST7; goto extract_sfmt_l_rfe; }
         itype = OR1K64BF_INSN_X_INVALID; goto extract_sfmt_empty;
       case 2016 :
         if ((entire_insn & 0xffffffff) == 0xfc000000)
-          { itype = OR1K64BF_INSN_L_CUST8; goto extract_sfmt_l_cust1; }
+          { itype = OR1K64BF_INSN_L_CUST8; goto extract_sfmt_l_rfe; }
         itype = OR1K64BF_INSN_X_INVALID; goto extract_sfmt_empty;
       default : itype = OR1K64BF_INSN_X_INVALID; goto extract_sfmt_empty;
       }
@@ -1694,6 +1694,19 @@ or1k64bf_decode (SIM_CPU *current_cpu, IADDR pc,
     return idesc;
   }
 
+ extract_sfmt_l_rfe:
+  {
+    const IDESC *idesc = &or1k64bf_insn_data[itype];
+#define FLD(f) abuf->fields.sfmt_empty.f
+
+
+  /* Record the fields for the semantic handler.  */
+  TRACE_EXTRACT (current_cpu, abuf, (current_cpu, pc, "sfmt_l_rfe", (char *) 0));
+
+#undef FLD
+    return idesc;
+  }
+
  extract_sfmt_l_nop_imm:
   {
     const IDESC *idesc = &or1k64bf_insn_data[itype];
@@ -1762,10 +1775,10 @@ or1k64bf_decode (SIM_CPU *current_cpu, IADDR pc,
     f_uimm16 = EXTRACT_LSB0_UINT (insn, 32, 15, 16);
 
   /* Record the fields for the semantic handler.  */
-  FLD (f_r1) = f_r1;
   FLD (f_r2) = f_r2;
   FLD (f_uimm16) = f_uimm16;
-  TRACE_EXTRACT (current_cpu, abuf, (current_cpu, pc, "sfmt_l_mfspr", "f_r1 0x%x", 'x', f_r1, "f_r2 0x%x", 'x', f_r2, "f_uimm16 0x%x", 'x', f_uimm16, (char *) 0));
+  FLD (f_r1) = f_r1;
+  TRACE_EXTRACT (current_cpu, abuf, (current_cpu, pc, "sfmt_l_mfspr", "f_r2 0x%x", 'x', f_r2, "f_uimm16 0x%x", 'x', f_uimm16, "f_r1 0x%x", 'x', f_r1, (char *) 0));
 
 #undef FLD
     return idesc;
@@ -2175,29 +2188,6 @@ or1k64bf_decode (SIM_CPU *current_cpu, IADDR pc,
     return idesc;
   }
 
- extract_sfmt_l_andi:
-  {
-    const IDESC *idesc = &or1k64bf_insn_data[itype];
-    CGEN_INSN_WORD insn = entire_insn;
-#define FLD(f) abuf->fields.sfmt_l_mfspr.f
-    UINT f_r1;
-    UINT f_r2;
-    UINT f_uimm16;
-
-    f_r1 = EXTRACT_LSB0_UINT (insn, 32, 25, 5);
-    f_r2 = EXTRACT_LSB0_UINT (insn, 32, 20, 5);
-    f_uimm16 = EXTRACT_LSB0_UINT (insn, 32, 15, 16);
-
-  /* Record the fields for the semantic handler.  */
-  FLD (f_r2) = f_r2;
-  FLD (f_uimm16) = f_uimm16;
-  FLD (f_r1) = f_r1;
-  TRACE_EXTRACT (current_cpu, abuf, (current_cpu, pc, "sfmt_l_andi", "f_r2 0x%x", 'x', f_r2, "f_uimm16 0x%x", 'x', f_uimm16, "f_r1 0x%x", 'x', f_r1, (char *) 0));
-
-#undef FLD
-    return idesc;
-  }
-
  extract_sfmt_l_xori:
   {
     const IDESC *idesc = &or1k64bf_insn_data[itype];
@@ -2310,7 +2300,7 @@ or1k64bf_decode (SIM_CPU *current_cpu, IADDR pc,
     return idesc;
   }
 
- extract_sfmt_l_sfgtu:
+ extract_sfmt_l_sfgts:
   {
     const IDESC *idesc = &or1k64bf_insn_data[itype];
     CGEN_INSN_WORD insn = entire_insn;
@@ -2324,27 +2314,7 @@ or1k64bf_decode (SIM_CPU *current_cpu, IADDR pc,
   /* Record the fields for the semantic handler.  */
   FLD (f_r2) = f_r2;
   FLD (f_r3) = f_r3;
-  TRACE_EXTRACT (current_cpu, abuf, (current_cpu, pc, "sfmt_l_sfgtu", "f_r2 0x%x", 'x', f_r2, "f_r3 0x%x", 'x', f_r3, (char *) 0));
-
-#undef FLD
-    return idesc;
-  }
-
- extract_sfmt_l_sfgtui:
-  {
-    const IDESC *idesc = &or1k64bf_insn_data[itype];
-    CGEN_INSN_WORD insn = entire_insn;
-#define FLD(f) abuf->fields.sfmt_l_mfspr.f
-    UINT f_r2;
-    UINT f_uimm16;
-
-    f_r2 = EXTRACT_LSB0_UINT (insn, 32, 20, 5);
-    f_uimm16 = EXTRACT_LSB0_UINT (insn, 32, 15, 16);
-
-  /* Record the fields for the semantic handler.  */
-  FLD (f_r2) = f_r2;
-  FLD (f_uimm16) = f_uimm16;
-  TRACE_EXTRACT (current_cpu, abuf, (current_cpu, pc, "sfmt_l_sfgtui", "f_r2 0x%x", 'x', f_r2, "f_uimm16 0x%x", 'x', f_uimm16, (char *) 0));
+  TRACE_EXTRACT (current_cpu, abuf, (current_cpu, pc, "sfmt_l_sfgts", "f_r2 0x%x", 'x', f_r2, "f_r3 0x%x", 'x', f_r3, (char *) 0));
 
 #undef FLD
     return idesc;
@@ -2394,34 +2364,17 @@ or1k64bf_decode (SIM_CPU *current_cpu, IADDR pc,
   {
     const IDESC *idesc = &or1k64bf_insn_data[itype];
     CGEN_INSN_WORD insn = entire_insn;
-#define FLD(f) abuf->fields.sfmt_l_sw.f
-    UINT f_imm16_25_5;
+#define FLD(f) abuf->fields.sfmt_l_lwz.f
     UINT f_r2;
-    UINT f_imm16_10_11;
-    INT f_simm16_split;
+    INT f_simm16;
 
-    f_imm16_25_5 = EXTRACT_LSB0_UINT (insn, 32, 25, 5);
     f_r2 = EXTRACT_LSB0_UINT (insn, 32, 20, 5);
-    f_imm16_10_11 = EXTRACT_LSB0_UINT (insn, 32, 10, 11);
-  f_simm16_split = ((HI) (UINT) (((((f_imm16_25_5) << (11))) | (f_imm16_10_11))));
+    f_simm16 = EXTRACT_LSB0_SINT (insn, 32, 15, 16);
 
   /* Record the fields for the semantic handler.  */
   FLD (f_r2) = f_r2;
-  FLD (f_simm16_split) = f_simm16_split;
-  TRACE_EXTRACT (current_cpu, abuf, (current_cpu, pc, "sfmt_l_maci", "f_r2 0x%x", 'x', f_r2, "f_simm16_split 0x%x", 'x', f_simm16_split, (char *) 0));
-
-#undef FLD
-    return idesc;
-  }
-
- extract_sfmt_l_cust1:
-  {
-    const IDESC *idesc = &or1k64bf_insn_data[itype];
-#define FLD(f) abuf->fields.sfmt_empty.f
-
-
-  /* Record the fields for the semantic handler.  */
-  TRACE_EXTRACT (current_cpu, abuf, (current_cpu, pc, "sfmt_l_cust1", (char *) 0));
+  FLD (f_simm16) = f_simm16;
+  TRACE_EXTRACT (current_cpu, abuf, (current_cpu, pc, "sfmt_l_maci", "f_r2 0x%x", 'x', f_r2, "f_simm16 0x%x", 'x', f_simm16, (char *) 0));
 
 #undef FLD
     return idesc;

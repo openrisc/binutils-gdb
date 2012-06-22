@@ -9308,6 +9308,22 @@ or1k64bf_h_mac_machi_set (SIM_CPU *current_cpu, UDI newval)
   SET_H_MAC_MACHI (newval);
 }
 
+/* Get the value of h-tick-ttmr.  */
+
+UDI
+or1k64bf_h_tick_ttmr_get (SIM_CPU *current_cpu)
+{
+  return GET_H_TICK_TTMR ();
+}
+
+/* Set a value for h-tick-ttmr.  */
+
+void
+or1k64bf_h_tick_ttmr_set (SIM_CPU *current_cpu, UDI newval)
+{
+  SET_H_TICK_TTMR (newval);
+}
+
 /* Get the value of h-sys-vr-rev.  */
 
 UDI
