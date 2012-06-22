@@ -92,9 +92,6 @@ SIM_EXTRA_CLEAN =
 
 arch = or1k
 
-traps.o: traps.c $(SIM_MAIN_DEPS)
-traps-linux.o: traps-linux.c $(SIM_MAIN_DEPS)
-
 # or1k32bf
 
 OR1K32BF_INCLUDE_DEPS = \
@@ -126,6 +123,14 @@ sim-if32.o: sim-if.c $(SIM_MAIN_DEPS) $(srcdir)/../common/sim-core.h eng32.h
 	$(COMPILE) $<
 	$(POSTCOMPILE)
 
+traps32.o: traps.c $(SIM_MAIN_DEPS) eng32.h
+	$(COMPILE) $<
+	$(POSTCOMPILE)
+traps32-linux.o: traps-linux.c $(SIM_MAIN_DEPS) eng32.h
+	$(COMPILE) $<
+	$(POSTCOMPILE)
+
+
 # or1k64bf
 
 OR1K64BF_INCLUDE_DEPS = \
@@ -156,6 +161,14 @@ model64.o: model64.c $(OR1K64BF_INCLUDE_DEPS)
 sim-if64.o: sim-if.c $(SIM_MAIN_DEPS) $(srcdir)/../common/sim-core.h eng64.h
 	$(COMPILE) $<
 	$(POSTCOMPILE)
+
+traps64.o: traps.c $(SIM_MAIN_DEPS) eng64.h
+	$(COMPILE) $<
+	$(POSTCOMPILE)
+traps64-linux.o: traps-linux.c $(SIM_MAIN_DEPS) eng64.h
+	$(COMPILE) $<
+	$(POSTCOMPILE)
+
 
 # cgen support, enable with --enable-cgen-maint
 CGEN_MAINT = ; @true

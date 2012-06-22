@@ -77,6 +77,9 @@ void or1k32bf_cpu_init (SIM_DESC sd, sim_cpu *current_cpu)
                      #FIELD, #INDEX, field);                            \
     }                                                                   \
   } while (0)
+  
+  current_cpu->next_delay_slot = 0;
+  current_cpu->delay_slot = 0;
 
   CHECK_SPR_FIELD(SYS,UPR,UP,   field == 1);
   CHECK_SPR_FIELD(SYS,UPR,DCP,  field == 0);
@@ -109,21 +112,44 @@ void or1k32bf_cpu_init (SIM_DESC sd, sim_cpu *current_cpu)
   SET_H_SYS_FPCSR(0);
 }
 
-void or1k32bf_insn_before (sim_cpu *current_cpu, SEM_PC vpc)
+void or1k32bf_insn_before (sim_cpu *current_cpu, SEM_PC vpc, IDESC *idesc)
 {
+  SIM_DESC sd = CPU_STATE(current_cpu);
+
+  current_cpu->delay_slot = current_cpu->next_delay_slot;
+  current_cpu->next_delay_slot = 0;
+
+  if (current_cpu->delay_slot &&
+      CGEN_ATTR_BOOLS (CGEN_INSN_ATTRS ((idesc)->idata)) & CGEN_ATTR_MASK (CGEN_INSN_NOT_IN_DELAY_SLOT)) {
+    USI pc;
+#ifdef WITH_SCACHE
+    pc = vpc->argbuf.addr;
+#else
+    pc = vpc;
+#endif
+    sim_io_error (sd, "invalid instruction in a delay slot at PC 0x%08x", pc);
+  }
+  
 }
 
-SEM_PC or1k32bf_insn_after (sim_cpu *current_cpu, SEM_PC vpc)
+void or1k32bf_insn_after (sim_cpu *current_cpu, SEM_PC vpc, IDESC *idesc)
 {
+  SIM_DESC sd = CPU_STATE(current_cpu);
   USI ppc;
+  
 #ifdef WITH_SCACHE
   ppc = vpc->argbuf.addr;
 #else
   ppc = vpc;
 #endif
-  SET_H_SPR (SPR_ADDR(SYS,PPC), ppc);
-  
-  return vpc;
+
+  SET_H_SYS_PPC (ppc);
+
+  if (!GET_H_SYS_CPUCFGR_ND () &&
+      CGEN_ATTR_BOOLS (CGEN_INSN_ATTRS ((idesc)->idata)) & CGEN_ATTR_MASK (CGEN_INSN_DELAYED_CTI)) {
+    SIM_ASSERT (!current_cpu->delay_slot);
+    current_cpu->next_delay_slot = 1;
+  }
 }
 
 void or1k32bf_nop (sim_cpu *current_cpu, USI uimm16)
@@ -155,86 +181,6 @@ void or1k32bf_nop (sim_cpu *current_cpu, USI uimm16)
     break;
   }
   
-}
-
-void or1k32bf_mfspr (sim_cpu *current_cpu, USI pc, int rd, USI addr)
-{
-  SIM_DESC sd = CPU_STATE(current_cpu);
-  
-  if (!GET_H_SYS_SR_SM () && !GET_H_SYS_SR_SUMRA ()) {
-    sim_io_eprintf(sd, "WARNING: l.mfspr in user mode (SR 0x%x)\n", GET_H_SYS_SR());
-    return;
-  }
-  
-  if (addr >= NUM_SPR)
-    return;
-  
-  SI val = GET_H_SPR(addr);
-  
-  switch (addr) {
-
-  case SPR_ADDR(SYS,VR):
-  case SPR_ADDR(SYS,UPR):
-  case SPR_ADDR(SYS,CPUCFGR):
-  case SPR_ADDR(SYS,SR):
-  case SPR_ADDR(SYS,FPCSR):
-  case SPR_ADDR(SYS,DMMUCFGR):
-    SET_H_GPR(rd, val);
-    break;
-    
-  default:
-    if (addr >= SPR_ADDR(SYS,GPR0) && addr <= SPR_ADDR(SYS,GPR511)) {
-      SET_H_GPR(rd, val);
-    } else {
-      sim_io_eprintf (sd, "WARNING: l.mfspr with invalid SPR address 0x%x\n", addr);
-    }
-    break;
-    
-  }
-
-}
-
-void or1k32bf_mtspr (sim_cpu *current_cpu, USI pc, USI addr, USI val)
-{
-  SIM_DESC sd = CPU_STATE(current_cpu);
-  
-  if (!GET_H_SYS_SR_SM () && !GET_H_SYS_SR_SUMRA ()) {
-    sim_io_eprintf(sd, "WARNING: l.mtspr in user mode (SR 0x%x)\n", GET_H_SYS_SR());
-    return;
-  }
-  
-  if (addr >= NUM_SPR)
-    return;
-  
-  switch (addr) {
-    
-  case SPR_ADDR(SYS,SR):
-    break;
-
-  case SPR_ADDR(SYS,UPR):
-    break;
-    
-  default:
-    if (addr >= SPR_ADDR(SYS,GPR0) && addr <= SPR_ADDR(SYS,GPR511)) {
-      SET_H_SPR(addr, val);
-    }
-    break;
-    
-  }
-  
-  return;
-}
-
-void or1k32bf_exception (sim_cpu *current_cpu, USI pc, USI exnum)
-{
-  /* TODO */
-  abort();
-}
-
-void or1k32bf_rfe (sim_cpu *current_cpu, USI pc)
-{
-  /* TODO */
-  abort();
 }
 
 USI or1k32bf_make_load_store_addr (sim_cpu *current_cpu, USI base, SI offset, int size)

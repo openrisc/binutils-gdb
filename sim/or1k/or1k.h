@@ -19,12 +19,20 @@
 #define SPR_GROUP_FIRST(group) (((UWI) SPR_GROUP_##group) << SPR_GROUP_SHIFT)
 #define SPR_GROUP_LAST(group) (SPR_GROUP_FIRST | (((UWI) 1 << SPR_GROUP_SHIFT) - 1))
 #define SPR_ADDR(group,index) (SPR_GROUP_FIRST(group) | ((UWI) SPR_INDEX_##group##_##index))
+#define SPR_ADDR_GROUP(addr) (((UWI) (addr)) >> SPR_GROUP_SHIFT)
+#define SPR_INDEX_MASK (~(~((UWI) 0) << SPR_GROUP_SHIFT))
+#define SPR_ADDR_INDEX(addr) (((UWI) (addr)) && SPR_INDEX_MASK)
 #define SPR_FIELD(group,index,field,val) ((SPR_FIELD_MASK_##group##_##index##_##field & (val)) >> SPR_FIELD_LSB_##group##_##index##_##field)
 
 #ifdef WANT_CPU_OR1K32BF
 void or1k32bf_cpu_init (SIM_DESC sd, sim_cpu *current_cpu);
-void or1k32bf_insn_before (sim_cpu *current_cpu, SEM_PC vpc);
-SEM_PC or1k32bf_insn_after (sim_cpu *current_cpu, SEM_PC vpc);
+void or1k32bf_insn_before (sim_cpu *current_cpu, SEM_PC vpc, IDESC *idesc);
+void or1k32bf_insn_after (sim_cpu *current_cpu, SEM_PC vpc, IDESC *idesc);
+void or1k32bf_exception (sim_cpu *current_cpu, USI pc, USI exnum);
+void or1k32bf_rfe (sim_cpu *current_cpu);
+void or1k32bf_nop (sim_cpu *current_cpu, USI uimm16);
+USI or1k32bf_mfspr (sim_cpu *current_cpu, USI addr);
+void or1k32bf_mtspr (sim_cpu *current_cpu, USI addr, USI val);
 #endif
 
 #endif

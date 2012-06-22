@@ -4,11 +4,11 @@ AC_INIT(Makefile.in)
 sinclude(../common/acinclude.m4)
   
   case "${target_alias}" in
-  or1k*-linux*)
-    traps_obj=traps-linux.o
+  or1k-linux*|or1knd-linux*)
+    traps_obj=traps32-linux.o
     ;;
-  *)
-    traps_obj=traps.o
+  or1k-*|or1knd-*)
+    traps_obj=traps32.o
     ;;
   esac
 

@@ -44,6 +44,11 @@ struct _sim_cpu {
      go after here.  Oh for a better language.  */
   UWI spr[NUM_SPR];
 
+  /* next instruction will be in delay slot */
+  BI next_delay_slot;
+  /* currently in delay slot */
+  BI delay_slot;
+
 #ifdef WANT_CPU_OR1K32BF
   OR1K32BF_CPU_DATA cpu_data;
 #endif

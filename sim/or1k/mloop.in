@@ -62,7 +62,7 @@ execute (SIM_CPU *current_cpu, SCACHE *sc, int fast_p)
 {
   SEM_PC vpc;
   
-  @cpu@_insn_before (current_cpu, vpc);
+  @cpu@_insn_before (current_cpu, vpc, sc->argbuf.idesc);
 
   if (fast_p)
     {
@@ -124,7 +124,9 @@ execute (SIM_CPU *current_cpu, SCACHE *sc, int fast_p)
 #endif /* WITH_SEM_SWITCH_FULL */
     }
 
-  return @cpu@_insn_after (current_cpu, vpc);
+  @cpu@_insn_after (current_cpu, vpc, sc->argbuf.idesc);
+  
+  return vpc;
 }
 
 EOF
@@ -161,27 +163,46 @@ xextract-pbb)
 
 cat <<EOF
 {
+  SIM_DESC sd = CPU_STATE(current_cpu);
   const IDESC *idesc;
   int icount = 0;
 
   while (max_insns > 0) {
+
     USI insn = GETIMEMUSI (current_cpu, pc);
+
     idesc = extract (current_cpu, pc, insn, &sc->argbuf, FAST_P);
+
     SEM_SKIP_COMPILE (current_cpu, sc, 1);
+
     ++sc;
     --max_insns;
     ++icount;
     pc += 4;
-    if (CGEN_ATTR_BOOLS (CGEN_INSN_ATTRS ((idesc)->idata)) & CGEN_ATTR_MASK (CGEN_INSN_DELAYED_CTI))
+
+    if (CGEN_ATTR_BOOLS (CGEN_INSN_ATTRS ((idesc)->idata)) & CGEN_ATTR_MASK (CGEN_INSN_FORCED_CTI))
       {
+        
+        SET_CTI_VPC (sc - 1);
+
+        break;
+
+      }
+    else if (CGEN_ATTR_BOOLS (CGEN_INSN_ATTRS ((idesc)->idata)) & CGEN_ATTR_MASK (CGEN_INSN_DELAYED_CTI))
+      {
+
         /* handle delay slot */
         SET_CTI_VPC (sc - 1);
+
         insn = GETIMEMUSI (current_cpu, pc);
+
         idesc = extract (current_cpu, pc, insn, &sc->argbuf, FAST_P);
+        
         ++sc;
         --max_insns;
         ++icount;
         pc += 4;
+
         break;
       }
   }
