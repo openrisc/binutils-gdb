@@ -225,8 +225,8 @@ USI or1k32bf_fl1 (sim_cpu *current_cpu, USI val)
 {
   USI bit;
   USI ret;
-  for (bit = 1, ret = 1; bit; bit <<= 1, ret++) {
-    if (!(val & bit))
+  for (bit = 1 << 31, ret = 32; bit; bit >>= 1, ret--) {
+    if (val & bit)
       return ret;
   }
   return 0;
