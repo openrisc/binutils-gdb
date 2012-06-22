@@ -1,0 +1,19 @@
+# OR1K simulator testsuite.
+
+if [istarget or1k*-*-*] {
+    
+    set all_machs "or1k"
+
+    global global_ld_options
+    set global_ld_options "-T $srcdir/$subdir/or1k-test.ld"
+    
+    foreach src [lsort [glob -nocomplain $srcdir/$subdir/*.S]] {
+        
+        if ![runtest_file_p $runtests $src] {
+            continue
+        }
+                
+        run_sim_test $src $all_machs
+    }
+
+}
