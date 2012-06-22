@@ -1,5 +1,9 @@
 2012-06-22  Peter Gavin  <pgavin@gmail.com>
 
+	* configure: regenerated
+
+2012-06-22  Peter Gavin  <pgavin@gmail.com>
+
 	fix the way branches and exceptions are handled
 	* Makefile.in: build traps32.o and traps64.o instead of just traps.o
 	* configure.ac: pick the correct traps object
