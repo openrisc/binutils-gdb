@@ -1,0 +1,76 @@
+2012-06-22  Peter Gavin  <pgavin@gmail.com>
+
+	* or1k-desc.h: ditto
+	* or1k-desc.c: ditto
+	* or1k-opc.h: ditto
+	* or1k-opc.c: ditto
+	* or1k-opinst.c: ditto
+
+2012-05-13  Peter Gavin  <pgavin@gmail.com>
+
+	* or1k-asm.c: regenerate
+	* or1k-desc.h: ditto
+	* or1k-desc.c: ditto
+	* or1k-dis.c: ditto
+	* or1k-opc.h: ditto
+	* or1k-opc.c: ditto
+	* or1k-opinst.c: ditto
+
+2012-04-12  Peter Gavin  <pgavin@gmail.com>
+
+	* or1k-opinst.c: new file
+	* or1k-asm.c: regenerate
+	* or1k-desc.c: regenerate
+	* or1k-desc.h: regenerate
+	* or1k-dis.c: regenerate
+	* or1k-ibld.c: regenerate
+	* or1k-opc.c: regenerate
+	* or1k-opc.h: regenerate
+
+2012-04-12  Peter Gavin  <pgavin@gmail.com>
+
+	* Makefile.am: build or1k-opinst.c
+
+2012-03-14  Peter Gavin  <pgavin@gmail.com>
+
+	* Makefile.am: stamp-or1k: rename
+	  or1k32.cpu -> or1kcommon.cpu,
+	  or1korbis32.cpu -> or1korbis.cpu,
+	  or1kor32fpx.cpu -> or1korfpx.cpu
+	  allow for 64-bit port
+
+2012-02-23  Peter Gavin  <pgavin@gmail.com>
+
+	* or1k-asm.c: regenerate
+	* or1k-desc.c: regenerate
+	* or1k-desc.h: regenerate
+	* or1k-opc.c: regenerate
+	* or1k-opc.h: regenerate
+
+2012-02-18  Peter Gavin  <pgavin@gmail.com>
+
+	* Makefile.am: add dependencies to stamp-or1k for all cpu files
+	* or1k-asm.c, or1k-desc.c, or1k-desc.h, or1k-dis.c, or1k-ibld.c,
+	or1k-opc.c, or1k-opc.h: regenerated
+
+2012-02-13  Peter Gavin  <pgavin@gmail.com>
+
+	* openrisc-asm.c: deleted
+	* openrisc-desc.c: deleted
+	* openrisc-desc.h: deleted
+	* openrisc-dis.c: deleted
+	* openrisc-ibld.c: deleted
+	* openrisc-opc.c: deleted
+	* openrisc-opc.h: deleted
+	* or32-dis.c: deleted
+	* or32-opc.c: deleted
+	* or1k-asm.c: new file, generated with cgen
+	* or1k-desc.c: ditto
+	* or1k-desc.h: ditto
+	* or1k-dis.c: ditto
+	* or1k-ibld.c: ditto
+	* or1k-opc.c: ditto
+	* or1k-opc.h: ditto
+	* Makefile.am: remove old openrisc stuff, replace with or1k
+	* configure.in: ditto
+	* disassemble.c: ditto

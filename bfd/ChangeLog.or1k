@@ -1,0 +1,40 @@
+2012-05-13  Peter Gavin  <pgavin@gmail.com>
+
+	* config.bfd: add or1knd target
+	* archures.c: add bfd_mach_or1k and bfd_mach_or1knd entries
+	* cpu-or1k.c: add bfd_or1knd_arch, make bfd_or1k_arch use bfd_mach_or1k
+	* elf32-or1k.c: add or1knd support
+	(or1k_elf_object_p) set mach to bfd_mach_or1knd when
+	EF_OR1K_NODELAY is set in elf file
+	(or1k_elf_final_write_processing) set output EF_OR1K_NODELAY flag
+	when arch is or1knd
+	(or1k_elf_set_private_flags) new function
+	(elf32_or1k_merge_private_bfd_data) new function; make sure
+	EF_OR1K_NODELAY flag is consistent on all objects; initialize
+	output flags
+	* bfd-in2.h: regenerate
+
+2012-02-23  Peter Gavin  <pgavin@gmail.com>
+
+	* config.bfd: remove openrisc-*-elf, add or1k-*-linux
+
+2012-02-18  Peter Gavin  <pgavin@gmail.com>
+
+	* elf32-or1k.c: fix howtos, make it binary compatible again;
+	remove or1k_final_link_relocate (I'm pretty sure it's not needed);
+	make things more consistent with other ports; change
+	ELF_MAXPAGESIZE to 8K (that what the hardware actually uses)
+	* reloc.c: remove BFD_RELOC_OR1K_ABS_26 (it's not used);
+	guess_is_rela: this or1k port uses rela, so change it
+
+2012-02-13  Peter Gavin  <pgavin@gmail.com>
+
+	* coff-or32.c, cpu-openrisc.c, cpu-or32.c: deleted
+	* elf32-openrisc.c, elf32-or32.c: ditto
+	* Makefile.am: s/openrisc/or1k/ s/or32/or1k/, remove coff-or32 support
+	* archures.c: ditto
+	* config.bfd: ditto
+	* configure.in: ditto
+	* coffcode.h: ditto
+	* reloc.c: ditto
+	* targets.c: ditto

@@ -1,0 +1,21 @@
+2012-05-13  Peter Gavin  <pgavin@gmail.com>
+
+	* configure.tgt: add or1knd targets
+
+2012-02-23  Peter Gavin  <pgavin@gmail.com>
+
+	* configure.tgt: add or1k-*-linux
+
+2012-02-18  Peter Gavin  <pgavin@gmail.com>
+
+	* emulparams/elf32or1k.sh: use RELA relocs; add NOP value
+
+2012-02-13  Peter Gavin  <pgavin@gmail.com>
+
+	* configure.tgt: s/openrisc/or1k/ s/or32/or1l/
+	* Makefile.am: ditto
+	* emulparams/elf32openrisc.sh: deleted
+	* emulparams/or32.sh: deleted
+	* emulparams/or32elf.sh: deleted
+	* emulparams/elf32or1k.sh: new file
+	* scripttempl/or32.sc -> scripttempl/or1k.sc

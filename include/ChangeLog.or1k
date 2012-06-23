@@ -1,0 +1,15 @@
+2012-05-13  Peter Gavin  <pgavin@gmail.com>
+
+	* elf/or1k.h: add EF_OR1K_NODELAY flag
+
+2012-02-18  Peter Gavin  <pgavin@gmail.com>
+
+	* elf/or1k.h: reorder relocs to maintain binary compatibility; add
+	32/16/8-bit pc-relative relocs
+
+2012-02-13  Peter Gavin  <pgavin@gmail.com>
+
+
+	* dis-asm.h: s/openrisc/or1k/ s/or32/or1k/
+        * elf/common.h: ditto
+        * elf/or1k.h: new file

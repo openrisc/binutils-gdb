@@ -1,0 +1,28 @@
+2012-06-22  Peter Gavin  <pgavin@gmail.com>
+
+	* gas/or1k/allinsn.d, gas/or1k/allinsn.s: add tests for l.mac and l.maci
+
+2012-06-22  Peter Gavin  <pgavin@gmail.com>
+
+	* gas/or1k/allinsn.d: fix immediates in l.sf* instructions
+
+2012-05-13  Peter Gavin  <pgavin@gmail.com>
+
+	* gas/elf/warn-2.s: use or1k* instead of or1k to catch or1knd target
+
+2012-02-18  Peter Gavin  <pgavin@gmail.com>
+
+	* gas/testsuite/gas/or1k/allinsn.s: add testcase for 65536 as
+          an immediate
+	* gas/testsuite/gas/or1k/allinsn.d: fix to match actual output
+
+2012-02-13  Peter Gavin  <pgavin@gmail.com>
+
+	* gas/all/gas.exp: openrisc passes the test now
+	* gas/elf/warn-2.exp: s/openrisc/or1k/ s/or32/or1k/
+	* gas/lns/lns-common-1-or1k.s: new file because or1k has different nop opcode
+	* gas/lns/lns.exp: use lns-common-1-or1k.s when doing or1k
+	* gas/testsuite/gas/openrisc/*: deleted
+	* gas/testsuite/gas/or1k/allinsn.d: new file
+	* gas/testsuite/gas/or1k/allinsn.s: ditto
+	* gas/testsuite/gas/or1k/allinsn.exp: ditto

@@ -1,0 +1,14 @@
+2012-05-13  Peter Gavin  <pgavin@gmail.com>
+
+	* readelf.c: (get_machine_flags) output "nodelay" for
+	EF_OR1K_NODELAY binaries
+
+2012-02-18  Peter Gavin  <pgavin@gmail.com>
+
+	* readelf.c: is_32bit_pcrel_reloc, is_16bit_abs_reloc, is_none_reloc: fix to
+	match the actual or1k relocs
+
+2012-02-13  Peter Gavin  <pgavin@gmail.com>
+
+	* readelf.c: s/openrisc/or1k/ s/or32/or1k/
+
