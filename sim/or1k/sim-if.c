@@ -235,14 +235,6 @@ sim_open (kind, callback, abfd, argv)
       return 0;
     }
 
-  if ((or1k_cpucfgr & SPR_FIELD_MASK_SYS_CPUCFGR_ND) &&
-      (STATE_ARCHITECTURE (sd)->mach != bfd_mach_or1knd)) {
-    sim_io_eprintf (sd, "WARNING: CPUCFGR ND flag set, but loading non-or1knd binary\n");
-  } else if (!(or1k_cpucfgr & SPR_FIELD_MASK_SYS_CPUCFGR_ND) &&
-             (STATE_ARCHITECTURE (sd)->mach != bfd_mach_or1k)) {
-    sim_io_eprintf (sd, "WARNING: CPUCFGR ND flag not set, but loading non-or1k binary\n");
-  }
-  
   /* Establish any remaining configuration options.  */
   if (sim_config (sd) != SIM_RC_OK)
     {
@@ -255,7 +247,16 @@ sim_open (kind, callback, abfd, argv)
       free_state (sd);
       return 0;
     }
-
+  
+  /* make sure delay slot mode is consistent with the loaded binary */
+  if ((or1k_cpucfgr & SPR_FIELD_MASK_SYS_CPUCFGR_ND) &&
+      (STATE_ARCHITECTURE (sd)->mach != bfd_mach_or1knd)) {
+    sim_io_eprintf (sd, "WARNING: CPUCFGR ND flag set, but loading non-or1knd binary\n");
+  } else if (!(or1k_cpucfgr & SPR_FIELD_MASK_SYS_CPUCFGR_ND) &&
+             (STATE_ARCHITECTURE (sd)->mach != bfd_mach_or1k)) {
+    sim_io_eprintf (sd, "WARNING: CPUCFGR ND flag not set, but loading non-or1k binary\n");
+  }
+  
   /* Open a copy of the cpu descriptor table.  */
   {
     CGEN_CPU_DESC cd = or1k_cgen_cpu_open_1 (STATE_ARCHITECTURE (sd)->printable_name,

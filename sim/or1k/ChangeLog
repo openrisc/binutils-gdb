@@ -1,3 +1,9 @@
+2012-09-06  Peter Gavin  <pgavin@gmail.com>
+
+	* sim-if.c: (sim_open) push check for delay slot mode further down
+	in function so other checks happen first.  This prevents a
+	segfault when the simulator is run without arguments.
+
 2012-06-22  Peter Gavin  <pgavin@gmail.com>
 
 	* cpu32.c: regenerate
