@@ -77,7 +77,11 @@ case "${target}" in
        SIM_ARCH(msp430)
        ;;
    or1k-*-* | or1knd-*-*)
-       SIM_ARCH(or1k)
+       if test "${enable_or1ksim}" != no; then
+          SIM_ARCH(or1ksim)
+       else
+          SIM_ARCH(or1k)
+       fi
        sim_testsuite=yes
        ;;
    rl78-*-*)
