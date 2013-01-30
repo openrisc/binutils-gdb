@@ -541,6 +541,10 @@ Steve Tjiang, John Newlin, and Scott Foehner.
 Michael Eager and staff of Xilinx, Inc., contributed support for the
 Xilinx MicroBlaze architecture.
 
+The original port to the OpenRISC 1000 is believed to be due to
+Alessandro Forin and Per Bothner. More recent ports have been the work
+of Jeremy Bennett.
+
 @node Sample Session
 @chapter A Sample @value{GDBN} Session
 
@@ -22190,6 +22194,104 @@ Show the current setting of printing monitor warnings.
 This command allows sending an arbitrary @var{command} string to the
 monitor.  The monitor must be in debug mode for this to work.
 @end table
+
+@node OpenRISC 1000
+@subsection OpenRISC 1000
+@cindex OpenRISC 1000
+
+Previous versions of @value{GDBN} supported remote connection via a
+proprietary JTAG protocol using the @samp{target jtag} command. Support
+for this has now been dropped.
+
+
+@table @code
+
+@kindex target remote
+@item target remote
+
+This is now the only way to connect to a remote OpenRISC 1000
+target.  This is supported by @dfn{Or1ksim}, the OpenRISC 1000
+architectural simulator, Verilator and Icarus Verilog
+simulations.  @dfn{Remote serial protocol} servers are also available to
+drive various hardware implementations via JTAG.
+Connects to remote JTAG server.
+
+Example: @code{target remote :51000}
+
+@kindex target sim
+@item target sim
+
+@dfn{Or1ksim}, the OpenRISC 1000 architectural simulator is now
+incorporated within @value{GDBN} as a simulator target.  It is started
+in quiet mode with 8M of memory starting at address 0.  It is possible
+to pass arguments to extend this configuration using the @samp{-f}
+option to @samp{target sim}.  However for more complex use, the user is
+advised to run @dfn{Or1ksim} separately, with its own configuration
+file, and connect using @samp{target remote}
+
+Example: @code{target sim}
+
+@kindex info spr
+@item info or1k spr
+Displays groups.
+
+@item info spr @var{group}
+@itemx info spr @var{groupno}
+Displays register names in selected group.
+
+@item info spr @var{group} @var{register}
+@itemx info spr @var{register}
+@itemx info spr @var{groupno} @var{registerno}
+@itemx info spr @var{registerno}
+Shows information about specified spr register.
+
+Example: @code{info spr DRR}
+
+@code{DEBUG.DRR = SPR6_21 = 0 (0x0)}
+
+@kindex spr
+@item spr @var{group} @var{register} @var{value}
+@itemx spr @var{register @var{value}}
+@itemx spr @var{groupno} @var{registerno @var{value}}
+@itemx spr @var{registerno @var{value}}
+Writes @var{value} to specified spr register.
+
+Example: spr PICMR 0x24
+@end table
+
+The use of @samp{info} and @samp{spr} commands is anachronistic.  At
+some time in the future they will be replaced by @samp{info register @var{spr | group name}}
+and @samp{set $spr=@var{value}}.
+
+There are some known problems with the current implementation
+@cindex OpenRISC 1000 known problems
+
+@enumerate
+
+@item
+@cindex OpenRISC 1000 known problems, hardware breakpoints and watchpoints
+Some OpenRISC 1000 targets support hardware breakpoints and watchpoints.
+Consult the target documentation for details.  @value{GDBN} is not
+perfect in handling of watchpoints.  It is possible to allocate hardware
+watchpoints and not discover until running that sufficient watchpoints
+are not available.  It is also possible that GDB will report watchpoints
+being hit spuriously.  This can be down to the assembly code having
+additional memory accesses that are not obviously reflected in the
+source code.
+
+@item
+@cindex OpenRISC 1000 known problems, architectural compatability
+The OpenRISC 1000 architecture has evolved since the first port of @value{GDBN}. In particular the structure of the Unit Present register has
+changed and the CPU Configuration register has been added.  The port of
+@value{GDBN} version @value{GDBVN} uses the @emph{current}
+specification of the OpenRISC 1000.
+
+@end enumerate
+
+@cindex Bugs, reporting
+@cindex Reporting bugs
+Reports of bugs are much welcomed. Please report problems through the
+OpenRISC tracker at @uref{http://opencores.org/openrisc,downloads}.
 
 @node PowerPC Embedded
 @subsection PowerPC Embedded
