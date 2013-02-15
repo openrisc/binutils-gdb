@@ -684,7 +684,7 @@ static const char *
 or1k_register_name (struct gdbarch *gdbarch,
 		    int             regnum)
 {
-  static char *or1k_gdb_reg_names[OR1K_TOTAL_NUM_REGS] =
+  static char *or1k_gdb_reg_names[OR1K_NUM_REGS_CACHED] =
     {
       /* general purpose registers */
       "r0",  "r1",  "r2",  "r3",  "r4",  "r5",  "r6",  "r7",
@@ -784,7 +784,7 @@ or1k_registers_info (struct gdbarch    *gdbarch,
   if (-1 == regnum)
     {
       /* Do all (valid) registers */
-      unsigned int  lim = all ? OR1K_NUM_REGS : OR1K_MAX_GPR_REGS;
+      unsigned int  lim = all ? OR1K_NUM_REGS_CACHED : OR1K_MAX_GPR_REGS;
 
       for (regnum = 0; regnum < lim; regnum++) {
 	if ('\0' != *(or1k_register_name (gdbarch, regnum)))
@@ -837,7 +837,7 @@ or1k_register_reggroup_p (struct gdbarch  *gdbarch,
   if (group == all_reggroup)
     {
       return ((regnum >= 0) &&
-	      (regnum < OR1K_TOTAL_NUM_REGS) &&
+	      (regnum < OR1K_NUM_REGS_CACHED) &&
 	      (or1k_register_name (gdbarch, regnum)[0] != '\0'));
     }
 

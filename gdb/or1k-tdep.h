@@ -317,19 +317,21 @@
 #define OR1K_SPR_DCFGR_WPCI     0x00000008  /* Watchpoint ctrs implemented */
 
 /* Properties of the architecture. GDB mapping of registers is all the GPRs
-   followed by the PPC, NPC and SR at the end. Red zone is the area past the
-   end of the stack reserved for exception handlers etc. */
-#define OR1K_MAX_GPR_REGS           32
+   and SPRs followed by the PPC, NPC and SR at the end. Red zone is the area
+   past the end of the stack reserved for exception handlers etc. */
+#define OR1K_MAX_GPR_REGS            32
+#define OR1K_MAX_SPR_REGS           (32 * 2048)
 #define OR1K_NUM_PSEUDO_REGS         0
-#define OR1K_NUM_REGS               (OR1K_MAX_GPR_REGS + 3)
+#define OR1K_NUM_REGS_CACHED        (OR1K_MAX_GPR_REGS + 3)
+#define OR1K_NUM_REGS               (OR1K_NUM_REGS_CACHED + OR1K_MAX_SPR_REGS)
 #define OR1K_TOTAL_NUM_REGS         (OR1K_NUM_REGS + OR1K_NUM_PSEUDO_REGS)
 #define OR1K_MAX_MATCHPOINTS         8
 #define OR1K_MAX_HW_WATCHES          OR1K_MAX_MATCHPOINTS
 #define OR1K_STACK_ALIGN             4
 #define OR1K_INSTLEN                 4
-#define OR1K_INSTBITLEN              (OR1K_INSTLEN * 8)
+#define OR1K_INSTBITLEN             (OR1K_INSTLEN * 8)
 #define OR1K_NUM_TAP_RECORDS         8
-#define OR1K_FRAME_RED_ZONE_SIZE  2536
+#define OR1K_FRAME_RED_ZONE_SIZE     2536
 
 /* OR1K exception vectors */
 
