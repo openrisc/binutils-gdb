@@ -862,6 +862,40 @@ tdesc_numbered_register (const struct tdesc_feature *feature,
   return 1;
 }
 
+/* Search FEATURE for a register REGNO and return its name. */
+char *
+tdesc_find_register_name (const struct tdesc_feature *feature,
+			   int regno)
+{
+  int ixr;
+  struct tdesc_reg *reg;
+
+  for (ixr = 0;
+       VEC_iterate (tdesc_reg_p, feature->registers, ixr, reg);
+       ixr++)
+    if (ixr == regno)
+      return reg->name;
+
+  return NULL;
+}
+
+/* Search FEATURE for a register REGNO and return its group name. */
+char *
+tdesc_find_register_group_name (const struct tdesc_feature *feature,
+			   int regno)
+{
+  int ixr;
+  struct tdesc_reg *reg;
+
+  for (ixr = 0;
+       VEC_iterate (tdesc_reg_p, feature->registers, ixr, reg);
+       ixr++)
+    if (ixr == regno)
+      return reg->group;
+
+  return NULL;
+}
+
 /* Search FEATURE for a register named NAME, but do not assign a fixed
    register number to it.  */
 

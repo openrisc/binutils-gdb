@@ -111,6 +111,18 @@ struct tdesc_arch_data *tdesc_data_alloc (void);
 
 void tdesc_data_cleanup (void *data_untyped);
 
+/* Search FEATURE for a register REGNO and return its name. */
+
+char *tdesc_find_register_name (const struct tdesc_feature *feature,
+				int regno);
+
+
+/* Search FEATURE for a register REGNO and return its group name. */
+
+char *tdesc_find_register_group_name (const struct tdesc_feature *feature,
+				      int regno);
+
+
 /* Search FEATURE for a register named NAME.  Record REGNO and the
    register in DATA; when tdesc_use_registers is called, REGNO will be
    assigned to the register.  1 is returned if the register was found,
