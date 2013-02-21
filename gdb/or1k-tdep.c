@@ -1173,10 +1173,14 @@ or1k_push_dummy_code (struct gdbarch *gdbarch,
 		      CORE_ADDR *bp_addr,
 		      struct regcache *regcache)
 {
-  /* Allocate space sufficient for a breakpoint, keeping the stack aligned.  */
-  sp = (sp - 4) & ~15;
+  CORE_ADDR bp_slot;
+
+  /* Reserve enough room on the stack for our breakpoint instruction.  */
+  bp_slot = sp - 4;
   /* Store the address of that breakpoint */
-  *bp_addr = sp;
+  *bp_addr = bp_slot;
+  /* keeping the stack aligned.  */
+  sp = or1k_frame_align (gdbarch, bp_slot);
   /* The call starts at the callee's entry point.  */
   *real_pc = function;
 
