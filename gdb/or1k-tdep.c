@@ -1868,7 +1868,7 @@ or1k_regset_from_core_section (struct gdbarch *gdbarch,
 			       const char     *sect_name,
 			       size_t          sect_size)
 {
-  printf ("sect_name \"%s\", sect_size %d\n", sect_name, sect_size);
+  printf ("sect_name \"%s\", sect_size %zd\n", sect_name, sect_size);
   return NULL;
 
 }	/* or1k_regset_from_core_section () */
