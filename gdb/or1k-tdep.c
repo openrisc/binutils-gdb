@@ -164,7 +164,7 @@ or1k_fetch_instruction (struct gdbarch *gdbarch,
 			CORE_ADDR       addr)
 {
   enum bfd_endian byte_order = gdbarch_byte_order (gdbarch);
-  char            buf[OR1K_INSTLEN];
+  gdb_byte        buf[OR1K_INSTLEN];
   int             status;
 
   status = target_read_memory (addr, buf, OR1K_INSTLEN);
@@ -1247,8 +1247,8 @@ or1k_push_dummy_call (struct gdbarch  *gdbarch,
   /* Put as many args as possible in registers */
   for (argnum = 0; argnum < nargs; argnum++)
     {
-      char           *val;
-      char            valbuf[sizeof (ULONGEST) ];
+      const gdb_byte *val;
+      gdb_byte        valbuf[sizeof (ULONGEST)];
 
       struct value   *arg      = args[argnum];
       struct type    *arg_type = check_typedef (value_type (arg));
@@ -1266,7 +1266,7 @@ or1k_push_dummy_call (struct gdbarch  *gdbarch,
       else
 	{
 	  /* Everything else, we just get the value. */
-	  val = (char *) value_contents (arg);
+	  val = value_contents (arg);
 	}
 
       /* Stick the value in a register */
@@ -1346,8 +1346,8 @@ or1k_push_dummy_call (struct gdbarch  *gdbarch,
   /* Push the remaining args on the stack */
   for (argnum = first_stack_arg; argnum < nargs; argnum++)
     {
-      char           *val;
-      char            valbuf[sizeof (ULONGEST) ];
+      const gdb_byte *val;
+      gdb_byte        valbuf[sizeof (ULONGEST) ];
 
       struct value   *arg      = args[argnum];
       struct type    *arg_type = check_typedef (value_type (arg));
@@ -1364,7 +1364,7 @@ or1k_push_dummy_call (struct gdbarch  *gdbarch,
 	}
       else
 	{
-	  val = (char *) value_contents (arg);
+	  val = value_contents (arg);
 	}
 
       gdb_assert (len <= (bpw * 2));
