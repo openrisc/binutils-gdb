@@ -849,7 +849,7 @@ sim_trace (SIM_DESC  sd  ATTRIBUTE_UNUSED)
 }	/* sim_trace () */
 
 char **
-sim_complete_command (SIM_DESC sd, char *text, char *word)
+sim_complete_command (SIM_DESC sd, const char *text, const char *word)
 {
   return NULL;
 }

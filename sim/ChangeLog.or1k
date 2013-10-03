@@ -1,3 +1,7 @@
+2013-10-03  Franck Jullien  <franck.jullien@gmail.com>
+
+	* or1ksim/wrapper.c (sim_complete_command): Make char arguments const.
+
 2013-01-30  Franck Jullien  <franck.jullien@gmail.com>
 
 	* configure.ac : add choice between or1ksim or CGEN sim
