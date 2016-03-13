@@ -8,4 +8,4 @@ to the binutils part should go upstream as fast as possible, so that
 only experimental features are tested here. The upstream development
 is available in the branch `upstream` and it is merged regularly.
 
-[![Build Status](https://travis-ci.org/openrisc/binutils-gdb.svg?branch=master)](https://travis-ci.org/openrisc/binutils-gdb)
+[![Build Status](https://travis-ci.org/openrisc/binutils-gdb.svg?branch=or1k)](https://travis-ci.org/openrisc/binutils-gdb)
