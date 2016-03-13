@@ -1,0 +1,20 @@
+# Run in container-based environment
+sudo: false
+
+# Install the build requirements
+addons:
+  apt:
+    packages:
+    - build-essential
+    - libgmp-dev
+    - libmpfr-dev
+    - libmpc-dev
+    - zlib1g-dev
+    - texinfo
+    - flex
+    - bison
+
+# Execute the build
+script:
+  - mkdir build; cd build
+  - ../configure --target=or1k-elf --prefix=/tmp/or1k-elf --enable-shared --disable-itcl --disable-tk --disable-tcl --disable-winsup --disable-gdbtk --disable-libgui --disable-rda --disable-sid --disable-sim --with-sysroot --disable-newlib --disable-libgloss --with-system-zlib
