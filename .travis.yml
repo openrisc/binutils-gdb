@@ -18,3 +18,5 @@ addons:
 script:
   - mkdir build; cd build
   - ../configure --target=or1k-elf --prefix=/tmp/or1k-elf --enable-shared --disable-itcl --disable-tk --disable-tcl --disable-winsup --disable-gdbtk --disable-libgui --disable-rda --disable-sid --disable-sim --with-sysroot --disable-newlib --disable-libgloss --with-system-zlib
+  - make
+  - make install
