@@ -28,6 +28,9 @@
    Commenting is Doxygen compatible.                                         */
 /*---------------------------------------------------------------------------*/
 
+#ifndef OR32SIM_H
+#define OR32SIM_H
+
 /* GDB signal numbers */
 #define TARGET_SIGNAL_NONE  0		/*!< No signal */
 #define TARGET_SIGNAL_TRAP  5		/*!< Breakpoint hit */
@@ -78,7 +81,8 @@
    - The NPC with which to resume. So as not to destroy the pipeline, this is
      only written immediately before unstalling.                             */
 /* ------------------------------------------------------------------------- */
-struct sim_state
+
+typedef struct
 {
   int                          is_debug;
   struct host_callback_struct *callback;
@@ -89,6 +93,6 @@ struct sim_state
   unsigned long int            entry_point;
   unsigned long int            resume_npc;
   
-};
+} or1ksim_state;
 
-
+#endif

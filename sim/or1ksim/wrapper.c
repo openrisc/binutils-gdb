@@ -38,6 +38,7 @@
 #include <sys/un.h>
 #include <unistd.h>
 
+#include "sim-main.h"
 #include "ansidecl.h"
 #include "config.h"
 #include "gdb/callback.h"
@@ -108,7 +109,7 @@ SIM_DESC
 sim_open (SIM_OPEN_KIND                kind,
 	  struct host_callback_struct *callback,
 	  struct bfd                  *abfd,
-	  char                        *argv[])
+	  char * const                *argv)
 {
   /*!A global record of the simulator description */
   static SIM_DESC  static_sd = NULL;
@@ -133,7 +134,7 @@ sim_open (SIM_OPEN_KIND                kind,
       int    res;			/* Result of initialization */
 
       static_sd = (SIM_DESC) malloc (sizeof (*static_sd));
-      static_sd->sim_open = 0;
+      static_sd->or1ksim.sim_open = 0;
 
       /* Count the number of arguments and see if we have specified either a
 	 config file or a memory size. */
@@ -195,14 +196,14 @@ sim_open (SIM_OPEN_KIND                kind,
   /* We have either initialized a new simulator, or already have an intialized
      simulator. Populate the descriptor and stall the processor, the return
      the descriptor. */
-  static_sd->callback    = callback;
-  static_sd->is_debug    = (kind == SIM_OPEN_DEBUG);
-  static_sd->myname      = (char *)xstrdup (argv[0]);
-  static_sd->sim_open    = 1;
-  static_sd->last_reason = sim_running;
-  static_sd->last_rc     = TARGET_SIGNAL_NONE;
-  static_sd->entry_point = OR32_RESET_EXCEPTION;
-  static_sd->resume_npc  = OR32_RESET_EXCEPTION;
+  static_sd->or1ksim.callback    = callback;
+  static_sd->or1ksim.is_debug    = (kind == SIM_OPEN_DEBUG);
+  static_sd->or1ksim.myname      = (char *)xstrdup (argv[0]);
+  static_sd->or1ksim.sim_open    = 1;
+  static_sd->or1ksim.last_reason = sim_running;
+  static_sd->or1ksim.last_rc     = TARGET_SIGNAL_NONE;
+  static_sd->or1ksim.entry_point = OR32_RESET_EXCEPTION;
+  static_sd->or1ksim.resume_npc  = OR32_RESET_EXCEPTION;
 
   or1ksim_set_stall_state (0);
 
@@ -235,8 +236,8 @@ sim_close (SIM_DESC  sd,
     }
   else
     {
-      free (sd->myname);
-      sd->sim_open = 0;
+      free (sd->or1ksim.myname);
+      sd->or1ksim.sim_open = 0;
       or1ksim_set_stall_state (0);
     }
 }	/* sim_close () */
@@ -273,7 +274,7 @@ sim_close (SIM_DESC  sd,
 /* ------------------------------------------------------------------------- */
 SIM_RC
 sim_load (SIM_DESC    sd,
-	  char       *prog,
+	  const char *prog,
 	  struct bfd *abfd,
 	  int         from_tty)
 {
@@ -284,8 +285,8 @@ sim_load (SIM_DESC    sd,
 #endif
 
   /* Use the built in loader, which will in turn use our write function. */
-  prog_bfd = sim_load_file (sd, sd->myname, sd->callback, prog, abfd,
-			    sd->is_debug, 0, sim_write);
+  prog_bfd = sim_load_file (sd, sd->or1ksim.myname, sd->or1ksim.callback, prog, abfd,
+			    sd->or1ksim.is_debug, 0, sim_write);
 
   if (NULL == prog_bfd)
     {
@@ -338,17 +339,17 @@ sim_load (SIM_DESC    sd,
 SIM_RC
 sim_create_inferior (SIM_DESC     sd,
 		     struct bfd  *abfd,
-		     char       **argv  ATTRIBUTE_UNUSED,
-		     char       **env   ATTRIBUTE_UNUSED)
+		     char * const *argv  ATTRIBUTE_UNUSED,
+		     char * const *env   ATTRIBUTE_UNUSED)
 {
 #ifdef OR32_SIM_DEBUG
   printf ("sim_create_inferior called\n");
 #endif
 
   or1ksim_set_stall_state (1);
-  sd->entry_point = (NULL == abfd) ? OR32_RESET_EXCEPTION :
+  sd->or1ksim.entry_point = (NULL == abfd) ? OR32_RESET_EXCEPTION :
                                     bfd_get_start_address (abfd);
-  sd->resume_npc  = OR32_RESET_EXCEPTION;
+  sd->or1ksim.resume_npc  = OR32_RESET_EXCEPTION;
 
   return  SIM_RC_OK;
 
@@ -428,7 +429,7 @@ sim_write (SIM_DESC             sd  ATTRIBUTE_UNUSED,
                       register.
 
    @return  The actual size of the register, or zero if regno is not
-            applicable. Legacy implementations return -1.
+            applicable. Legacy implementations return -1.                    */
 /* ------------------------------------------------------------------------- */
 int
 sim_fetch_register (SIM_DESC       sd,
@@ -450,7 +451,7 @@ sim_fetch_register (SIM_DESC       sd,
 
   if (OR32_NPC_REGNUM == regno)
     {
-      regval = sd->resume_npc;
+      regval = sd->or1ksim.resume_npc;
       res    = 4;
     }
   else
@@ -494,7 +495,7 @@ sim_fetch_register (SIM_DESC       sd,
                      register.
 
    @return  The actual size of the register, or zero if regno is not
-            applicable. Legacy implementations return -1.
+            applicable. Legacy implementations return -1.                    */
 /* ------------------------------------------------------------------------- */
 int
 sim_store_register (SIM_DESC       sd,
@@ -526,7 +527,7 @@ sim_store_register (SIM_DESC       sd,
 
   if (OR32_NPC_REGNUM == regno)
     {
-      sd->resume_npc = regval;
+      sd->or1ksim.resume_npc = regval;
       return  4;			/* Reg length in bytes */
     }
   else
@@ -638,12 +639,12 @@ sim_resume (SIM_DESC  sd,
   (void) or1ksim_read_reg (OR32_NPC_REGNUM, &npc);
 
 #ifdef OR32_SIM_DEBUG
-  printf ("  npc = 0x%08lx, resume_npc = 0x%08lx\n", npc, sd->resume_npc);
+  printf ("  npc = 0x%08lx, resume_npc = 0x%08lx\n", npc, sd->or1ksim.resume_npc);
 #endif
 
-  if (npc != sd->resume_npc)
+  if (npc != sd->or1ksim.resume_npc)
     {
-      (void) or1ksim_write_reg (OR32_NPC_REGNUM, sd->resume_npc);
+      (void) or1ksim_write_reg (OR32_NPC_REGNUM, sd->or1ksim.resume_npc);
     }
 
   /* Set a time point */
@@ -665,10 +666,10 @@ sim_resume (SIM_DESC  sd,
       printf ("  execution halted at 0x%08lx.\n", npc);
 #endif
 
-      sd->last_reason = sim_exited;
+      sd->or1ksim.last_reason = sim_exited;
       (void) or1ksim_read_reg (OR32_FIRST_ARG_REGNUM, &retval);
-      sd->last_rc     = (unsigned int) retval;
-      sd->resume_npc  = OR32_RESET_EXCEPTION;
+      sd->or1ksim.last_rc     = (unsigned int) retval;
+      sd->or1ksim.resume_npc  = OR32_RESET_EXCEPTION;
       cycles = (long int) (or1ksim_get_time_period ()
 			   * (double) or1ksim_clock_rate());
       break;
@@ -679,17 +680,17 @@ sim_resume (SIM_DESC  sd,
       printf ("  execution hit breakpoint.\n");
 #endif
 
-      sd->last_reason = sim_stopped;
-      sd->last_rc     = TARGET_SIGNAL_TRAP;
+      sd->or1ksim.last_reason = sim_stopped;
+      sd->or1ksim.last_rc     = TARGET_SIGNAL_TRAP;
 
       /* This could have been a breakpoint or single step. */
       if (step)
 	{
-	  (void) or1ksim_read_reg (OR32_NPC_REGNUM, &(sd->resume_npc));
+	  (void) or1ksim_read_reg (OR32_NPC_REGNUM, &(sd->or1ksim.resume_npc));
 	}
       else
 	{
-	  (void) or1ksim_read_reg (OR32_PPC_REGNUM, &(sd->resume_npc));
+	  (void) or1ksim_read_reg (OR32_PPC_REGNUM, &(sd->or1ksim.resume_npc));
 	}
 
       break;
@@ -698,9 +699,9 @@ sim_resume (SIM_DESC  sd,
       /* Should not happen */
       fprintf (stderr, "Ooops. Didn't expect OK return from Or1ksim.\n");
 
-      sd->last_reason = sim_running;		/* Should trigger an error! */
-      sd->last_rc     = TARGET_SIGNAL_NONE;
-      (void) or1ksim_read_reg (OR32_NPC_REGNUM, &(sd->resume_npc));
+      sd->or1ksim.last_reason = sim_running;		/* Should trigger an error! */
+      sd->or1ksim.last_rc     = TARGET_SIGNAL_NONE;
+      (void) or1ksim_read_reg (OR32_NPC_REGNUM, &(sd->or1ksim.resume_npc));
       break;
     }
 }	/* sim_resume () */
@@ -764,8 +765,8 @@ sim_stop_reason (SIM_DESC       sd,
 		 enum sim_stop *reason,
 		 int           *sigrc)
  {
-   *reason = sd->last_reason;
-   *sigrc  = sd->last_rc;
+   *reason = sd->or1ksim.last_reason;
+   *sigrc  = sd->or1ksim.last_rc;
 
 }	/* sim_stop_reason () */
 
@@ -783,7 +784,7 @@ sim_stop_reason (SIM_DESC       sd,
 /* ------------------------------------------------------------------------- */
 void
 sim_do_command (SIM_DESC  sd   ATTRIBUTE_UNUSED,
-		char     *cmd  ATTRIBUTE_UNUSED)
+		const char *cmd  ATTRIBUTE_UNUSED)
 {
 #ifdef OR32_SIM_DEBUG
   printf ("sim_do_command called\n");
