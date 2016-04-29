@@ -288,6 +288,42 @@ fi
 AC_SUBST(TARGET_OBS)
 AC_SUBST(HAVE_NATIVE_GCORE_TARGET)
 
+# Choose to use or1ksim or the CGEN simulator. Default is or1ksim.
+# --disable-or1ksim to choose the CGEN simulator.
+AC_ARG_ENABLE([or1ksim],
+              [AS_HELP_STRING([--disable-or1ksim],
+              [disable or1ksim and use CGEN sim instead])],
+              [ENABLE_OR1KSIM=$enableval],
+              [ENABLE_OR1KSIM=yes])
+
+if test "x${ENABLE_OR1KSIM}" = xno ; then
+  enable_or1ksim=no
+else
+  enable_or1ksim=yes
+fi
+
+# Option to explicitly specify the location of the Or1ksim installation
+AC_ARG_WITH([or1ksim],
+            [AS_HELP_STRING([--with-or1ksim=PATH],
+            [specify the Or1ksim installation directory explicitly (otherwise use default search paths)])],
+            [],
+            [])
+
+# If we are using or1ksim we need to link in the or1ksim lib
+# Config sim_ldflags, but we cant include in CONFIG_LDFLAGS yet 
+# since we dont know if we are building sim until later
+sim_ldflags=
+if test "x$enable_or1ksim" != xno ; then
+
+  if test "x$withval" != x
+  then
+      sim_ldflags="-Wl,-rpath -Wl,$withval/lib -L$withval/lib -lsim"
+  else
+      sim_ldflags="-Wl,-rpath -Wl,/opt/or1ksim/lib -L/opt/or1ksim/lib -lsim"
+  fi
+
+fi
+
 # For other settings, only the main target counts.
 gdb_sim=
 gdb_osabi=
@@ -1811,7 +1847,6 @@ if test ${build} = ${host} -a ${host} = ${target} ; then
       fi
       ;;
    esac
-   AC_SUBST(CONFIG_LDFLAGS)
 fi
 
 dnl See if we have a thread_db header file that has TD_NOTALLOC and
@@ -2155,6 +2190,7 @@ if test "${ignore_sim}" = "false"; then
   if test x"${gdb_sim}" != x ; then
     SIM="${gdb_sim}"
     SIM_OBS="remote-sim.o"
+    CONFIG_LDFLAGS="${CONFIG_LDFLAGS} ${sim_ldflags}"
     AC_DEFINE(WITH_SIM, 1, [Define if the simulator is being linked in.])
 
     # Some tdep code should only be compiled in when the ppc sim is
@@ -2171,7 +2207,7 @@ AC_SUBST(SIM_OBS)
 
 AC_SUBST(ENABLE_CFLAGS)
 AC_SUBST(PROFILE_CFLAGS)
-
+AC_SUBST(CONFIG_LDFLAGS)
 AC_SUBST(CONFIG_OBS)
 AC_SUBST(CONFIG_DEPS)
 AC_SUBST(CONFIG_SRCS)

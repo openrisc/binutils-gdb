@@ -1,0 +1,39 @@
+2012-05-13  Peter Gavin  <pgavin@gmail.com>
+
+	* config/tc-or1k.h:
+	(or1k_elf_final_processing) add prototype
+	(elf_tc_final_processing) define
+	* config/tc-or1k.c: add nodelay
+	(s_nodelay) new function, handle ".nodelay" directive
+	(or1k_elf_final_processing) new function, set EF_OR1K_NODELAY flag
+	in binaries when assembly file uses ".nodelay" directive
+	* configure.tgt: add or1knd target
+	* configure.ac: use or1k as cgen cpu type when target is or1knd
+	* configure: regenerate
+
+2012-02-23  Peter Gavin  <pgavin@gmail.com>
+
+	* config/tc-or1k.c: handle .align pseudo with s_align_bytes
+	instead of default (s_align_pow2)
+
+2012-02-23  Peter Gavin  <pgavin@gmail.com>
+
+	* configure.tgt: remote or1k-*-rtems*, add or1k-*-linux*, add
+	endian=big, make bfd_gas=yes for or1k
+
+2012-02-18  Peter Gavin  <pgavin@gmail.com>
+
+	* config/tc-or1k: fix md_relax_table;
+	md_estimate_size_before_relax: no relaxations change the size of
+	code, so just return rlx_length; fix md_pcrel_from_section;
+	md_cgen_lookup_reloc: use the reloc determined at parse time if it
+	exists, otherwise use the cgen operand type;
+
+2012-02-13  Peter Gavin  <pgavin@gmail.com>
+
+	* Makefile.am, configure.in, configure.tgt: s/openrisc/or1k/ s/or32/or1k/
+	* doc/as.texinfo: ditto
+        * config/obj-coff.h: remove or32-coff support
+        * config/tc-openrisc.c, config/tc-openrisc.h: deleted
+	* config/tc-or32.c, config/tc-or32.h: ditto
+	* config/tc-or1k.c, config/tc-or1k.h: new files

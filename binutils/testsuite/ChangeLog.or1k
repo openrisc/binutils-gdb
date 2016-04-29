@@ -1,0 +1,11 @@
+2012-05-13  Peter Gavin  <pgavin@gmail.com>
+
+	* binutils-all/objdump.exp: (cpus_expected) add or1k
+
+2012-02-13  Peter Gavin  <pgavin@gmail.com>
+
+	* binutils-all/dw2-decodedline-1.S: new file, copied from
+          dw2-decodedline.S because or1k has a different nop opcode
+	* binutils-all/objcopy.exp: don't skip openrisc/or32
+	* binutils-all/objcopy.exp: don't skip openrisc/or32, also use
+	dw2-decodedline-1.S when checking for or1k

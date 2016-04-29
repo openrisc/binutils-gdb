@@ -1,0 +1,103 @@
+2012-06-22  Peter Gavin  <pgavin@gmail.com>
+
+	fix some carry/overflow flag problems, fix mac problems
+	* or1korbis.cpu:
+	(l-macrc) don't use parallel
+	(l-addc) fix carry/overflow flag handling
+	(l-addci) ditto
+	(l-udiv) use udiv instead of just div
+	(l-maci) use simm16 instead of simm16-split
+
+2012-06-22  Peter Gavin  <pgavin@gmail.com>
+
+	fix l.sf* instructions
+	* or1korbis.cpu:
+	(insn-opcode-setflag) NEQ -> NE
+	(l-sf*) rewrite generator pmacros, make sure sign extension
+	etc. are handled correctly
+
+2012-06-22  Peter Gavin  <pgavin@gmail.com>
+
+	bug fixes for branching & exceptions
+	* or1kcommon.cpu:
+	(FORCED-CTI) new attribute, for instructions like rfe that
+	forcefully transfer control without a delay slot
+	(NOT-IN-DELAY-SLOT) moved from or1k.cpu
+	(DELAYED-CTI) moved from or1korbis.cpu
+	* or1k.cpu:
+	(NOT-IN-DELAY-SLOT) moved to or1kcommon.cpu
+	* or1korbis.cpu:
+	(spr-reg-info) add TICK TTMR SPR
+	(DELAYED-CTI) moved to or1kcommon.cpu
+	(l-rfe) add FORCED-CTI attribute, don't pass pc to helper function
+	(l-mfspr, l-mtspr) don't pass pc to helper function
+
+
+2012-05-13  Peter Gavin  <pgavin@gmail.com>
+
+	* or1k.cpu, or1kcommon.cpu, or1korbis.cpu, or1kfpx.cpu: more
+	changes:
+	- set default alignment to "aligned"
+	- add nodelay (or1knd) support
+	- fix delay slot handling: since the simulator caches instructions
+	by basic blocks, when not using the delay slot, if a branch is
+	taken, we have to 1) skip the instruction in the delay slot, and
+	2) actually set the PC to the delay slot when the branch isn't taken
+	- use GPR entries in SPR array instead of their own array
+	- fix SPR enumerations, add the entries for the ones we care about
+	- fix nop handling for simulator
+	- call special C functions for mtspr/mfspr
+	- add address calculation taking LEE into account
+	- use correct opcodes for .d insns
+	- add custom insns
+	- other small things
+
+2012-04-12  Peter Gavin  <pgavin@gmail.com>
+
+	* or1k.opc: do not include cgen/basic-{modes,ops}.h
+
+2012-04-12  Peter Gavin  <pgavin@gmail.com>
+
+	* or1k.opc: change CGEN_DIS_HASH_SIZE to 256
+
+2012-04-12  Peter Gavin  <pgavin@gmail.com>
+
+	* or1k.cpu, or1kcommon.cpu, or1korbis.cpu, or1korfpx.cpu: many,
+	many changes:
+	Generally get more prepared for OR64.
+	Clean up handling of different machine and features.
+	Fix handling of floating point registers.
+	Prepare for eventual use by sim/gdb.
+	Fix overflow for mul instructions.
+	Fix divide by zero handling.
+	And probably some other changes I've missed.
+
+2012-03-14  Peter Gavin  <pgavin@gmail.com>
+
+	* or1k32.cpu -> or1kcommon.cpu
+	* or1korbis32.cpu -> or1korbis.cpu
+	* or1kor32fpx.cpu -> or1korfpx.cpu
+	  allow for 64-bit port
+
+2012-02-23  Peter Gavin  <pgavin@gmail.com>
+
+	* or1korbis32.cpu: add l.cmov and 2 needed fields
+
+2012-02-18  Peter Gavin  <pgavin@gmail.com>
+
+	* or1k.cpu: add ORFPX32 support; add ORBIS32-MACHS/OR32FPX-MACHS
+	pmacros that will hold the list of machs with the respective isa;
+	* or1kor32fpx.cpu: new file
+	* or1k32.cpu: change the way SPRs and SPR fields are handled;
+	change the way immediates are handled; add enums for SPRs
+	* or1korbis32.cpu: change the way immediates are handled; add mac
+	instructions; add MACHS ORBIS32-MACHS to all instructions; add
+	carry/overflow handling to alu insns; make instructions generally
+	use WI instead of SI; add extb/exth insns
+	* or1k.opc: change the way immediates are handled; determine
+	whether to use hi/lo relocation at parse time
+
+2012-02-13  Peter Gavin  <pgavin@gmail.com>
+
+	* openrisc.cpu, openrisc.opc: deleted
+	* or1k.cpu, or1k.opc, or1k32.cpu, or1korbis32.cpu: new files

@@ -1,0 +1,87 @@
+2012-09-06  Peter Gavin  <pgavin@gmail.com>
+
+	* sim-if.c: (sim_open) push check for delay slot mode further down
+	in function so other checks happen first.  This prevents a
+	segfault when the simulator is run without arguments.
+
+2012-06-22  Peter Gavin  <pgavin@gmail.com>
+
+	* cpu32.c: regenerate
+	* cpu32.h: ditto
+	* cpu64.c: ditto
+	* cpu64.h: ditto
+	* decode32.c: ditto
+	* decode32.h: ditto
+	* decode64.c: ditto
+	* decode64.h: ditto
+	* model32.c: ditto
+	* sem32.c: ditto
+	* sem32-switch.c: ditto
+	* sem64.c: ditto
+	* sem64-switch.c: ditto
+
+2012-06-22  Peter Gavin  <pgavin@gmail.com>
+
+	* or1k.c:
+	(or1k32bf_fl1) fix bug
+
+2012-06-22  Peter Gavin  <pgavin@gmail.com>
+
+	* or1k.c:
+	(or1k32bf_make_load_store_addr) remove stupid erroneous warning
+	message
+
+2012-06-22  Peter Gavin  <pgavin@gmail.com>
+
+	* configure: regenerated
+
+2012-06-22  Peter Gavin  <pgavin@gmail.com>
+
+	fix the way branches and exceptions are handled
+	* Makefile.in: build traps32.o and traps64.o instead of just traps.o
+	* configure.ac: pick the correct traps object
+	* mloop.in:
+	(execute) pass idesc to @cpu@_insn_{before,after}, return vpc instead of result of @cpu@_insts_{after}
+	(extract-pbb) end basic blocks at instructions marked FORCED-CTI
+	* sim-main.h:
+	(_sim_cpu) add fields delay_slot and next_delay_slot to track when
+	an instruction is in a delay slot
+	* or1k.c:
+	(or1k_cpu_init) initialized current_cpu->{next_,}delay_slot
+	(or1k32bf_insn_before) handle delay slot flags, check for invalid
+	instructions in delay slots
+	(or1k32bf_insn_after) handle delay slot flags
+	(or1k32bf_mfspr) move to traps.c
+	(or1k32bf_mtspr) ditto
+	(or1k32bf_exception) ditto
+	(or1k32bf_rfe) ditto
+	* or1k.h:
+	(SPR_ADDR_GROUP) new macro
+	(SPR_INDEX_MASK) ditto
+	(SPR_ADDR_INDEX) ditto
+	(or1k32bf_insn_before, or1k32bf_insn_after) add idesc argument
+	(or1k32bf_exception, or1k32bf_rfe, or1k32bf_nop) add prototypes
+	(or1k32bf_mfspr, or1k32bf_mtspr) ditto
+	* traps.h:
+	(sim_engine_invalid_instruction) new function
+	(or1k32bf_exception) new function (moved from or1k.c, but was just a stub)
+	(or1k32bf_rfe) ditto
+	(or1k32bf_mfspr) moved from or1k.c, some fixes
+	(or1k32bf_mtspr) moved from or1k.c, some fixes
+
+2012-05-21  Peter Gavin  <pgavin@gmail.com>
+
+	* or1k.c (or1k32bf_nop) make NOP_EXIT report exit code on
+	simulator output; add NOP_EXIT_SILENT which silently exits. This
+	is needed to maintain compatibility with existing testsuites, but
+	we need to be able to silently exit for the gcc testsuite.
+	Newlib's exit will use NOP_EXIT_SILENT.
+
+2012-05-17  Peter Gavin  <pgavin@gmail.com>
+
+	* or1k.c (or1k32bf_nop) handle NOP_NOP, NOP_REPORT; warn if
+	unknown l.nop code is unknown
+
+2012-05-13  Peter Gavin  <pgavin@gmail.com>
+
+	* initial commit
