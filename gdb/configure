@@ -5839,14 +5839,14 @@ if test "${with_or1ksim+set}" = set; then :
   withval=$with_or1ksim;
 fi
 
-
+sim_ldflags=
 if test "x$enable_or1ksim" != xno; then
 
   if test "x$withval" != x
   then
-      CONFIG_LDFLAGS="${CONFIG_LDFLAGS} -Wl,-rpath -Wl,$withval/lib -L$withval/lib -lsim"
+      sim_ldflags="-Wl,-rpath -Wl,$withval/lib -L$withval/lib -lsim"
   else
-      CONFIG_LDFLAGS="${CONFIG_LDFLAGS} -Wl,-rpath -Wl,/opt/or1ksim/lib -L/opt/or1ksim/lib -lsim"
+      sim_ldflags="-Wl,-rpath -Wl,/opt/or1ksim/lib -L/opt/or1ksim/lib -lsim"
   fi
 
 fi
@@ -15906,6 +15906,7 @@ if test "${ignore_sim}" = "false"; then
   if test x"${gdb_sim}" != x ; then
     SIM="${gdb_sim}"
     SIM_OBS="remote-sim.o"
+    CONFIG_LDFLAGS="${CONFIG_LDFLAGS} ${sim_ldflags}"
 
 $as_echo "#define WITH_SIM 1" >>confdefs.h
 
