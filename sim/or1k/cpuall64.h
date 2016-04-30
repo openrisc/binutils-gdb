@@ -33,8 +33,8 @@ This file is part of the GNU simulators.
 #include "decode64.h"
 #endif
 
-extern const MACH or64_mach;
-extern const MACH or64nd_mach;
+extern const SIM_MACH or64_mach;
+extern const SIM_MACH or64nd_mach;
 
 #ifndef WANT_CPU
 /* The ARGBUF struct.  */

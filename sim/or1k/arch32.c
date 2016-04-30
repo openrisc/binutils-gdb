@@ -25,7 +25,7 @@ This file is part of the GNU simulators.
 #include "sim-main.h"
 #include "bfd.h"
 
-const MACH *sim_machs[] =
+const SIM_MACH *sim_machs[] =
 {
 #ifdef HAVE_CPU_OR1K32BF
   & or32_mach,

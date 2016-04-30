@@ -37,8 +37,8 @@ This file is part of the GNU simulators.
    FAST_P, when desired, is defined on the command line, -DFAST_P=1.  */
 #if FAST_P
 #define SEM_FN_NAME(cpu,fn) XCONCAT3 (cpu,_semf_,fn)
-#undef TRACE_RESULT
-#define TRACE_RESULT(cpu, abuf, name, type, val)
+#undef CGEN_TRACE_RESULT
+#define CGEN_TRACE_RESULT(cpu, abuf, name, type, val)
 #else
 #define SEM_FN_NAME(cpu,fn) XCONCAT3 (cpu,_sem_,fn)
 #endif
@@ -214,7 +214,7 @@ SEM_FN_NAME (or1k64bf,l_j) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     UDI opval = FLD (i_disp26);
     SEM_BRANCH_VIA_CACHE (current_cpu, sem_arg, opval, vpc);
-    TRACE_RESULT (current_cpu, abuf, "pc", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "pc", 'D', opval);
   }
 }
 if (GET_H_SYS_CPUCFGR_ND ()) {
@@ -244,14 +244,14 @@ SEM_FN_NAME (or1k64bf,l_jal) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     UDI opval = ADDDI (pc, ((GET_H_SYS_CPUCFGR_ND ()) ? (4) : (8)));
     SET_H_GPR (((UINT) 9), opval);
-    TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
   }
 {
 {
   {
     UDI opval = FLD (i_disp26);
     SEM_BRANCH_VIA_CACHE (current_cpu, sem_arg, opval, vpc);
-    TRACE_RESULT (current_cpu, abuf, "pc", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "pc", 'D', opval);
   }
 }
 if (GET_H_SYS_CPUCFGR_ND ()) {
@@ -283,7 +283,7 @@ SEM_FN_NAME (or1k64bf,l_jr) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     UDI opval = GET_H_GPR (FLD (f_r3));
     SEM_BRANCH_VIA_ADDR (current_cpu, sem_arg, opval, vpc);
-    TRACE_RESULT (current_cpu, abuf, "pc", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "pc", 'D', opval);
   }
 }
 if (GET_H_SYS_CPUCFGR_ND ()) {
@@ -313,14 +313,14 @@ SEM_FN_NAME (or1k64bf,l_jalr) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     UDI opval = ADDDI (pc, ((GET_H_SYS_CPUCFGR_ND ()) ? (4) : (8)));
     SET_H_GPR (((UINT) 9), opval);
-    TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
   }
 {
 {
   {
     UDI opval = GET_H_GPR (FLD (f_r3));
     SEM_BRANCH_VIA_ADDR (current_cpu, sem_arg, opval, vpc);
-    TRACE_RESULT (current_cpu, abuf, "pc", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "pc", 'D', opval);
   }
 }
 if (GET_H_SYS_CPUCFGR_ND ()) {
@@ -354,7 +354,7 @@ if (NOTDI (GET_H_SYS_SR_F ())) {
     UDI opval = FLD (i_disp26);
     SEM_BRANCH_VIA_CACHE (current_cpu, sem_arg, opval, vpc);
     written |= (1 << 4);
-    TRACE_RESULT (current_cpu, abuf, "pc", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "pc", 'D', opval);
   }
 }
 } else {
@@ -364,7 +364,7 @@ if (GET_H_SYS_CPUCFGR_ND ()) {
     UDI opval = ADDDI (pc, 4);
     SEM_BRANCH_VIA_ADDR (current_cpu, sem_arg, opval, vpc);
     written |= (1 << 4);
-    TRACE_RESULT (current_cpu, abuf, "pc", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "pc", 'D', opval);
   }
 }
 }
@@ -400,7 +400,7 @@ if (GET_H_SYS_SR_F ()) {
     UDI opval = FLD (i_disp26);
     SEM_BRANCH_VIA_CACHE (current_cpu, sem_arg, opval, vpc);
     written |= (1 << 4);
-    TRACE_RESULT (current_cpu, abuf, "pc", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "pc", 'D', opval);
   }
 }
 } else {
@@ -410,7 +410,7 @@ if (GET_H_SYS_CPUCFGR_ND ()) {
     UDI opval = ADDDI (pc, 4);
     SEM_BRANCH_VIA_ADDR (current_cpu, sem_arg, opval, vpc);
     written |= (1 << 4);
-    TRACE_RESULT (current_cpu, abuf, "pc", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "pc", 'D', opval);
   }
 }
 }
@@ -456,6 +456,57 @@ SEM_FN_NAME (or1k64bf,l_sys) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   SEM_PC vpc = SEM_NEXT_VPC (sem_arg, pc, 4);
 
 or1k64bf_exception (current_cpu, pc, EXCEPT_SYSCALL);
+
+  return vpc;
+#undef FLD
+}
+
+/* l-msync: l.msync */
+
+static SEM_PC
+SEM_FN_NAME (or1k64bf,l_msync) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
+{
+#define FLD(f) abuf->fields.sfmt_empty.f
+  ARGBUF *abuf = SEM_ARGBUF (sem_arg);
+  int UNUSED written = 0;
+  IADDR UNUSED pc = abuf->addr;
+  SEM_PC vpc = SEM_NEXT_VPC (sem_arg, pc, 4);
+
+((void) 0); /*nop*/
+
+  return vpc;
+#undef FLD
+}
+
+/* l-psync: l.psync */
+
+static SEM_PC
+SEM_FN_NAME (or1k64bf,l_psync) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
+{
+#define FLD(f) abuf->fields.sfmt_empty.f
+  ARGBUF *abuf = SEM_ARGBUF (sem_arg);
+  int UNUSED written = 0;
+  IADDR UNUSED pc = abuf->addr;
+  SEM_PC vpc = SEM_NEXT_VPC (sem_arg, pc, 4);
+
+((void) 0); /*nop*/
+
+  return vpc;
+#undef FLD
+}
+
+/* l-csync: l.csync */
+
+static SEM_PC
+SEM_FN_NAME (or1k64bf,l_csync) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
+{
+#define FLD(f) abuf->fields.sfmt_empty.f
+  ARGBUF *abuf = SEM_ARGBUF (sem_arg);
+  int UNUSED written = 0;
+  IADDR UNUSED pc = abuf->addr;
+  SEM_PC vpc = SEM_NEXT_VPC (sem_arg, pc, 4);
+
+((void) 0); /*nop*/
 
   return vpc;
 #undef FLD
@@ -509,7 +560,7 @@ SEM_FN_NAME (or1k64bf,l_movhi) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     UDI opval = SLLDI (ZEXTSIDI (FLD (f_uimm16)), 16);
     SET_H_GPR (FLD (f_r1), opval);
-    TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
   }
 
   return vpc;
@@ -531,17 +582,17 @@ SEM_FN_NAME (or1k64bf,l_macrc) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     UDI opval = GET_H_MAC_MACLO ();
     SET_H_GPR (FLD (f_r1), opval);
-    TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
   }
   {
     UDI opval = 0;
     SET_H_MAC_MACLO (opval);
-    TRACE_RESULT (current_cpu, abuf, "mac-maclo", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "mac-maclo", 'D', opval);
   }
   {
     UDI opval = 0;
     SET_H_MAC_MACHI (opval);
-    TRACE_RESULT (current_cpu, abuf, "mac-machi", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "mac-machi", 'D', opval);
   }
 }
 
@@ -563,7 +614,7 @@ SEM_FN_NAME (or1k64bf,l_mfspr) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     UDI opval = or1k64bf_mfspr (current_cpu, ORDI (GET_H_GPR (FLD (f_r2)), ZEXTSIDI (FLD (f_uimm16))));
     SET_H_GPR (FLD (f_r1), opval);
-    TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
   }
 
   return vpc;
@@ -601,7 +652,7 @@ SEM_FN_NAME (or1k64bf,l_lwz) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     UDI opval = ZEXTSIDI (GETMEMUSI (current_cpu, pc, or1k64bf_make_load_store_addr (current_cpu, GET_H_GPR (FLD (f_r2)), EXTSISI (FLD (f_simm16)), 4)));
     SET_H_GPR (FLD (f_r1), opval);
-    TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
   }
 
   return vpc;
@@ -622,8 +673,41 @@ SEM_FN_NAME (or1k64bf,l_lws) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     DI opval = EXTSIDI (GETMEMSI (current_cpu, pc, or1k64bf_make_load_store_addr (current_cpu, GET_H_GPR (FLD (f_r2)), EXTSISI (FLD (f_simm16)), 4)));
     SET_H_GPR (FLD (f_r1), opval);
-    TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
   }
+
+  return vpc;
+#undef FLD
+}
+
+/* l-lwa: l.lwa $rD,${simm16}($rA) */
+
+static SEM_PC
+SEM_FN_NAME (or1k64bf,l_lwa) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
+{
+#define FLD(f) abuf->fields.sfmt_l_lwz.f
+  ARGBUF *abuf = SEM_ARGBUF (sem_arg);
+  int UNUSED written = 0;
+  IADDR UNUSED pc = abuf->addr;
+  SEM_PC vpc = SEM_NEXT_VPC (sem_arg, pc, 4);
+
+{
+  {
+    UDI opval = ZEXTSIDI (GETMEMUSI (current_cpu, pc, or1k64bf_make_load_store_addr (current_cpu, GET_H_GPR (FLD (f_r2)), EXTSISI (FLD (f_simm16)), 4)));
+    SET_H_GPR (FLD (f_r1), opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
+  }
+  {
+    BI opval = 1;
+    CPU (h_atomic_reserve) = opval;
+    CGEN_TRACE_RESULT (current_cpu, abuf, "atomic-reserve", 'x', opval);
+  }
+  {
+    SI opval = or1k64bf_make_load_store_addr (current_cpu, GET_H_GPR (FLD (f_r2)), EXTSISI (FLD (f_simm16)), 4);
+    CPU (h_atomic_address) = opval;
+    CGEN_TRACE_RESULT (current_cpu, abuf, "atomic-address", 'x', opval);
+  }
+}
 
   return vpc;
 #undef FLD
@@ -643,7 +727,7 @@ SEM_FN_NAME (or1k64bf,l_lbz) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     UDI opval = ZEXTQIDI (GETMEMUQI (current_cpu, pc, or1k64bf_make_load_store_addr (current_cpu, GET_H_GPR (FLD (f_r2)), EXTSISI (FLD (f_simm16)), 1)));
     SET_H_GPR (FLD (f_r1), opval);
-    TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
   }
 
   return vpc;
@@ -664,7 +748,7 @@ SEM_FN_NAME (or1k64bf,l_lbs) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     DI opval = EXTQIDI (GETMEMQI (current_cpu, pc, or1k64bf_make_load_store_addr (current_cpu, GET_H_GPR (FLD (f_r2)), EXTSISI (FLD (f_simm16)), 1)));
     SET_H_GPR (FLD (f_r1), opval);
-    TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
   }
 
   return vpc;
@@ -685,7 +769,7 @@ SEM_FN_NAME (or1k64bf,l_lhz) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     UDI opval = ZEXTHIDI (GETMEMUHI (current_cpu, pc, or1k64bf_make_load_store_addr (current_cpu, GET_H_GPR (FLD (f_r2)), EXTSISI (FLD (f_simm16)), 2)));
     SET_H_GPR (FLD (f_r1), opval);
-    TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
   }
 
   return vpc;
@@ -706,7 +790,7 @@ SEM_FN_NAME (or1k64bf,l_lhs) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     DI opval = EXTHIDI (GETMEMHI (current_cpu, pc, or1k64bf_make_load_store_addr (current_cpu, GET_H_GPR (FLD (f_r2)), EXTSISI (FLD (f_simm16)), 2)));
     SET_H_GPR (FLD (f_r1), opval);
-    TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
   }
 
   return vpc;
@@ -724,12 +808,25 @@ SEM_FN_NAME (or1k64bf,l_sw) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   IADDR UNUSED pc = abuf->addr;
   SEM_PC vpc = SEM_NEXT_VPC (sem_arg, pc, 4);
 
+{
+  SI tmp_addr;
+  tmp_addr = or1k64bf_make_load_store_addr (current_cpu, GET_H_GPR (FLD (f_r2)), EXTSISI (FLD (f_simm16_split)), 4);
   {
     USI opval = TRUNCDISI (GET_H_GPR (FLD (f_r3)));
-    SETMEMUSI (current_cpu, pc, or1k64bf_make_load_store_addr (current_cpu, GET_H_GPR (FLD (f_r2)), EXTSISI (FLD (f_simm16_split)), 4), opval);
-    TRACE_RESULT (current_cpu, abuf, "memory", 'x', opval);
+    SETMEMUSI (current_cpu, pc, tmp_addr, opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "memory", 'x', opval);
   }
+if (EQSI (ANDSI (tmp_addr, 268435452), CPU (h_atomic_address))) {
+  {
+    BI opval = 0;
+    CPU (h_atomic_reserve) = opval;
+    written |= (1 << 4);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "atomic-reserve", 'x', opval);
+  }
+}
+}
 
+  abuf->written = written;
   return vpc;
 #undef FLD
 }
@@ -745,12 +842,25 @@ SEM_FN_NAME (or1k64bf,l_sb) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   IADDR UNUSED pc = abuf->addr;
   SEM_PC vpc = SEM_NEXT_VPC (sem_arg, pc, 4);
 
+{
+  SI tmp_addr;
+  tmp_addr = or1k64bf_make_load_store_addr (current_cpu, GET_H_GPR (FLD (f_r2)), EXTSISI (FLD (f_simm16_split)), 1);
   {
     UQI opval = TRUNCDIQI (GET_H_GPR (FLD (f_r3)));
-    SETMEMUQI (current_cpu, pc, or1k64bf_make_load_store_addr (current_cpu, GET_H_GPR (FLD (f_r2)), EXTSISI (FLD (f_simm16_split)), 1), opval);
-    TRACE_RESULT (current_cpu, abuf, "memory", 'x', opval);
+    SETMEMUQI (current_cpu, pc, tmp_addr, opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "memory", 'x', opval);
   }
+if (EQSI (ANDSI (tmp_addr, 268435452), CPU (h_atomic_address))) {
+  {
+    BI opval = 0;
+    CPU (h_atomic_reserve) = opval;
+    written |= (1 << 4);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "atomic-reserve", 'x', opval);
+  }
+}
+}
 
+  abuf->written = written;
   return vpc;
 #undef FLD
 }
@@ -766,12 +876,65 @@ SEM_FN_NAME (or1k64bf,l_sh) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   IADDR UNUSED pc = abuf->addr;
   SEM_PC vpc = SEM_NEXT_VPC (sem_arg, pc, 4);
 
+{
+  SI tmp_addr;
+  tmp_addr = or1k64bf_make_load_store_addr (current_cpu, GET_H_GPR (FLD (f_r2)), EXTSISI (FLD (f_simm16_split)), 2);
   {
     UHI opval = TRUNCDIHI (GET_H_GPR (FLD (f_r3)));
-    SETMEMUHI (current_cpu, pc, or1k64bf_make_load_store_addr (current_cpu, GET_H_GPR (FLD (f_r2)), EXTSISI (FLD (f_simm16_split)), 2), opval);
-    TRACE_RESULT (current_cpu, abuf, "memory", 'x', opval);
+    SETMEMUHI (current_cpu, pc, tmp_addr, opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "memory", 'x', opval);
   }
+if (EQSI (ANDSI (tmp_addr, 268435452), CPU (h_atomic_address))) {
+  {
+    BI opval = 0;
+    CPU (h_atomic_reserve) = opval;
+    written |= (1 << 4);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "atomic-reserve", 'x', opval);
+  }
+}
+}
 
+  abuf->written = written;
+  return vpc;
+#undef FLD
+}
+
+/* l-swa: l.swa ${simm16-split}($rA),$rB */
+
+static SEM_PC
+SEM_FN_NAME (or1k64bf,l_swa) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
+{
+#define FLD(f) abuf->fields.sfmt_l_sw.f
+  ARGBUF *abuf = SEM_ARGBUF (sem_arg);
+  int UNUSED written = 0;
+  IADDR UNUSED pc = abuf->addr;
+  SEM_PC vpc = SEM_NEXT_VPC (sem_arg, pc, 4);
+
+{
+  SI tmp_addr;
+  BI tmp_flag;
+  tmp_addr = or1k64bf_make_load_store_addr (current_cpu, GET_H_GPR (FLD (f_r2)), EXTSISI (FLD (f_simm16_split)), 4);
+  {
+    UDI opval = ANDBI (CPU (h_atomic_reserve), EQSI (tmp_addr, CPU (h_atomic_address)));
+    SET_H_SYS_SR_F (opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'D', opval);
+  }
+if (GET_H_SYS_SR_F ()) {
+  {
+    USI opval = TRUNCDISI (GET_H_GPR (FLD (f_r3)));
+    SETMEMUSI (current_cpu, pc, tmp_addr, opval);
+    written |= (1 << 7);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "memory", 'x', opval);
+  }
+}
+  {
+    BI opval = 0;
+    CPU (h_atomic_reserve) = opval;
+    CGEN_TRACE_RESULT (current_cpu, abuf, "atomic-reserve", 'x', opval);
+  }
+}
+
+  abuf->written = written;
   return vpc;
 #undef FLD
 }
@@ -790,7 +953,7 @@ SEM_FN_NAME (or1k64bf,l_sll) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     UDI opval = SLLDI (GET_H_GPR (FLD (f_r2)), GET_H_GPR (FLD (f_r3)));
     SET_H_GPR (FLD (f_r1), opval);
-    TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
   }
 
   return vpc;
@@ -811,7 +974,7 @@ SEM_FN_NAME (or1k64bf,l_slli) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     UDI opval = SLLDI (GET_H_GPR (FLD (f_r2)), FLD (f_uimm6));
     SET_H_GPR (FLD (f_r1), opval);
-    TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
   }
 
   return vpc;
@@ -832,7 +995,7 @@ SEM_FN_NAME (or1k64bf,l_srl) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     UDI opval = SRLDI (GET_H_GPR (FLD (f_r2)), GET_H_GPR (FLD (f_r3)));
     SET_H_GPR (FLD (f_r1), opval);
-    TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
   }
 
   return vpc;
@@ -853,7 +1016,7 @@ SEM_FN_NAME (or1k64bf,l_srli) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     UDI opval = SRLDI (GET_H_GPR (FLD (f_r2)), FLD (f_uimm6));
     SET_H_GPR (FLD (f_r1), opval);
-    TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
   }
 
   return vpc;
@@ -874,7 +1037,7 @@ SEM_FN_NAME (or1k64bf,l_sra) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     UDI opval = SRADI (GET_H_GPR (FLD (f_r2)), GET_H_GPR (FLD (f_r3)));
     SET_H_GPR (FLD (f_r1), opval);
-    TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
   }
 
   return vpc;
@@ -895,7 +1058,7 @@ SEM_FN_NAME (or1k64bf,l_srai) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     UDI opval = SRADI (GET_H_GPR (FLD (f_r2)), FLD (f_uimm6));
     SET_H_GPR (FLD (f_r1), opval);
-    TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
   }
 
   return vpc;
@@ -916,7 +1079,7 @@ SEM_FN_NAME (or1k64bf,l_ror) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     UDI opval = RORDI (GET_H_GPR (FLD (f_r2)), GET_H_GPR (FLD (f_r3)));
     SET_H_GPR (FLD (f_r1), opval);
-    TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
   }
 
   return vpc;
@@ -937,7 +1100,7 @@ SEM_FN_NAME (or1k64bf,l_rori) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     UDI opval = RORDI (GET_H_GPR (FLD (f_r2)), FLD (f_uimm6));
     SET_H_GPR (FLD (f_r1), opval);
-    TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
   }
 
   return vpc;
@@ -958,7 +1121,7 @@ SEM_FN_NAME (or1k64bf,l_and) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     UDI opval = ANDDI (GET_H_GPR (FLD (f_r2)), GET_H_GPR (FLD (f_r3)));
     SET_H_GPR (FLD (f_r1), opval);
-    TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
   }
 
   return vpc;
@@ -979,7 +1142,7 @@ SEM_FN_NAME (or1k64bf,l_or) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     UDI opval = ORDI (GET_H_GPR (FLD (f_r2)), GET_H_GPR (FLD (f_r3)));
     SET_H_GPR (FLD (f_r1), opval);
-    TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
   }
 
   return vpc;
@@ -1000,7 +1163,7 @@ SEM_FN_NAME (or1k64bf,l_xor) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     UDI opval = XORDI (GET_H_GPR (FLD (f_r2)), GET_H_GPR (FLD (f_r3)));
     SET_H_GPR (FLD (f_r1), opval);
-    TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
   }
 
   return vpc;
@@ -1023,17 +1186,17 @@ SEM_FN_NAME (or1k64bf,l_add) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     BI opval = ADDCFDI (GET_H_GPR (FLD (f_r2)), GET_H_GPR (FLD (f_r3)), 0);
     SET_H_SYS_SR_CY (opval);
-    TRACE_RESULT (current_cpu, abuf, "sys-sr-cy", 'x', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "sys-sr-cy", 'x', opval);
   }
   {
     BI opval = ADDOFDI (GET_H_GPR (FLD (f_r2)), GET_H_GPR (FLD (f_r3)), 0);
     SET_H_SYS_SR_OV (opval);
-    TRACE_RESULT (current_cpu, abuf, "sys-sr-ov", 'x', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "sys-sr-ov", 'x', opval);
   }
   {
     UDI opval = ADDDI (GET_H_GPR (FLD (f_r2)), GET_H_GPR (FLD (f_r3)));
     SET_H_GPR (FLD (f_r1), opval);
-    TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
   }
 }
 if (ANDIF (GET_H_SYS_SR_OV (), GET_H_SYS_SR_OVE ())) {
@@ -1061,17 +1224,17 @@ SEM_FN_NAME (or1k64bf,l_sub) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     BI opval = SUBCFDI (GET_H_GPR (FLD (f_r2)), GET_H_GPR (FLD (f_r3)), 0);
     SET_H_SYS_SR_CY (opval);
-    TRACE_RESULT (current_cpu, abuf, "sys-sr-cy", 'x', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "sys-sr-cy", 'x', opval);
   }
   {
     BI opval = SUBOFDI (GET_H_GPR (FLD (f_r2)), GET_H_GPR (FLD (f_r3)), 0);
     SET_H_SYS_SR_OV (opval);
-    TRACE_RESULT (current_cpu, abuf, "sys-sr-ov", 'x', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "sys-sr-ov", 'x', opval);
   }
   {
     UDI opval = SUBDI (GET_H_GPR (FLD (f_r2)), GET_H_GPR (FLD (f_r3)));
     SET_H_GPR (FLD (f_r1), opval);
-    TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
   }
 }
 if (ANDIF (GET_H_SYS_SR_OV (), GET_H_SYS_SR_OVE ())) {
@@ -1101,17 +1264,17 @@ SEM_FN_NAME (or1k64bf,l_addc) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     BI opval = ADDCFDI (GET_H_GPR (FLD (f_r2)), GET_H_GPR (FLD (f_r3)), tmp_tmp_sys_sr_cy);
     SET_H_SYS_SR_CY (opval);
-    TRACE_RESULT (current_cpu, abuf, "sys-sr-cy", 'x', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "sys-sr-cy", 'x', opval);
   }
   {
     BI opval = ADDOFDI (GET_H_GPR (FLD (f_r2)), GET_H_GPR (FLD (f_r3)), tmp_tmp_sys_sr_cy);
     SET_H_SYS_SR_OV (opval);
-    TRACE_RESULT (current_cpu, abuf, "sys-sr-ov", 'x', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "sys-sr-ov", 'x', opval);
   }
   {
     UDI opval = ADDCDI (GET_H_GPR (FLD (f_r2)), GET_H_GPR (FLD (f_r3)), tmp_tmp_sys_sr_cy);
     SET_H_GPR (FLD (f_r1), opval);
-    TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
   }
 }
 if (ANDIF (GET_H_SYS_SR_OV (), GET_H_SYS_SR_OVE ())) {
@@ -1139,17 +1302,17 @@ SEM_FN_NAME (or1k64bf,l_mul) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     BI opval = MUL2OFDI (GET_H_GPR (FLD (f_r2)), GET_H_GPR (FLD (f_r3)));
     SET_H_SYS_SR_OV (opval);
-    TRACE_RESULT (current_cpu, abuf, "sys-sr-ov", 'x', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "sys-sr-ov", 'x', opval);
   }
   {
     BI opval = MUL1OFDI (GET_H_GPR (FLD (f_r2)), GET_H_GPR (FLD (f_r3)));
     SET_H_SYS_SR_CY (opval);
-    TRACE_RESULT (current_cpu, abuf, "sys-sr-cy", 'x', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "sys-sr-cy", 'x', opval);
   }
   {
     UDI opval = MULDI (GET_H_GPR (FLD (f_r2)), GET_H_GPR (FLD (f_r3)));
     SET_H_GPR (FLD (f_r1), opval);
-    TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
   }
 }
 if (ANDIF (GET_H_SYS_SR_OV (), GET_H_SYS_SR_OVE ())) {
@@ -1177,17 +1340,17 @@ SEM_FN_NAME (or1k64bf,l_mulu) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     BI opval = 0;
     SET_H_SYS_SR_OV (opval);
-    TRACE_RESULT (current_cpu, abuf, "sys-sr-ov", 'x', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "sys-sr-ov", 'x', opval);
   }
   {
     BI opval = MUL1OFDI (GET_H_GPR (FLD (f_r2)), GET_H_GPR (FLD (f_r3)));
     SET_H_SYS_SR_CY (opval);
-    TRACE_RESULT (current_cpu, abuf, "sys-sr-cy", 'x', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "sys-sr-cy", 'x', opval);
   }
   {
     UDI opval = MULDI (GET_H_GPR (FLD (f_r2)), GET_H_GPR (FLD (f_r3)));
     SET_H_GPR (FLD (f_r1), opval);
-    TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
   }
 }
 if (ANDIF (GET_H_SYS_SR_OV (), GET_H_SYS_SR_OVE ())) {
@@ -1217,13 +1380,13 @@ if (NEDI (GET_H_GPR (FLD (f_r3)), 0)) {
     BI opval = 0;
     SET_H_SYS_SR_CY (opval);
     written |= (1 << 6);
-    TRACE_RESULT (current_cpu, abuf, "sys-sr-cy", 'x', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "sys-sr-cy", 'x', opval);
   }
   {
     DI opval = DIVDI (GET_H_GPR (FLD (f_r2)), GET_H_GPR (FLD (f_r3)));
     SET_H_GPR (FLD (f_r1), opval);
     written |= (1 << 5);
-    TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
   }
 }
 } else {
@@ -1231,13 +1394,13 @@ if (NEDI (GET_H_GPR (FLD (f_r3)), 0)) {
     BI opval = 1;
     SET_H_SYS_SR_CY (opval);
     written |= (1 << 6);
-    TRACE_RESULT (current_cpu, abuf, "sys-sr-cy", 'x', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "sys-sr-cy", 'x', opval);
   }
 }
   {
     BI opval = 0;
     SET_H_SYS_SR_OV (opval);
-    TRACE_RESULT (current_cpu, abuf, "sys-sr-ov", 'x', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "sys-sr-ov", 'x', opval);
   }
 if (ANDIF (GET_H_SYS_SR_CY (), GET_H_SYS_SR_OVE ())) {
 or1k64bf_exception (current_cpu, pc, EXCEPT_RANGE);
@@ -1267,13 +1430,13 @@ if (NEDI (GET_H_GPR (FLD (f_r3)), 0)) {
     BI opval = 0;
     SET_H_SYS_SR_CY (opval);
     written |= (1 << 6);
-    TRACE_RESULT (current_cpu, abuf, "sys-sr-cy", 'x', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "sys-sr-cy", 'x', opval);
   }
   {
     UDI opval = UDIVDI (GET_H_GPR (FLD (f_r2)), GET_H_GPR (FLD (f_r3)));
     SET_H_GPR (FLD (f_r1), opval);
     written |= (1 << 5);
-    TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
   }
 }
 } else {
@@ -1281,13 +1444,13 @@ if (NEDI (GET_H_GPR (FLD (f_r3)), 0)) {
     BI opval = 1;
     SET_H_SYS_SR_CY (opval);
     written |= (1 << 6);
-    TRACE_RESULT (current_cpu, abuf, "sys-sr-cy", 'x', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "sys-sr-cy", 'x', opval);
   }
 }
   {
     BI opval = 0;
     SET_H_SYS_SR_OV (opval);
-    TRACE_RESULT (current_cpu, abuf, "sys-sr-ov", 'x', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "sys-sr-ov", 'x', opval);
   }
 if (ANDIF (GET_H_SYS_SR_CY (), GET_H_SYS_SR_OVE ())) {
 or1k64bf_exception (current_cpu, pc, EXCEPT_RANGE);
@@ -1313,7 +1476,7 @@ SEM_FN_NAME (or1k64bf,l_ff1) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     UDI opval = or1k64bf_ff1 (current_cpu, GET_H_GPR (FLD (f_r2)));
     SET_H_GPR (FLD (f_r1), opval);
-    TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
   }
 
   return vpc;
@@ -1334,7 +1497,7 @@ SEM_FN_NAME (or1k64bf,l_fl1) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     UDI opval = or1k64bf_fl1 (current_cpu, GET_H_GPR (FLD (f_r2)));
     SET_H_GPR (FLD (f_r1), opval);
-    TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
   }
 
   return vpc;
@@ -1355,7 +1518,7 @@ SEM_FN_NAME (or1k64bf,l_andi) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     UDI opval = ANDDI (GET_H_GPR (FLD (f_r2)), ZEXTSIDI (FLD (f_uimm16)));
     SET_H_GPR (FLD (f_r1), opval);
-    TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
   }
 
   return vpc;
@@ -1376,7 +1539,7 @@ SEM_FN_NAME (or1k64bf,l_ori) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     UDI opval = ORDI (GET_H_GPR (FLD (f_r2)), ZEXTSIDI (FLD (f_uimm16)));
     SET_H_GPR (FLD (f_r1), opval);
-    TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
   }
 
   return vpc;
@@ -1397,7 +1560,7 @@ SEM_FN_NAME (or1k64bf,l_xori) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     UDI opval = XORDI (GET_H_GPR (FLD (f_r2)), EXTSIDI (FLD (f_simm16)));
     SET_H_GPR (FLD (f_r1), opval);
-    TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
   }
 
   return vpc;
@@ -1420,17 +1583,17 @@ SEM_FN_NAME (or1k64bf,l_addi) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     BI opval = ADDCFDI (GET_H_GPR (FLD (f_r2)), EXTSIDI (FLD (f_simm16)), 0);
     SET_H_SYS_SR_CY (opval);
-    TRACE_RESULT (current_cpu, abuf, "sys-sr-cy", 'x', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "sys-sr-cy", 'x', opval);
   }
   {
     BI opval = ADDOFDI (GET_H_GPR (FLD (f_r2)), EXTSIDI (FLD (f_simm16)), 0);
     SET_H_SYS_SR_OV (opval);
-    TRACE_RESULT (current_cpu, abuf, "sys-sr-ov", 'x', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "sys-sr-ov", 'x', opval);
   }
   {
     UDI opval = ADDDI (GET_H_GPR (FLD (f_r2)), EXTSIDI (FLD (f_simm16)));
     SET_H_GPR (FLD (f_r1), opval);
-    TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
   }
 }
 if (ANDIF (GET_H_SYS_SR_OV (), GET_H_SYS_SR_OVE ())) {
@@ -1460,17 +1623,17 @@ SEM_FN_NAME (or1k64bf,l_addic) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     BI opval = ADDCFDI (GET_H_GPR (FLD (f_r2)), EXTSIDI (FLD (f_simm16)), tmp_tmp_sys_sr_cy);
     SET_H_SYS_SR_CY (opval);
-    TRACE_RESULT (current_cpu, abuf, "sys-sr-cy", 'x', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "sys-sr-cy", 'x', opval);
   }
   {
     BI opval = ADDOFDI (GET_H_GPR (FLD (f_r2)), EXTSIDI (FLD (f_simm16)), tmp_tmp_sys_sr_cy);
     SET_H_SYS_SR_OV (opval);
-    TRACE_RESULT (current_cpu, abuf, "sys-sr-ov", 'x', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "sys-sr-ov", 'x', opval);
   }
   {
     DI opval = ADDCDI (GET_H_GPR (FLD (f_r2)), EXTSIDI (FLD (f_simm16)), tmp_tmp_sys_sr_cy);
     SET_H_GPR (FLD (f_r1), opval);
-    TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
   }
 }
 if (ANDIF (GET_H_SYS_SR_OV (), GET_H_SYS_SR_OVE ())) {
@@ -1498,17 +1661,17 @@ SEM_FN_NAME (or1k64bf,l_muli) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     UDI opval = MUL2OFDI (GET_H_GPR (FLD (f_r2)), EXTSIDI (FLD (f_simm16)));
     SET_H_SYS_SR_OV (opval);
-    TRACE_RESULT (current_cpu, abuf, "sys-sr-ov", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "sys-sr-ov", 'D', opval);
   }
   {
     UDI opval = MUL1OFDI (GET_H_GPR (FLD (f_r2)), EXTSIDI (FLD (f_simm16)));
     SET_H_SYS_SR_CY (opval);
-    TRACE_RESULT (current_cpu, abuf, "sys-sr-cy", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "sys-sr-cy", 'D', opval);
   }
   {
     UDI opval = MULDI (GET_H_GPR (FLD (f_r2)), EXTSIDI (FLD (f_simm16)));
     SET_H_GPR (FLD (f_r1), opval);
-    TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
   }
 }
 if (ANDIF (GET_H_SYS_SR_OV (), GET_H_SYS_SR_OVE ())) {
@@ -1534,7 +1697,7 @@ SEM_FN_NAME (or1k64bf,l_exths) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     UDI opval = EXTHIDI (TRUNCDIHI (GET_H_GPR (FLD (f_r2))));
     SET_H_GPR (FLD (f_r1), opval);
-    TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
   }
 
   return vpc;
@@ -1555,7 +1718,7 @@ SEM_FN_NAME (or1k64bf,l_extbs) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     UDI opval = EXTQIDI (TRUNCDIQI (GET_H_GPR (FLD (f_r2))));
     SET_H_GPR (FLD (f_r1), opval);
-    TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
   }
 
   return vpc;
@@ -1576,7 +1739,7 @@ SEM_FN_NAME (or1k64bf,l_exthz) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     UDI opval = ZEXTHIDI (TRUNCDIHI (GET_H_GPR (FLD (f_r2))));
     SET_H_GPR (FLD (f_r1), opval);
-    TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
   }
 
   return vpc;
@@ -1597,7 +1760,7 @@ SEM_FN_NAME (or1k64bf,l_extbz) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     UDI opval = ZEXTQIDI (TRUNCDIQI (GET_H_GPR (FLD (f_r2))));
     SET_H_GPR (FLD (f_r1), opval);
-    TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
   }
 
   return vpc;
@@ -1618,7 +1781,7 @@ SEM_FN_NAME (or1k64bf,l_extws) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     UDI opval = EXTSIDI (TRUNCDISI (GET_H_GPR (FLD (f_r2))));
     SET_H_GPR (FLD (f_r1), opval);
-    TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
   }
 
   return vpc;
@@ -1639,7 +1802,7 @@ SEM_FN_NAME (or1k64bf,l_extwz) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     UDI opval = ZEXTSISI (TRUNCDISI (GET_H_GPR (FLD (f_r2))));
     SET_H_GPR (FLD (f_r1), opval);
-    TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
   }
 
   return vpc;
@@ -1662,14 +1825,14 @@ if (GET_H_SYS_SR_F ()) {
     UDI opval = GET_H_GPR (FLD (f_r2));
     SET_H_GPR (FLD (f_r1), opval);
     written |= (1 << 3);
-    TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
   }
 } else {
   {
     UDI opval = GET_H_GPR (FLD (f_r3));
     SET_H_GPR (FLD (f_r1), opval);
     written |= (1 << 3);
-    TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
   }
 }
 
@@ -1692,7 +1855,7 @@ SEM_FN_NAME (or1k64bf,l_sfgts) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     UDI opval = GTDI (GET_H_GPR (FLD (f_r2)), GET_H_GPR (FLD (f_r3)));
     SET_H_SYS_SR_F (opval);
-    TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'D', opval);
   }
 
   return vpc;
@@ -1713,7 +1876,7 @@ SEM_FN_NAME (or1k64bf,l_sfgtsi) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     UDI opval = GTDI (GET_H_GPR (FLD (f_r2)), EXTSIDI (FLD (f_simm16)));
     SET_H_SYS_SR_F (opval);
-    TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'D', opval);
   }
 
   return vpc;
@@ -1734,7 +1897,7 @@ SEM_FN_NAME (or1k64bf,l_sfgtu) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     UDI opval = GTUDI (GET_H_GPR (FLD (f_r2)), GET_H_GPR (FLD (f_r3)));
     SET_H_SYS_SR_F (opval);
-    TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'D', opval);
   }
 
   return vpc;
@@ -1755,7 +1918,7 @@ SEM_FN_NAME (or1k64bf,l_sfgtui) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     UDI opval = GTUDI (GET_H_GPR (FLD (f_r2)), EXTSIDI (FLD (f_simm16)));
     SET_H_SYS_SR_F (opval);
-    TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'D', opval);
   }
 
   return vpc;
@@ -1776,7 +1939,7 @@ SEM_FN_NAME (or1k64bf,l_sfges) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     UDI opval = GEDI (GET_H_GPR (FLD (f_r2)), GET_H_GPR (FLD (f_r3)));
     SET_H_SYS_SR_F (opval);
-    TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'D', opval);
   }
 
   return vpc;
@@ -1797,7 +1960,7 @@ SEM_FN_NAME (or1k64bf,l_sfgesi) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     UDI opval = GEDI (GET_H_GPR (FLD (f_r2)), EXTSIDI (FLD (f_simm16)));
     SET_H_SYS_SR_F (opval);
-    TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'D', opval);
   }
 
   return vpc;
@@ -1818,7 +1981,7 @@ SEM_FN_NAME (or1k64bf,l_sfgeu) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     UDI opval = GEUDI (GET_H_GPR (FLD (f_r2)), GET_H_GPR (FLD (f_r3)));
     SET_H_SYS_SR_F (opval);
-    TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'D', opval);
   }
 
   return vpc;
@@ -1839,7 +2002,7 @@ SEM_FN_NAME (or1k64bf,l_sfgeui) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     UDI opval = GEUDI (GET_H_GPR (FLD (f_r2)), EXTSIDI (FLD (f_simm16)));
     SET_H_SYS_SR_F (opval);
-    TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'D', opval);
   }
 
   return vpc;
@@ -1860,7 +2023,7 @@ SEM_FN_NAME (or1k64bf,l_sflts) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     UDI opval = LTDI (GET_H_GPR (FLD (f_r2)), GET_H_GPR (FLD (f_r3)));
     SET_H_SYS_SR_F (opval);
-    TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'D', opval);
   }
 
   return vpc;
@@ -1881,7 +2044,7 @@ SEM_FN_NAME (or1k64bf,l_sfltsi) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     UDI opval = LTDI (GET_H_GPR (FLD (f_r2)), EXTSIDI (FLD (f_simm16)));
     SET_H_SYS_SR_F (opval);
-    TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'D', opval);
   }
 
   return vpc;
@@ -1902,7 +2065,7 @@ SEM_FN_NAME (or1k64bf,l_sfltu) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     UDI opval = LTUDI (GET_H_GPR (FLD (f_r2)), GET_H_GPR (FLD (f_r3)));
     SET_H_SYS_SR_F (opval);
-    TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'D', opval);
   }
 
   return vpc;
@@ -1923,7 +2086,7 @@ SEM_FN_NAME (or1k64bf,l_sfltui) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     UDI opval = LTUDI (GET_H_GPR (FLD (f_r2)), EXTSIDI (FLD (f_simm16)));
     SET_H_SYS_SR_F (opval);
-    TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'D', opval);
   }
 
   return vpc;
@@ -1944,7 +2107,7 @@ SEM_FN_NAME (or1k64bf,l_sfles) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     UDI opval = LEDI (GET_H_GPR (FLD (f_r2)), GET_H_GPR (FLD (f_r3)));
     SET_H_SYS_SR_F (opval);
-    TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'D', opval);
   }
 
   return vpc;
@@ -1965,7 +2128,7 @@ SEM_FN_NAME (or1k64bf,l_sflesi) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     UDI opval = LEDI (GET_H_GPR (FLD (f_r2)), EXTSIDI (FLD (f_simm16)));
     SET_H_SYS_SR_F (opval);
-    TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'D', opval);
   }
 
   return vpc;
@@ -1986,7 +2149,7 @@ SEM_FN_NAME (or1k64bf,l_sfleu) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     UDI opval = LEUDI (GET_H_GPR (FLD (f_r2)), GET_H_GPR (FLD (f_r3)));
     SET_H_SYS_SR_F (opval);
-    TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'D', opval);
   }
 
   return vpc;
@@ -2007,7 +2170,7 @@ SEM_FN_NAME (or1k64bf,l_sfleui) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     UDI opval = LEUDI (GET_H_GPR (FLD (f_r2)), EXTSIDI (FLD (f_simm16)));
     SET_H_SYS_SR_F (opval);
-    TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'D', opval);
   }
 
   return vpc;
@@ -2028,7 +2191,7 @@ SEM_FN_NAME (or1k64bf,l_sfeq) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     UDI opval = EQDI (GET_H_GPR (FLD (f_r2)), GET_H_GPR (FLD (f_r3)));
     SET_H_SYS_SR_F (opval);
-    TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'D', opval);
   }
 
   return vpc;
@@ -2049,7 +2212,7 @@ SEM_FN_NAME (or1k64bf,l_sfeqi) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     UDI opval = EQDI (GET_H_GPR (FLD (f_r2)), EXTSIDI (FLD (f_simm16)));
     SET_H_SYS_SR_F (opval);
-    TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'D', opval);
   }
 
   return vpc;
@@ -2070,7 +2233,7 @@ SEM_FN_NAME (or1k64bf,l_sfne) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     UDI opval = NEDI (GET_H_GPR (FLD (f_r2)), GET_H_GPR (FLD (f_r3)));
     SET_H_SYS_SR_F (opval);
-    TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'D', opval);
   }
 
   return vpc;
@@ -2091,7 +2254,7 @@ SEM_FN_NAME (or1k64bf,l_sfnei) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     UDI opval = NEDI (GET_H_GPR (FLD (f_r2)), EXTSIDI (FLD (f_simm16)));
     SET_H_SYS_SR_F (opval);
-    TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'D', opval);
   }
 
   return vpc;
@@ -2117,12 +2280,12 @@ SEM_FN_NAME (or1k64bf,l_mac) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     SI opval = SUBWORDDISI (tmp_result, 0);
     SET_H_MAC_MACHI (opval);
-    TRACE_RESULT (current_cpu, abuf, "mac-machi", 'x', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "mac-machi", 'x', opval);
   }
   {
     SI opval = SUBWORDDISI (tmp_result, 1);
     SET_H_MAC_MACLO (opval);
-    TRACE_RESULT (current_cpu, abuf, "mac-maclo", 'x', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "mac-maclo", 'x', opval);
   }
 }
 
@@ -2149,12 +2312,12 @@ SEM_FN_NAME (or1k64bf,l_msb) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     SI opval = SUBWORDDISI (tmp_result, 0);
     SET_H_MAC_MACHI (opval);
-    TRACE_RESULT (current_cpu, abuf, "mac-machi", 'x', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "mac-machi", 'x', opval);
   }
   {
     SI opval = SUBWORDDISI (tmp_result, 1);
     SET_H_MAC_MACLO (opval);
-    TRACE_RESULT (current_cpu, abuf, "mac-maclo", 'x', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "mac-maclo", 'x', opval);
   }
 }
 
@@ -2181,12 +2344,12 @@ SEM_FN_NAME (or1k64bf,l_maci) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     SI opval = SUBWORDDISI (tmp_result, 0);
     SET_H_MAC_MACHI (opval);
-    TRACE_RESULT (current_cpu, abuf, "mac-machi", 'x', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "mac-machi", 'x', opval);
   }
   {
     SI opval = SUBWORDDISI (tmp_result, 1);
     SET_H_MAC_MACLO (opval);
-    TRACE_RESULT (current_cpu, abuf, "mac-maclo", 'x', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "mac-maclo", 'x', opval);
   }
 }
 
@@ -2344,7 +2507,7 @@ SEM_FN_NAME (or1k64bf,lf_add_s) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     SF opval = CGEN_CPU_FPU (current_cpu)->ops->addsf (CGEN_CPU_FPU (current_cpu), GET_H_FSR (FLD (f_r2)), GET_H_FSR (FLD (f_r3)));
     SET_H_FSR (FLD (f_r1), opval);
-    TRACE_RESULT (current_cpu, abuf, "fsr", 'f', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "fsr", 'f', opval);
   }
 
   return vpc;
@@ -2365,7 +2528,7 @@ SEM_FN_NAME (or1k64bf,lf_add_d) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     DF opval = CGEN_CPU_FPU (current_cpu)->ops->adddf (CGEN_CPU_FPU (current_cpu), GET_H_FDR (FLD (f_r1)), GET_H_FDR (FLD (f_r1)));
     SET_H_FDR (FLD (f_r1), opval);
-    TRACE_RESULT (current_cpu, abuf, "fdr", 'f', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "fdr", 'f', opval);
   }
 
   return vpc;
@@ -2386,7 +2549,7 @@ SEM_FN_NAME (or1k64bf,lf_sub_s) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     SF opval = CGEN_CPU_FPU (current_cpu)->ops->subsf (CGEN_CPU_FPU (current_cpu), GET_H_FSR (FLD (f_r2)), GET_H_FSR (FLD (f_r3)));
     SET_H_FSR (FLD (f_r1), opval);
-    TRACE_RESULT (current_cpu, abuf, "fsr", 'f', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "fsr", 'f', opval);
   }
 
   return vpc;
@@ -2407,7 +2570,7 @@ SEM_FN_NAME (or1k64bf,lf_sub_d) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     DF opval = CGEN_CPU_FPU (current_cpu)->ops->subdf (CGEN_CPU_FPU (current_cpu), GET_H_FDR (FLD (f_r1)), GET_H_FDR (FLD (f_r1)));
     SET_H_FDR (FLD (f_r1), opval);
-    TRACE_RESULT (current_cpu, abuf, "fdr", 'f', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "fdr", 'f', opval);
   }
 
   return vpc;
@@ -2428,7 +2591,7 @@ SEM_FN_NAME (or1k64bf,lf_mul_s) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     SF opval = CGEN_CPU_FPU (current_cpu)->ops->mulsf (CGEN_CPU_FPU (current_cpu), GET_H_FSR (FLD (f_r2)), GET_H_FSR (FLD (f_r3)));
     SET_H_FSR (FLD (f_r1), opval);
-    TRACE_RESULT (current_cpu, abuf, "fsr", 'f', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "fsr", 'f', opval);
   }
 
   return vpc;
@@ -2449,7 +2612,7 @@ SEM_FN_NAME (or1k64bf,lf_mul_d) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     DF opval = CGEN_CPU_FPU (current_cpu)->ops->muldf (CGEN_CPU_FPU (current_cpu), GET_H_FDR (FLD (f_r1)), GET_H_FDR (FLD (f_r1)));
     SET_H_FDR (FLD (f_r1), opval);
-    TRACE_RESULT (current_cpu, abuf, "fdr", 'f', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "fdr", 'f', opval);
   }
 
   return vpc;
@@ -2470,7 +2633,7 @@ SEM_FN_NAME (or1k64bf,lf_div_s) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     SF opval = CGEN_CPU_FPU (current_cpu)->ops->divsf (CGEN_CPU_FPU (current_cpu), GET_H_FSR (FLD (f_r2)), GET_H_FSR (FLD (f_r3)));
     SET_H_FSR (FLD (f_r1), opval);
-    TRACE_RESULT (current_cpu, abuf, "fsr", 'f', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "fsr", 'f', opval);
   }
 
   return vpc;
@@ -2491,7 +2654,7 @@ SEM_FN_NAME (or1k64bf,lf_div_d) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     DF opval = CGEN_CPU_FPU (current_cpu)->ops->divdf (CGEN_CPU_FPU (current_cpu), GET_H_FDR (FLD (f_r1)), GET_H_FDR (FLD (f_r1)));
     SET_H_FDR (FLD (f_r1), opval);
-    TRACE_RESULT (current_cpu, abuf, "fdr", 'f', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "fdr", 'f', opval);
   }
 
   return vpc;
@@ -2512,7 +2675,7 @@ SEM_FN_NAME (or1k64bf,lf_rem_s) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     SF opval = CGEN_CPU_FPU (current_cpu)->ops->remsf (CGEN_CPU_FPU (current_cpu), GET_H_FSR (FLD (f_r2)), GET_H_FSR (FLD (f_r3)));
     SET_H_FSR (FLD (f_r1), opval);
-    TRACE_RESULT (current_cpu, abuf, "fsr", 'f', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "fsr", 'f', opval);
   }
 
   return vpc;
@@ -2533,7 +2696,7 @@ SEM_FN_NAME (or1k64bf,lf_rem_d) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     DF opval = CGEN_CPU_FPU (current_cpu)->ops->moddf (CGEN_CPU_FPU (current_cpu), GET_H_FDR (FLD (f_r1)), GET_H_FDR (FLD (f_r1)));
     SET_H_FDR (FLD (f_r1), opval);
-    TRACE_RESULT (current_cpu, abuf, "fdr", 'f', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "fdr", 'f', opval);
   }
 
   return vpc;
@@ -2554,7 +2717,7 @@ SEM_FN_NAME (or1k64bf,lf_itof_s) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     SF opval = CGEN_CPU_FPU (current_cpu)->ops->floatsisf (CGEN_CPU_FPU (current_cpu), (GET_H_SYS_FPCSR_RM () == 0) ? (1) : (GET_H_SYS_FPCSR_RM () == 1) ? (3) : (GET_H_SYS_FPCSR_RM () == 2) ? (4) : (5), TRUNCDISI (GET_H_GPR (FLD (f_r2))));
     SET_H_FSR (FLD (f_r1), opval);
-    TRACE_RESULT (current_cpu, abuf, "fsr", 'f', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "fsr", 'f', opval);
   }
 
   return vpc;
@@ -2575,7 +2738,7 @@ SEM_FN_NAME (or1k64bf,lf_itof_d) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     DF opval = CGEN_CPU_FPU (current_cpu)->ops->floatdidf (CGEN_CPU_FPU (current_cpu), (GET_H_SYS_FPCSR_RM () == 0) ? (1) : (GET_H_SYS_FPCSR_RM () == 1) ? (3) : (GET_H_SYS_FPCSR_RM () == 2) ? (4) : (5), GET_H_GPR (FLD (f_r2)));
     SET_H_FDR (FLD (f_r1), opval);
-    TRACE_RESULT (current_cpu, abuf, "fdr", 'f', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "fdr", 'f', opval);
   }
 
   return vpc;
@@ -2596,7 +2759,7 @@ SEM_FN_NAME (or1k64bf,lf_ftoi_s) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     DI opval = EXTSIDI (CGEN_CPU_FPU (current_cpu)->ops->fixsfsi (CGEN_CPU_FPU (current_cpu), (GET_H_SYS_FPCSR_RM () == 0) ? (1) : (GET_H_SYS_FPCSR_RM () == 1) ? (3) : (GET_H_SYS_FPCSR_RM () == 2) ? (4) : (5), GET_H_FSR (FLD (f_r2))));
     SET_H_GPR (FLD (f_r1), opval);
-    TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
   }
 
   return vpc;
@@ -2617,7 +2780,7 @@ SEM_FN_NAME (or1k64bf,lf_ftoi_d) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     DI opval = CGEN_CPU_FPU (current_cpu)->ops->fixdfdi (CGEN_CPU_FPU (current_cpu), (GET_H_SYS_FPCSR_RM () == 0) ? (1) : (GET_H_SYS_FPCSR_RM () == 1) ? (3) : (GET_H_SYS_FPCSR_RM () == 2) ? (4) : (5), GET_H_FDR (FLD (f_r1)));
     SET_H_GPR (FLD (f_r1), opval);
-    TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "gpr", 'D', opval);
   }
 
   return vpc;
@@ -2638,7 +2801,7 @@ SEM_FN_NAME (or1k64bf,lf_eq_s) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     BI opval = CGEN_CPU_FPU (current_cpu)->ops->eqsf (CGEN_CPU_FPU (current_cpu), GET_H_FSR (FLD (f_r2)), GET_H_FSR (FLD (f_r3)));
     SET_H_SYS_SR_F (opval);
-    TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'x', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'x', opval);
   }
 
   return vpc;
@@ -2659,7 +2822,7 @@ SEM_FN_NAME (or1k64bf,lf_eq_d) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     BI opval = CGEN_CPU_FPU (current_cpu)->ops->eqdf (CGEN_CPU_FPU (current_cpu), GET_H_FDR (FLD (f_r1)), GET_H_FDR (FLD (f_r1)));
     SET_H_SYS_SR_F (opval);
-    TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'x', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'x', opval);
   }
 
   return vpc;
@@ -2680,7 +2843,7 @@ SEM_FN_NAME (or1k64bf,lf_ne_s) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     BI opval = CGEN_CPU_FPU (current_cpu)->ops->nesf (CGEN_CPU_FPU (current_cpu), GET_H_FSR (FLD (f_r2)), GET_H_FSR (FLD (f_r3)));
     SET_H_SYS_SR_F (opval);
-    TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'x', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'x', opval);
   }
 
   return vpc;
@@ -2701,7 +2864,7 @@ SEM_FN_NAME (or1k64bf,lf_ne_d) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     BI opval = CGEN_CPU_FPU (current_cpu)->ops->nedf (CGEN_CPU_FPU (current_cpu), GET_H_FDR (FLD (f_r1)), GET_H_FDR (FLD (f_r1)));
     SET_H_SYS_SR_F (opval);
-    TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'x', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'x', opval);
   }
 
   return vpc;
@@ -2722,7 +2885,7 @@ SEM_FN_NAME (or1k64bf,lf_ge_s) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     BI opval = CGEN_CPU_FPU (current_cpu)->ops->gesf (CGEN_CPU_FPU (current_cpu), GET_H_FSR (FLD (f_r2)), GET_H_FSR (FLD (f_r3)));
     SET_H_SYS_SR_F (opval);
-    TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'x', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'x', opval);
   }
 
   return vpc;
@@ -2743,7 +2906,7 @@ SEM_FN_NAME (or1k64bf,lf_ge_d) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     BI opval = CGEN_CPU_FPU (current_cpu)->ops->gedf (CGEN_CPU_FPU (current_cpu), GET_H_FDR (FLD (f_r1)), GET_H_FDR (FLD (f_r1)));
     SET_H_SYS_SR_F (opval);
-    TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'x', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'x', opval);
   }
 
   return vpc;
@@ -2764,7 +2927,7 @@ SEM_FN_NAME (or1k64bf,lf_gt_s) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     BI opval = CGEN_CPU_FPU (current_cpu)->ops->gtsf (CGEN_CPU_FPU (current_cpu), GET_H_FSR (FLD (f_r2)), GET_H_FSR (FLD (f_r3)));
     SET_H_SYS_SR_F (opval);
-    TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'x', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'x', opval);
   }
 
   return vpc;
@@ -2785,7 +2948,7 @@ SEM_FN_NAME (or1k64bf,lf_gt_d) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     BI opval = CGEN_CPU_FPU (current_cpu)->ops->gtdf (CGEN_CPU_FPU (current_cpu), GET_H_FDR (FLD (f_r1)), GET_H_FDR (FLD (f_r1)));
     SET_H_SYS_SR_F (opval);
-    TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'x', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'x', opval);
   }
 
   return vpc;
@@ -2806,7 +2969,7 @@ SEM_FN_NAME (or1k64bf,lf_lt_s) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     BI opval = CGEN_CPU_FPU (current_cpu)->ops->ltsf (CGEN_CPU_FPU (current_cpu), GET_H_FSR (FLD (f_r2)), GET_H_FSR (FLD (f_r3)));
     SET_H_SYS_SR_F (opval);
-    TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'x', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'x', opval);
   }
 
   return vpc;
@@ -2827,7 +2990,7 @@ SEM_FN_NAME (or1k64bf,lf_lt_d) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     BI opval = CGEN_CPU_FPU (current_cpu)->ops->ltdf (CGEN_CPU_FPU (current_cpu), GET_H_FDR (FLD (f_r1)), GET_H_FDR (FLD (f_r1)));
     SET_H_SYS_SR_F (opval);
-    TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'x', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'x', opval);
   }
 
   return vpc;
@@ -2848,7 +3011,7 @@ SEM_FN_NAME (or1k64bf,lf_le_s) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     BI opval = CGEN_CPU_FPU (current_cpu)->ops->lesf (CGEN_CPU_FPU (current_cpu), GET_H_FSR (FLD (f_r2)), GET_H_FSR (FLD (f_r3)));
     SET_H_SYS_SR_F (opval);
-    TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'x', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'x', opval);
   }
 
   return vpc;
@@ -2869,7 +3032,7 @@ SEM_FN_NAME (or1k64bf,lf_le_d) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     BI opval = CGEN_CPU_FPU (current_cpu)->ops->ledf (CGEN_CPU_FPU (current_cpu), GET_H_FDR (FLD (f_r1)), GET_H_FDR (FLD (f_r1)));
     SET_H_SYS_SR_F (opval);
-    TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'x', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "sys-sr-f", 'x', opval);
   }
 
   return vpc;
@@ -2890,7 +3053,7 @@ SEM_FN_NAME (or1k64bf,lf_madd_s) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     SF opval = CGEN_CPU_FPU (current_cpu)->ops->addsf (CGEN_CPU_FPU (current_cpu), CGEN_CPU_FPU (current_cpu)->ops->mulsf (CGEN_CPU_FPU (current_cpu), GET_H_FSR (FLD (f_r2)), GET_H_FSR (FLD (f_r3))), GET_H_FSR (FLD (f_r1)));
     SET_H_FSR (FLD (f_r1), opval);
-    TRACE_RESULT (current_cpu, abuf, "fsr", 'f', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "fsr", 'f', opval);
   }
 
   return vpc;
@@ -2911,7 +3074,7 @@ SEM_FN_NAME (or1k64bf,lf_madd_d) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   {
     DF opval = CGEN_CPU_FPU (current_cpu)->ops->adddf (CGEN_CPU_FPU (current_cpu), CGEN_CPU_FPU (current_cpu)->ops->muldf (CGEN_CPU_FPU (current_cpu), GET_H_FDR (FLD (f_r1)), GET_H_FDR (FLD (f_r1))), GET_H_FDR (FLD (f_r1)));
     SET_H_FDR (FLD (f_r1), opval);
-    TRACE_RESULT (current_cpu, abuf, "fdr", 'f', opval);
+    CGEN_TRACE_RESULT (current_cpu, abuf, "fdr", 'f', opval);
   }
 
   return vpc;
@@ -2969,6 +3132,9 @@ static const struct sem_fn_desc sem_fns[] = {
   { OR1K64BF_INSN_L_BF, SEM_FN_NAME (or1k64bf,l_bf) },
   { OR1K64BF_INSN_L_TRAP, SEM_FN_NAME (or1k64bf,l_trap) },
   { OR1K64BF_INSN_L_SYS, SEM_FN_NAME (or1k64bf,l_sys) },
+  { OR1K64BF_INSN_L_MSYNC, SEM_FN_NAME (or1k64bf,l_msync) },
+  { OR1K64BF_INSN_L_PSYNC, SEM_FN_NAME (or1k64bf,l_psync) },
+  { OR1K64BF_INSN_L_CSYNC, SEM_FN_NAME (or1k64bf,l_csync) },
   { OR1K64BF_INSN_L_RFE, SEM_FN_NAME (or1k64bf,l_rfe) },
   { OR1K64BF_INSN_L_NOP_IMM, SEM_FN_NAME (or1k64bf,l_nop_imm) },
   { OR1K64BF_INSN_L_MOVHI, SEM_FN_NAME (or1k64bf,l_movhi) },
@@ -2977,6 +3143,7 @@ static const struct sem_fn_desc sem_fns[] = {
   { OR1K64BF_INSN_L_MTSPR, SEM_FN_NAME (or1k64bf,l_mtspr) },
   { OR1K64BF_INSN_L_LWZ, SEM_FN_NAME (or1k64bf,l_lwz) },
   { OR1K64BF_INSN_L_LWS, SEM_FN_NAME (or1k64bf,l_lws) },
+  { OR1K64BF_INSN_L_LWA, SEM_FN_NAME (or1k64bf,l_lwa) },
   { OR1K64BF_INSN_L_LBZ, SEM_FN_NAME (or1k64bf,l_lbz) },
   { OR1K64BF_INSN_L_LBS, SEM_FN_NAME (or1k64bf,l_lbs) },
   { OR1K64BF_INSN_L_LHZ, SEM_FN_NAME (or1k64bf,l_lhz) },
@@ -2984,6 +3151,7 @@ static const struct sem_fn_desc sem_fns[] = {
   { OR1K64BF_INSN_L_SW, SEM_FN_NAME (or1k64bf,l_sw) },
   { OR1K64BF_INSN_L_SB, SEM_FN_NAME (or1k64bf,l_sb) },
   { OR1K64BF_INSN_L_SH, SEM_FN_NAME (or1k64bf,l_sh) },
+  { OR1K64BF_INSN_L_SWA, SEM_FN_NAME (or1k64bf,l_swa) },
   { OR1K64BF_INSN_L_SLL, SEM_FN_NAME (or1k64bf,l_sll) },
   { OR1K64BF_INSN_L_SLLI, SEM_FN_NAME (or1k64bf,l_slli) },
   { OR1K64BF_INSN_L_SRL, SEM_FN_NAME (or1k64bf,l_srl) },

@@ -10156,6 +10156,38 @@ or1k64bf_h_sys_fpcsr_dzf_set (SIM_CPU *current_cpu, UDI newval)
   SET_H_SYS_FPCSR_DZF (newval);
 }
 
+/* Get the value of h-atomic-reserve.  */
+
+BI
+or1k64bf_h_atomic_reserve_get (SIM_CPU *current_cpu)
+{
+  return CPU (h_atomic_reserve);
+}
+
+/* Set a value for h-atomic-reserve.  */
+
+void
+or1k64bf_h_atomic_reserve_set (SIM_CPU *current_cpu, BI newval)
+{
+  CPU (h_atomic_reserve) = newval;
+}
+
+/* Get the value of h-atomic-address.  */
+
+SI
+or1k64bf_h_atomic_address_get (SIM_CPU *current_cpu)
+{
+  return CPU (h_atomic_address);
+}
+
+/* Set a value for h-atomic-address.  */
+
+void
+or1k64bf_h_atomic_address_set (SIM_CPU *current_cpu, SI newval)
+{
+  CPU (h_atomic_address) = newval;
+}
+
 /* Record trace results for INSN.  */
 
 void
