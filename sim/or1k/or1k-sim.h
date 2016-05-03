@@ -4,7 +4,7 @@
 #include "symcat.h"
 
 /* GDB register numbers. */
-#define PC_REGNUM	16
+#define PC_REGNUM	33
 
 /* Misc. profile data.  */
 typedef struct {
