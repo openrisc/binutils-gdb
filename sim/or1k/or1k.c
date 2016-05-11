@@ -21,8 +21,14 @@ int XCONCAT2(WANT_CPU,_fetch_register) (sim_cpu *current_cpu, int rn, unsigned c
   else
     switch (rn)
       {
+      case PPC_REGNUM :
+        SETTWI (buf, XCONCAT2(WANT_CPU,_h_sys_ppc_get) (current_cpu));
+        break;
       case PC_REGNUM :
         SETTWI (buf, XCONCAT2(WANT_CPU,_h_pc_get) (current_cpu));
+        break;
+      case SR_REGNUM :
+        SETTWI (buf, XCONCAT2(WANT_CPU,_h_sys_sr_get) (current_cpu));
         break;
       default :
          return 0;
@@ -37,8 +43,14 @@ int XCONCAT2(WANT_CPU,_store_register) (sim_cpu *current_cpu, int rn, unsigned c
   else
     switch (rn)
       {
+      case PPC_REGNUM :
+        XCONCAT2(WANT_CPU,_h_sys_ppc_set) (current_cpu, GETTWI (buf));
+        break;
       case PC_REGNUM :
         XCONCAT2(WANT_CPU,_h_pc_set) (current_cpu, GETTWI (buf));
+        break;
+      case SR_REGNUM :
+        XCONCAT2(WANT_CPU,_h_sys_sr_set) (current_cpu, GETTWI (buf));
         break;
       default :
          return 0;
