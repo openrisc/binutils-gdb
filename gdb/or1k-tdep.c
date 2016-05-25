@@ -439,10 +439,9 @@ or1k_return_value (struct gdbarch  *gdbarch,
   unsigned int    rv_size    = TYPE_LENGTH (valtype);
   unsigned int    bpw        = (gdbarch_tdep (gdbarch))->bytes_per_word;
 
-  /* Deal with struct/union as addresses. If an array won't fit in a single 
+  /* Deal with struct/union as addresses. If an array won't fit in a single
      register it is returned as address. Anything larger than 2 registers needs
-     to also be passed as address (this is maily from default_return_in_memory
-     in gcc) */
+     to also be passed as address (this is from gcc default_return_in_memory) */
   if ((TYPE_CODE_STRUCT == rv_type) || (TYPE_CODE_UNION == rv_type) ||
       ((TYPE_CODE_ARRAY == rv_type) && rv_size > bpw) ||
       (rv_size > 2*bpw))
@@ -464,7 +463,7 @@ or1k_return_value (struct gdbarch  *gdbarch,
 
       return RETURN_VALUE_ABI_RETURNS_ADDRESS;
     }
-  
+
   if (rv_size <= bpw)
     {
       /* up to one word scalars are returned in R11 */
@@ -1357,7 +1356,7 @@ or1k_push_dummy_call (struct gdbarch  *gdbarch,
 	  sp -= align_up(len, bpw);
 	}
 
-      /* ensure our dummy heap doesn't touch the stack, this could only happen 
+      /* ensure our dummy heap doesn't touch the stack, this could only happen
          if we have many arguments including fabricated arguments */
       gdb_assert(heap_offset == 0 || ((heap_sp + heap_offset) < sp));
     }
