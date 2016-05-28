@@ -45,19 +45,19 @@ This file is part of the GNU simulators.
 #define TIMING_DATA(td) 0
 #endif
 
-static const MODEL or64_models[] =
+static const SIM_MODEL or64_models[] =
 {
   { 0 }
 };
 
-static const MODEL or64nd_models[] =
+static const SIM_MODEL or64nd_models[] =
 {
   { 0 }
 };
 
 /* The properties of this cpu's implementation.  */
 
-static const MACH_IMP_PROPERTIES or1k64bf_imp_properties =
+static const SIM_MACH_IMP_PROPERTIES or1k64bf_imp_properties =
 {
   sizeof (SIM_CPU),
 #if WITH_SCACHE
@@ -99,7 +99,7 @@ or64_init_cpu (SIM_CPU *cpu)
 #endif
 }
 
-const MACH or64_mach =
+const SIM_MACH or64_mach =
 {
   "or64", "or1k64", MACH_OR64,
   64, 64, & or64_models[0], & or1k64bf_imp_properties,
@@ -125,7 +125,7 @@ or64nd_init_cpu (SIM_CPU *cpu)
 #endif
 }
 
-const MACH or64nd_mach =
+const SIM_MACH or64nd_mach =
 {
   "or64nd", "or1k64nd", MACH_OR64ND,
   64, 64, & or64nd_models[0], & or1k64bf_imp_properties,

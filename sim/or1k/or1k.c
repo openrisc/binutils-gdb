@@ -9,27 +9,64 @@
 #include "sim-main.h"
 #include "symcat.h"
 #include "cgen-ops.h"
+#include "cgen-mem.h"
+#include "cpuall.h"
 
 #include <string.h>
 
-/* not sure what the point of these is */
 int XCONCAT2(WANT_CPU,_fetch_register) (sim_cpu *current_cpu, int rn, unsigned char *buf, int len)
 {
-  return -1;
+   if (rn < 32)
+    SETTWI (buf, XCONCAT2(WANT_CPU,_h_gpr_get) (current_cpu, rn));
+  else
+    switch (rn)
+      {
+      case PPC_REGNUM :
+        SETTWI (buf, XCONCAT2(WANT_CPU,_h_sys_ppc_get) (current_cpu));
+        break;
+      case PC_REGNUM :
+        SETTWI (buf, XCONCAT2(WANT_CPU,_h_pc_get) (current_cpu));
+        break;
+      case SR_REGNUM :
+        SETTWI (buf, XCONCAT2(WANT_CPU,_h_sys_sr_get) (current_cpu));
+        break;
+      default :
+         return 0;
+      }
+  return sizeof(WI); /* WI from arch.h */
 }
 
 int XCONCAT2(WANT_CPU,_store_register) (sim_cpu *current_cpu, int rn, unsigned char *buf, int len)
 {
-  return -1;
+  if (rn < 32)
+    XCONCAT2(WANT_CPU,_h_gpr_set) (current_cpu, rn, GETTWI (buf));
+  else
+    switch (rn)
+      {
+      case PPC_REGNUM :
+        XCONCAT2(WANT_CPU,_h_sys_ppc_set) (current_cpu, GETTWI (buf));
+        break;
+      case PC_REGNUM :
+        XCONCAT2(WANT_CPU,_h_pc_set) (current_cpu, GETTWI (buf));
+        break;
+      case SR_REGNUM :
+        XCONCAT2(WANT_CPU,_h_sys_sr_set) (current_cpu, GETTWI (buf));
+        break;
+      default :
+         return 0;
+      }
+  return sizeof(WI); /* WI from arch.h */
 }
 
 #ifdef WANT_CPU_OR1K32BF
 int or1k32bf_model_or1200_u_exec (sim_cpu * UNUSED current_cpu, const IDESC * UNUSED idesc, int unit_num, int referenced)
 {
+  return -1;
 }
 
 int or1k32bf_model_or1200nd_u_exec (sim_cpu * UNUSED current_cpu, const IDESC * UNUSED idesc, int unit_num, int referenced)
 {
+  return -1;
 }
 
 void or1k32bf_model_insn_before (sim_cpu * UNUSED current_cpu, int UNUSED first_p)

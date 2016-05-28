@@ -1,6 +1,8 @@
 #ifndef SIM_MAIN_H
 #define SIM_MAIN_H
 
+#define WITH_SCACHE_PBB 1
+
 #include "ansidecl.h"
 #include "or1k-desc.h"
 #include "sim-basics.h"

@@ -53,6 +53,14 @@ typedef struct {
 do { \
 SET_H_SPR ((((index)) + (ORSI (SLLSI (SPR_GROUP_SYS, 11), SPR_INDEX_SYS_GPR0))), (x));\
 ;} while (0)
+  /* atomic reserve flag */
+  BI h_atomic_reserve;
+#define GET_H_ATOMIC_RESERVE() CPU (h_atomic_reserve)
+#define SET_H_ATOMIC_RESERVE(x) (CPU (h_atomic_reserve) = (x))
+  /* atomic reserve address */
+  SI h_atomic_address;
+#define GET_H_ATOMIC_ADDRESS() CPU (h_atomic_address)
+#define SET_H_ATOMIC_ADDRESS(x) (CPU (h_atomic_address) = (x))
   } hardware;
 #define CPU_CGEN_HW(cpu) (& (cpu)->cpu_data.hardware)
 } OR1K32BF_CPU_DATA;
@@ -4475,6 +4483,10 @@ USI or1k32bf_h_sys_fpcsr_inf_get (SIM_CPU *);
 void or1k32bf_h_sys_fpcsr_inf_set (SIM_CPU *, USI);
 USI or1k32bf_h_sys_fpcsr_dzf_get (SIM_CPU *);
 void or1k32bf_h_sys_fpcsr_dzf_set (SIM_CPU *, USI);
+BI or1k32bf_h_atomic_reserve_get (SIM_CPU *);
+void or1k32bf_h_atomic_reserve_set (SIM_CPU *, BI);
+SI or1k32bf_h_atomic_address_get (SIM_CPU *);
+void or1k32bf_h_atomic_address_set (SIM_CPU *, SI);
 
 /* These must be hand-written.  */
 extern CPUREG_FETCH_FN or1k32bf_fetch_register;
@@ -4622,6 +4634,17 @@ struct scache {
   f_resv_20_5 = EXTRACT_LSB0_UINT (insn, 32, 20, 5); \
   f_uimm16 = EXTRACT_LSB0_UINT (insn, 32, 15, 16); \
 
+#define EXTRACT_IFMT_L_MSYNC_VARS \
+  UINT f_opcode; \
+  UINT f_op_25_5; \
+  UINT f_resv_20_21; \
+  unsigned int length;
+#define EXTRACT_IFMT_L_MSYNC_CODE \
+  length = 4; \
+  f_opcode = EXTRACT_LSB0_UINT (insn, 32, 31, 6); \
+  f_op_25_5 = EXTRACT_LSB0_UINT (insn, 32, 25, 5); \
+  f_resv_20_21 = EXTRACT_LSB0_UINT (insn, 32, 20, 21); \
+
 #define EXTRACT_IFMT_L_RFE_VARS \
   UINT f_opcode; \
   UINT f_resv_25_26; \
@@ -4719,7 +4742,7 @@ struct scache {
 
 #define EXTRACT_IFMT_L_SW_VARS \
   UINT f_opcode; \
-  UINT f_r1; \
+  UINT f_r2; \
   UINT f_r3; \
   UINT f_imm16_25_5; \
   UINT f_imm16_10_11; \
@@ -4728,11 +4751,24 @@ struct scache {
 #define EXTRACT_IFMT_L_SW_CODE \
   length = 4; \
   f_opcode = EXTRACT_LSB0_UINT (insn, 32, 31, 6); \
-  f_r1 = EXTRACT_LSB0_UINT (insn, 32, 25, 5); \
+  f_r2 = EXTRACT_LSB0_UINT (insn, 32, 20, 5); \
   f_r3 = EXTRACT_LSB0_UINT (insn, 32, 15, 5); \
   f_imm16_25_5 = EXTRACT_LSB0_UINT (insn, 32, 25, 5); \
   f_imm16_10_11 = EXTRACT_LSB0_UINT (insn, 32, 10, 11); \
   f_simm16_split = ((HI) (UINT) (((((f_imm16_25_5) << (11))) | (f_imm16_10_11))));\
+
+#define EXTRACT_IFMT_L_SWA_VARS \
+  UINT f_opcode; \
+  UINT f_r2; \
+  UINT f_r3; \
+  INT f_simm16; \
+  unsigned int length;
+#define EXTRACT_IFMT_L_SWA_CODE \
+  length = 4; \
+  f_opcode = EXTRACT_LSB0_UINT (insn, 32, 31, 6); \
+  f_r2 = EXTRACT_LSB0_UINT (insn, 32, 20, 5); \
+  f_r3 = EXTRACT_LSB0_UINT (insn, 32, 15, 5); \
+  f_simm16 = EXTRACT_LSB0_SINT (insn, 32, 15, 16); \
 
 #define EXTRACT_IFMT_L_SLL_VARS \
   UINT f_opcode; \
