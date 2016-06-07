@@ -408,43 +408,27 @@ nios2*-*-*)
 or1k-*-linux*)
 	# Target: OpenCores OpenRISC 1000 32-bit implementation for Linux
 	gdb_target_obs="or1k-tdep.o corelow.o"
-    if test "${enable_or1ksim}" != no; then
-       gdb_sim=../sim/or1ksim/libsim.a
-    else
-       gdb_sim=../sim/or1k/libsim.a
-    fi
+        gdb_sim=../sim/or1k/libsim.a
 	build_gdbserver=yes
 	;;
 
 or1k-*-*)
 	# Target: OpenCores OpenRISC 1000 32-bit implementation bare metal
 	gdb_target_obs="or1k-tdep.o"
-    if test "${enable_or1ksim}" != no; then
-       gdb_sim=../sim/or1ksim/libsim.a
-    else
-       gdb_sim=../sim/or1k/libsim.a
-    fi
+        gdb_sim=../sim/or1k/libsim.a
 	;;
 
 or1knd-*-linux*)
 	# Target: OpenCores OpenRISC 1000 32-bit implementation for Linux, without delay slot
 	gdb_target_obs="or1k-tdep.o corelow.o"
-    if test "${enable_or1ksim}" != no; then
-       gdb_sim=../sim/or1ksim/libsim.a
-    else
-       gdb_sim=../sim/or1k/libsim.a
-    fi
+        gdb_sim=../sim/or1k/libsim.a
 	build_gdbserver=yes
 	;;
 
 or1knd-*-*)
 	# Target: OpenCores OpenRISC 1000 32-bit implementation bare metal, without delay slot
 	gdb_target_obs="or1k-tdep.o"
-    if test "${enable_or1ksim}" != no; then
-       gdb_sim=../sim/or1ksim/libsim.a
-    else
-       gdb_sim=../sim/or1k/libsim.a
-    fi
+        gdb_sim=../sim/or1k/libsim.a
 	;;
 
 powerpc*-*-freebsd*)
