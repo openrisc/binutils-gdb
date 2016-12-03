@@ -457,8 +457,14 @@ or1k_cgen_parse_operand (CGEN_CPU_DESC cd,
     case OR1K_OPERAND_RA :
       errmsg = cgen_parse_keyword (cd, strp, & or1k_cgen_opval_h_gpr, & fields->f_r2);
       break;
+    case OR1K_OPERAND_RAD32F :
+      errmsg = cgen_parse_keyword (cd, strp, & or1k_cgen_opval_h_fd32r, & fields->f_r2);
+      break;
     case OR1K_OPERAND_RADF :
-      errmsg = cgen_parse_keyword (cd, strp, & or1k_cgen_opval_h_fdr, & fields->f_r1);
+      errmsg = cgen_parse_keyword (cd, strp, & or1k_cgen_opval_h_fdr, & fields->f_r2);
+      break;
+    case OR1K_OPERAND_RADI :
+      errmsg = cgen_parse_keyword (cd, strp, & or1k_cgen_opval_h_i64r, & fields->f_r2);
       break;
     case OR1K_OPERAND_RASF :
       errmsg = cgen_parse_keyword (cd, strp, & or1k_cgen_opval_h_fsr, & fields->f_r2);
@@ -466,8 +472,11 @@ or1k_cgen_parse_operand (CGEN_CPU_DESC cd,
     case OR1K_OPERAND_RB :
       errmsg = cgen_parse_keyword (cd, strp, & or1k_cgen_opval_h_gpr, & fields->f_r3);
       break;
+    case OR1K_OPERAND_RBD32F :
+      errmsg = cgen_parse_keyword (cd, strp, & or1k_cgen_opval_h_fd32r, & fields->f_r3);
+      break;
     case OR1K_OPERAND_RBDF :
-      errmsg = cgen_parse_keyword (cd, strp, & or1k_cgen_opval_h_fdr, & fields->f_r1);
+      errmsg = cgen_parse_keyword (cd, strp, & or1k_cgen_opval_h_fdr, & fields->f_r3);
       break;
     case OR1K_OPERAND_RBSF :
       errmsg = cgen_parse_keyword (cd, strp, & or1k_cgen_opval_h_fsr, & fields->f_r3);
@@ -475,8 +484,14 @@ or1k_cgen_parse_operand (CGEN_CPU_DESC cd,
     case OR1K_OPERAND_RD :
       errmsg = cgen_parse_keyword (cd, strp, & or1k_cgen_opval_h_gpr, & fields->f_r1);
       break;
+    case OR1K_OPERAND_RDD32F :
+      errmsg = cgen_parse_keyword (cd, strp, & or1k_cgen_opval_h_fd32r, & fields->f_r1);
+      break;
     case OR1K_OPERAND_RDDF :
       errmsg = cgen_parse_keyword (cd, strp, & or1k_cgen_opval_h_fdr, & fields->f_r1);
+      break;
+    case OR1K_OPERAND_RDDI :
+      errmsg = cgen_parse_keyword (cd, strp, & or1k_cgen_opval_h_i64r, & fields->f_r1);
       break;
     case OR1K_OPERAND_RDSF :
       errmsg = cgen_parse_keyword (cd, strp, & or1k_cgen_opval_h_fsr, & fields->f_r1);

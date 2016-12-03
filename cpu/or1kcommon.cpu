@@ -1,7 +1,8 @@
 ; OpenRISC 1000 32-bit CPU hardware description.  -*- Scheme -*-
-; Copyright 2000-2014 Free Software Foundation, Inc.
+; Copyright 2000-2016 Free Software Foundation, Inc.
 ; Contributed for OR32 by Johan Rydberg, jrydberg@opencores.org
 ; Modified by Julius Baxter, juliusbaxter@gmail.com
+; Modified by Andrey Bacherov, avbacherov@opencores.org
 ;
 ; This program is free software; you can redistribute it and/or modify
 ; it under the terms of the GNU General Public License as published by
@@ -66,25 +67,43 @@
    (fp 2))
   )
 
-(define-hardware
-  (name h-fsr)
-  (comment "floating point registers (single, virtual)")
-  (attrs VIRTUAL (MACH ORFPX32-MACHS))
-  (type register SF (32))
-  (indices keyword "" REG-INDICES)
-  (get (index) (subword SF (trunc SI (reg h-gpr index)) 0))
-  (set (index newval) (set UWI (reg h-gpr index) (zext UWI (subword SI newval 0))))
+;
+; To support double precision floating point data on 32-bit
+; machines (ORFPX64A32-MACHS) we join some ragister in pairs.
+; Here is the list of 1st registers of such pairs.
+; The pairs are available for register allocation routine in
+; according with FIXED_REGISTERS array in or1k.h of GCC port.
+;
+(define-pmacro REG-FD32R-INDICES
+  ((r2 2)
+   (r3 3)
+   (r4 4)
+   (r5 5)
+   (r6 6)
+   (r7 7)
+   (r11 11)
+   (r12 12)
+   (r13 13)
+   (r14 14)
+   (r17 17)
+   (r18 18)
+   (r19 19)
+   (r20 20)
+   (r21 21)
+   (r22 22)
+   (r23 23)
+   (r24 24)
+   (r25 25)
+   (r26 26)
+   (r27 27)
+   (r28 28)
+   (r29 29)
+   (r30 30))
   )
 
-(define-hardware
-  (name h-fdr) (comment "floating point registers (double, virtual)")
-  (attrs VIRTUAL (MACH ORFPX64-MACHS))
-  (type register DF (32))
-  (indices keyword "" REG-INDICES)
-  (get (index) (subword DF (trunc DI (reg h-gpr index)) 0))
-  (set (index newval) (set UDI (reg h-gpr index) (zext UDI (subword DI newval 0))))
-  )
-
+;
+; Hardware: [S]pecial [P]urpose [R]egisters
+;
 (define-hardware
   (name h-spr) (comment "special purpose registers")
   (attrs VIRTUAL (MACH ORBIS-MACHS))
@@ -98,6 +117,9 @@
   (or (sll UWI (enum UWI (.sym "SPR-GROUP-" spr-group)) spr-shift)
       (enum UWI (.sym "SPR-INDEX-" spr-group "-" spr-index))))
 
+;
+; Hardware: [G]enepral  [P]urpose [R]egisters
+;
 (define-hardware
   (name h-gpr) (comment "general registers")
   (attrs (MACH ORBIS-MACHS))
@@ -106,6 +128,75 @@
   (get (index) (reg UWI h-spr (add index (spr-address SYS GPR0))))
   (set (index newval) (set UWI (reg UWI h-spr (add index (spr-address SYS GPR0))) newval))
   )
+
+;
+; Hardware: virtual registerts for FPU (single precision)
+;           mapped to GPRs
+;
+(define-hardware
+  (name h-fsr)
+  (comment "floating point registers (single, virtual)")
+  (attrs VIRTUAL (MACH ORFPX32-MACHS))
+  (type register SF (32))
+  (indices keyword "" REG-INDICES)
+  (get (index) (subword SF (trunc SI (reg h-gpr index)) 0))
+  (set (index newval) (set UWI (reg h-gpr index) (zext UWI (subword SI newval 0))))
+  )
+
+;
+; Hardware: virtual registerts for FPU (double precision)
+;           mapped to GPRs
+;
+(define-hardware
+  (name h-fdr)
+  (comment "or64 floating point registers (double, virtual)")
+  (attrs VIRTUAL (MACH ORFPX64-MACHS))
+  (type register DF (32))
+  (indices keyword "" REG-INDICES)
+  (get (index) (subword DF (trunc DI (reg h-gpr index)) 0))
+  (set (index newval) (set UDI (reg h-gpr index) (zext UDI (subword DI newval 0))))
+  )
+
+;
+; Hardware: vrtual registers for double precision floating point
+;           operands on 32-bit machines
+;           mapped to GPRs
+;
+(define-hardware
+  (name h-fd32r)
+  (comment "or32 floating point registers (double, virtual)")
+  (attrs VIRTUAL (MACH ORFPX64A32-MACHS))
+  (type register DF (13))
+  (indices keyword "" REG-FD32R-INDICES)
+  (get (index) (join DF SI
+                        (reg h-gpr index)
+                        (reg h-gpr (add index 1))))
+  (set (index newval)
+       (sequence ()
+                 (set (reg h-gpr index) (subword SI newval 0))
+                 (set (reg h-gpr (add index 1)) (subword SI newval 1))))
+)
+
+;
+; Hardware: vrtual 64-bit integer registers for confersions
+;           float64 <-> int64 on 32-bit machines
+;           mapped to GPRs
+;
+(define-hardware
+  (name h-i64r)
+  (comment "or32 double word registers (int64, virtual)")
+  (attrs VIRTUAL (MACH ORFPX64A32-MACHS))
+  (type register DI (13))
+  (indices keyword "" REG-FD32R-INDICES)
+  (get (index) (join DI SI
+                        (reg h-gpr index)
+                        (reg h-gpr (add index 1))))
+  (set (index newval)
+       (sequence ()
+                 (set (reg h-gpr index) (subword SI newval 0))
+                 (set (reg h-gpr (add index 1)) (subword SI newval 1))))
+)
+
 
 (define-normal-enum
   except-number
