@@ -1060,7 +1060,9 @@ or1k_elf_relocate_section (bfd *output_bfd,
   bfd *dynobj;
   asection *sreloc;
   bfd_vma *local_got_offsets;
-  asection *sgot;
+  asection *sgot, *splt;
+  bfd_vma plt_base, got_base;
+  bfd_boolean ret_val = TRUE;
 
   if (htab == NULL)
     return FALSE;
@@ -1070,7 +1072,15 @@ or1k_elf_relocate_section (bfd *output_bfd,
 
   sreloc = elf_section_data (input_section)->sreloc;
 
+  splt = htab->root.splt;
+  plt_base = 0;
+  if (splt != NULL)
+    plt_base = splt->output_section->vma + splt->output_offset;
+
   sgot = htab->root.sgot;
+  got_base = 0;
+  if (sgot != NULL)
+    got_base = sgot->output_section->vma + sgot->output_offset;
 
   symtab_hdr = &elf_tdata (input_bfd)->symtab_hdr;
   sym_hashes = elf_sym_hashes (input_bfd);
@@ -1097,8 +1107,12 @@ or1k_elf_relocate_section (bfd *output_bfd,
 
       if (r_type < 0 || r_type >= (int) R_OR1K_max)
 	{
+	  (*_bfd_error_handler)
+	    (_("%B: unknown relocation type %d"),
+	     input_bfd, (int) r_type);
 	  bfd_set_error (bfd_error_bad_value);
-	  return FALSE;
+	  ret_val = FALSE;
+	  continue;
 	}
 
       howto = or1k_elf_howto_table + ELF32_R_TYPE (rel->r_info);
@@ -1136,16 +1150,24 @@ or1k_elf_relocate_section (bfd *output_bfd,
       switch (howto->type)
 	{
 	case R_OR1K_PLT26:
+	  /* If the call is not local, redirect the branch to the PLT.
+	     Otherwise do nothing to send the branch to the symbol direct.  */
+	  if (!SYMBOL_CALLS_LOCAL (info, h))
 	  {
-	    if (htab->root.splt != NULL && h != NULL
-		&& h->plt.offset != (bfd_vma) -1)
+	      BFD_ASSERT (h->plt.offset != (bfd_vma) -1);
+	      relocation = plt_base + h->plt.offset;
+	    }
+
+	  /* Addend should be zero.  */
+	  if (rel->r_addend != 0)
 	      {
-		relocation = (htab->root.splt->output_section->vma
-			      + htab->root.splt->output_offset
-			      + h->plt.offset);
+	      (*_bfd_error_handler)
+		(_("%B: addend should be zero for plt relocations"),
+		 input_bfd);
+	      bfd_set_error (bfd_error_bad_value);
+	      ret_val = FALSE;
 	      }
 	    break;
-	  }
 
 	case R_OR1K_GOT16:
 	  /* Relocation is to the entry for this symbol in the global
@@ -1222,9 +1244,7 @@ or1k_elf_relocate_section (bfd *output_bfd,
 		      srelgot = htab->root.srelgot;
 		      BFD_ASSERT (srelgot != NULL);
 
-		      outrel.r_offset = (sgot->output_section->vma
-					 + sgot->output_offset
-					 + off);
+		      outrel.r_offset = got_base + off;
 		      outrel.r_info = ELF32_R_INFO (0, R_OR1K_RELATIVE);
 		      outrel.r_addend = relocation;
 		      loc = srelgot->contents;
@@ -1240,9 +1260,13 @@ or1k_elf_relocate_section (bfd *output_bfd,
 
 	  /* Addend should be zero.  */
 	  if (rel->r_addend != 0)
-	    _bfd_error_handler
-	      (_("internal error: addend should be zero for R_OR1K_GOT16"));
-
+	    {
+	      (*_bfd_error_handler)
+		(_("%B: addend should be zero for got relocations"),
+		 input_bfd);
+	      bfd_set_error (bfd_error_bad_value);
+	      ret_val = FALSE;
+	    }
 	  break;
 
 	case R_OR1K_GOTOFF_LO16:
@@ -1251,17 +1275,44 @@ or1k_elf_relocate_section (bfd *output_bfd,
 	case R_OR1K_GOTOFF_SLO16:
 	  /* Relocation is offset from GOT.  */
 	  BFD_ASSERT (sgot != NULL);
-	  relocation
-	    -= (htab->root.hgot->root.u.def.value
-		+ htab->root.hgot->root.u.def.section->output_offset
-		+ htab->root.hgot->root.u.def.section->output_section->vma);
+	  if (!SYMBOL_REFERENCES_LOCAL (info, h))
+	    {
+	      (*_bfd_error_handler)
+		(_("%B: gotoff relocation against dynamic symbol %s"),
+		 input_bfd, h->root.root.string);
+	      ret_val = FALSE;
+	      bfd_set_error (bfd_error_bad_value);
+	    }
+	  relocation -= got_base;
 	  break;
 
 	case R_OR1K_INSN_REL_26:
+	  /* For a non-shared link, these will reference either the plt
+	     or a .dynbss copy of the symbol.  */
+	  if (bfd_link_pic (info) && !SYMBOL_REFERENCES_LOCAL (info, h))
+	    {
+	      (*_bfd_error_handler)
+		(_("%B: pc-relative relocation against dynamic symbol %s"),
+		 input_bfd, h->root.root.string);
+	      ret_val = FALSE;
+	      bfd_set_error (bfd_error_bad_value);
+	    }
+	  break;
+
 	case R_OR1K_HI_16_IN_INSN:
 	case R_OR1K_LO_16_IN_INSN:
 	case R_OR1K_AHI16:
 	case R_OR1K_SLO16:
+	  if (bfd_link_pic (info))
+	    {
+	      (*_bfd_error_handler)
+		(_("%B: non-pic relocation against symbol %s"),
+		 input_bfd, h->root.root.string);
+	      ret_val = FALSE;
+	      bfd_set_error (bfd_error_bad_value);
+	    }
+	  break;
+
 	case R_OR1K_32:
 	  /* R_OR1K_16? */
 	  {
@@ -1272,18 +1323,17 @@ or1k_elf_relocate_section (bfd *output_bfd,
 		|| (input_section->flags & SEC_ALLOC) == 0)
 	      break;
 
-	    if ((bfd_link_pic (info)
-		 && (h == NULL
+	    /* Emit a direct relocation if the symbol is dynamic,
+	       or a RELATIVE reloc for shared objects.  We can omit
+	       RELATIVE relocs to local undefweak symbols.  */
+	    if (bfd_link_pic (info)
+		? (h == NULL
 		     || ELF_ST_VISIBILITY (h->other) == STV_DEFAULT
 		     || h->root.type != bfd_link_hash_undefweak)
-		 && (howto->type != R_OR1K_INSN_REL_26
-		     || !SYMBOL_CALLS_LOCAL (info, h)))
-		|| (!bfd_link_pic (info)
-		    && h != NULL
+		: (h != NULL
 		    && h->dynindx != -1
 		    && !h->non_got_ref
-		    && ((h->def_dynamic
-			 && !h->def_regular)
+		   && ((h->def_dynamic && !h->def_regular)
 			|| h->root.type == bfd_link_hash_undefweak
 			|| h->root.type == bfd_link_hash_undefined)))
 	      {
@@ -1311,32 +1361,16 @@ or1k_elf_relocate_section (bfd *output_bfd,
 
 		if (skip)
 		  memset (&outrel, 0, sizeof outrel);
-		/* h->dynindx may be -1 if the symbol was marked to
-		   become local.  */
-		else if (h != NULL
-			 && ((! info->symbolic && h->dynindx != -1)
-			     || !h->def_regular))
-		  {
-		    BFD_ASSERT (h->dynindx != -1);
-		    outrel.r_info = ELF32_R_INFO (h->dynindx, r_type);
-		    outrel.r_addend = rel->r_addend;
-		  }
-		else
-		  {
-		    if (r_type == R_OR1K_32)
+		else if (SYMBOL_REFERENCES_LOCAL (info, h))
 		      {
 			outrel.r_info = ELF32_R_INFO (0, R_OR1K_RELATIVE);
 			outrel.r_addend = relocation + rel->r_addend;
 		      }
 		    else
 		      {
-			BFD_FAIL ();
-			_bfd_error_handler
-			  (_("%B: probably compiled without -fPIC?"),
-			   input_bfd);
-			bfd_set_error (bfd_error_bad_value);
-			return FALSE;
-		      }
+		    BFD_ASSERT (h->dynindx != -1);
+		    outrel.r_info = ELF32_R_INFO (h->dynindx, r_type);
+		    outrel.r_addend = rel->r_addend;
 		  }
 
 		loc = sreloc->contents;
@@ -1412,8 +1446,7 @@ or1k_elf_relocate_section (bfd *output_bfd,
 		/* Add DTPMOD and DTPOFF GOT and rela entries.  */
 		for (i = 0; i < 2; ++i)
 		  {
-		    rela.r_offset = sgot->output_section->vma +
-		      sgot->output_offset + gotoff + i*4;
+		    rela.r_offset = got_base + gotoff + i*4;
 		    if (h != NULL && h->dynindx != -1)
 		      {
 			rela.r_info = ELF32_R_INFO (h->dynindx,
@@ -1447,8 +1480,7 @@ or1k_elf_relocate_section (bfd *output_bfd,
 	    else if (dynamic)
 	      {
 		/* Add TPOFF GOT and rela entries.  */
-		rela.r_offset = sgot->output_section->vma +
-		  sgot->output_offset + gotoff;
+		rela.r_offset = got_base + gotoff;
 		if (h != NULL && h->dynindx != -1)
 		  {
 		    rela.r_info = ELF32_R_INFO (h->dynindx, R_OR1K_TLS_TPOFF);
@@ -1543,7 +1575,7 @@ or1k_elf_relocate_section (bfd *output_bfd,
 	}
     }
 
-  return TRUE;
+  return ret_val;
 }
 
 /* Return the section that should be marked against GC for a given
