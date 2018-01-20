@@ -2377,7 +2377,7 @@ SEM_FN_NAME (or1k32bf,l_maci) (SIM_CPU *current_cpu, SEM_ARG sem_arg)
   DI tmp_prod;
   DI tmp_mac;
   DI tmp_result;
-  tmp_prod = MULDI (GET_H_GPR (FLD (f_r2)), EXTSIDI (FLD (f_simm16)));
+  tmp_prod = MULDI (EXTSIDI (GET_H_GPR (FLD (f_r2))), EXTSIDI (FLD (f_simm16)));
   tmp_mac = JOINSIDI (GET_H_MAC_MACHI (), GET_H_MAC_MACLO ());
   tmp_result = ADDDI (tmp_mac, tmp_prod);
   {

@@ -1160,7 +1160,7 @@
      (+ OPC_MACI (f-resv-25-5 0) rA simm16)
      (sequence ()
 	(sequence ((DI prod) (DI mac) (DI result))
-	   (set DI prod (mul DI rA (ext DI simm16)))
+	   (set DI prod (mul DI (ext DI rA) (ext DI simm16)))
 	   (set DI mac (join DI SI mac-machi mac-maclo))
 	   (set DI result (add mac prod))
 	   (set SI mac-machi (subword SI result 0))
