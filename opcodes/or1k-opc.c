@@ -116,6 +116,10 @@ static const CGEN_IFMT ifmt_l_and ATTRIBUTE_UNUSED = {
   32, 32, 0xfc0007ff, { { F (F_OPCODE) }, { F (F_R1) }, { F (F_R2) }, { F (F_R3) }, { F (F_RESV_10_7) }, { F (F_OP_3_4) }, { 0 } }
 };
 
+static const CGEN_IFMT ifmt_lv_add ATTRIBUTE_UNUSED = {
+  32, 32, 0xfc0007ff, { { F (F_OPCODE) }, { F (F_R1) }, { F (F_R2) }, { F (F_R3) }, { F (F_RESV_10_3) }, { F (F_OP_7_8) }, { 0 } }
+};
+
 static const CGEN_IFMT ifmt_l_muld ATTRIBUTE_UNUSED = {
   32, 32, 0xffe007ff, { { F (F_OPCODE) }, { F (F_RESV_25_5) }, { F (F_R2) }, { F (F_R3) }, { F (F_RESV_10_7) }, { F (F_OP_3_4) }, { 0 } }
 };
@@ -952,6 +956,18 @@ static const CGEN_OPCODE or1k_cgen_insn_opcode_table[MAX_INSNS] =
     { 0, 0, 0, 0 },
     { { MNEM, ' ', OP (RASF), ',', OP (RBSF), 0 } },
     & ifmt_lf_cust1_s, { 0xc80000d0 }
+  },
+/* l.test $rD,$rA,$rB */
+  {
+    { 0, 0, 0, 0 },
+    { { MNEM, ' ', OP (RD), ',', OP (RA), ',', OP (RB), 0 } },
+    & ifmt_l_and, { 0xe0000007 }
+  },
+/* lv.add.b $rD,$rA,$rB */
+  {
+    { 0, 0, 0, 0 },
+    { { MNEM, ' ', OP (RD), ',', OP (RA), ',', OP (RB), 0 } },
+    & ifmt_lv_add, { 0x28000030 }
   },
 /* lf.cust1.d */
   {

@@ -1366,6 +1366,11 @@ static const CGEN_IBASE or1k_cgen_insn_table[MAX_INSNS] =
     OR1K_INSN_L_ADD, "l-add", "l.add", 32,
     { 0, { { { (1<<MACH_OR32)|(1<<MACH_OR32ND)|(1<<MACH_OR64)|(1<<MACH_OR64ND), 0 } } } }
   },
+/* l.test $rD,$rA,$rB */
+  {
+    OR1K_INSN_L_TEST, "l-test", "l.test", 32,
+    { 0, { { { (1<<MACH_OR32)|(1<<MACH_OR32ND)|(1<<MACH_OR64)|(1<<MACH_OR64ND), 0 } } } }
+  },
 /* l.sub $rD,$rA,$rB */
   {
     OR1K_INSN_L_SUB, "l-sub", "l.sub", 32,
@@ -1789,6 +1794,11 @@ static const CGEN_IBASE or1k_cgen_insn_table[MAX_INSNS] =
 /* lf.cust1.s $rASF,$rBSF */
   {
     OR1K_INSN_LF_CUST1_S, "lf-cust1-s", "lf.cust1.s", 32,
+    { 0, { { { (1<<MACH_OR32)|(1<<MACH_OR32ND)|(1<<MACH_OR64)|(1<<MACH_OR64ND), 0 } } } }
+  },
+/* lv.add.b $rD,$rA,$rB */
+  {
+    OR1K_INSN_LV_ADD_B, "lv-add-b", "lv.add.b", 32,
     { 0, { { { (1<<MACH_OR32)|(1<<MACH_OR32ND)|(1<<MACH_OR64)|(1<<MACH_OR64ND), 0 } } } }
   },
 /* lf.cust1.d */
