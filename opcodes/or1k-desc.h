@@ -357,7 +357,7 @@ typedef enum insn_opcode_float_regreg {
 /* Enum declaration for machine type selection.  */
 typedef enum mach_attr {
   MACH_BASE, MACH_OR32, MACH_OR32ND, MACH_OR64
- , MACH_OR64ND, MACH_MAX
+ , MACH_OR64ND, MACH_OR32DSP, MACH_MAX
 } MACH_ATTR;
 
 /* Enum declaration for instruction set selection.  */
