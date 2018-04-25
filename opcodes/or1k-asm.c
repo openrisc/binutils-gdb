@@ -498,6 +498,21 @@ or1k_cgen_parse_operand (CGEN_CPU_DESC cd,
     case OR1K_OPERAND_UIMM16_SPLIT :
       errmsg = parse_uimm16_split (cd, strp, OR1K_OPERAND_UIMM16_SPLIT, (unsigned long *) (& fields->f_uimm16_split));
       break;
+    case OR1K_OPERAND_UIMM1A :
+      errmsg = cgen_parse_unsigned_integer (cd, strp, OR1K_OPERAND_UIMM1A, (unsigned long *) (& fields->f_uimm1a));
+      break;
+    case OR1K_OPERAND_UIMM1B :
+      errmsg = cgen_parse_unsigned_integer (cd, strp, OR1K_OPERAND_UIMM1B, (unsigned long *) (& fields->f_uimm1b));
+      break;
+    case OR1K_OPERAND_UIMM1D :
+      errmsg = cgen_parse_unsigned_integer (cd, strp, OR1K_OPERAND_UIMM1D, (unsigned long *) (& fields->f_uimm1d));
+      break;
+    case OR1K_OPERAND_UIMM1S :
+      errmsg = cgen_parse_unsigned_integer (cd, strp, OR1K_OPERAND_UIMM1S, (unsigned long *) (& fields->f_uimm1s));
+      break;
+    case OR1K_OPERAND_UIMM1U :
+      errmsg = cgen_parse_unsigned_integer (cd, strp, OR1K_OPERAND_UIMM1U, (unsigned long *) (& fields->f_uimm1u));
+      break;
     case OR1K_OPERAND_UIMM2D :
       errmsg = cgen_parse_unsigned_integer (cd, strp, OR1K_OPERAND_UIMM2D, (unsigned long *) (& fields->f_uimm2d));
       break;
