@@ -49,31 +49,35 @@
 
 ## select instructions
 
-|31 - 26|25 - 21|20 - 16|15 - 11|10 - 8|7|6|5|4|3|2 - 1|0|
-|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-|0x3F|D|A|B|res.|0|1|0|1|0|OP|S|
+|31 - 26|25 - 21|20 - 16|15 - 11|10 - 8|7|6|5|4|3|2|1|0|
+|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+|0x3F|D|A|B|res.|0|1|0|1|OP|U|OP|S|
 
 - OP : operation codes
-0. max : select max between A and B for each operation size
+0. average : make average of A and B for each operation size
 1. min : select min between A and B for each operation size
 2. merge : make merge using A and B, {A,B} or {A,B,A,B}
-3. average : make average of A and B for each operation size
+3. max : select max between A and B for each operation size
 
 - S : operation size
 0. byte
 1. half word
 
+- U : sign
+0. signed
+1. unsigned
+
 ## pack/unpack instructions
 
 |31 - 26|25 - 21|20 - 16|15 - 11|10 - 8|7|6|5|4|3|2 - 1|0|
 |:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-|0x3F|D|A|B|res.|0|1|0|1|1|OP|S|
+|0x3F|D|A|B|res.|0|1|1|0|0|OP|S|
 
 - OP : operation codes
 0. pack signed
 1. pack signed saturated
 2. pack unsigned saturated
-3. unpack
+3. unpack signed
 
 - S : operation size
 0. byte
@@ -83,27 +87,13 @@
 
 |31 - 26|25 - 21|20 - 16|15 - 11|10 - 8|7|6|5|4|3|2 - 1|0|
 |:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-|0x3F|D|A|B|res.|0|1|1|0|0|OP|S|
+|0x3F|D|A|B|res.|0|1|1|0|1|OP|S|
 
 - OP : operation codes
 0. rotate left
 1. shift left logical
 2. shift right arithmetic
 3. shift right logical
-
-- S : operation size
-0. byte
-1. half word
-
-## saturation instructions
-
-|31 - 26|25 - 21|20 - 16|15 - 11|10 - 8|7|6|5|4|3|2|1|0|
-|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-|0x3F|D|A|B|res.|0|1|1|0|1|U|0|S|
-
-- U : signed/unsigned
-0. signed
-1. unsigned
 
 - S : operation size
 0. byte
@@ -175,6 +165,23 @@
 - U : signed/unsigned
 0. signed
 1. unsigned
+
+## move partial instructions
+
+|31 - 26|25 - 21|20 - 16|15 - 11|10 - 8|7|6|5|4 - 3|2 - 1|0|
+|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+|0x3F|D|A|B|res.|1|0|1|SRC|DST|S|
+
+move b[i] -> d[i], and other data from a
+
+- S : tranfer size
+0. byte
+1. half word
+
+- SRC : source byte offset
+
+- DST : destination byte offset
+
 
 ## extension instructions
 
