@@ -51,7 +51,7 @@ extern "C" {
 #define CGEN_INT_INSN_P 1
 
 /* Maximum number of syntax elements in an instruction.  */
-#define CGEN_ACTUAL_MAX_SYNTAX_ELEMENTS 17
+#define CGEN_ACTUAL_MAX_SYNTAX_ELEMENTS 19
 
 /* CGEN_MNEMONIC_OPERANDS is defined if mnemonics have operands.
    e.g. In "b,a foo" the ",a" is an operand.  If mnemonics have operands
@@ -290,7 +290,7 @@ typedef enum insn_opcode {
  , OPC_SHROTI = 46, OPC_SFI = 47, OPC_MTSPR = 48, OPC_MAC = 49
  , OPC_FLOAT = 50, OPC_SWA = 51, OPC_SD = 52, OPC_SW = 53
  , OPC_SB = 54, OPC_SH = 55, OPC_ALU = 56, OPC_SF = 57
- , OPC_CUST5 = 60, OPC_CUST6 = 61, OPC_CUST7 = 62, OPC_CUST8 = 63
+ , OPC_CUST5 = 60, OPC_CUST6 = 61, OPC_CUST7 = 62, OPC_DSP = 63
 } INSN_OPCODE;
 
 /* Enum declaration for systrapsync insn opcode enums.  */
@@ -310,9 +310,9 @@ typedef enum insn_opcode_mac {
 } INSN_OPCODE_MAC;
 
 /* Enum declaration for shift/rotate insn opcode enums.  */
-typedef enum insn_opcode_shorts {
+typedef enum insn_opcode_shrots {
   OPC_SHROTS_SLL, OPC_SHROTS_SRL, OPC_SHROTS_SRA, OPC_SHROTS_ROR
-} INSN_OPCODE_SHORTS;
+} INSN_OPCODE_SHROTS;
 
 /* Enum declaration for extend byte/half opcode enums.  */
 typedef enum insn_opcode_extbhs {
@@ -340,6 +340,98 @@ typedef enum insn_opcode_setflag {
  , OPC_SF_LTS = 12, OPC_SF_LES = 13
 } INSN_OPCODE_SETFLAG;
 
+/* Enum declaration for DSP insn opcode enums.  */
+typedef enum insn_opcode_dsp {
+  OPC_DSP_CMP = 1, OPC_DSP_ALL = 2, OPC_DSP_ANY = 3, OPC_DSP_ADD = 4
+ , OPC_DSP_SEL = 5, OPC_DSP_PACK = 6, OPC_DSP_LOGIC = 7, OPC_DSP_MUL = 8
+ , OPC_DSP_MULW = 9, OPC_DSP_MOV0 = 10, OPC_DSP_MOV1 = 11, OPC_DSP_MISC = 12
+} INSN_OPCODE_DSP;
+
+/* Enum declaration for compare insn opcode enums.  */
+typedef enum insn_opcode_cmp {
+  OPC_DSP_CMP_EQ_B = 0, OPC_DSP_CMP_EQ_H = 1, OPC_DSP_CMP_NE_B = 2, OPC_DSP_CMP_NE_H = 3
+ , OPC_DSP_CMP_GE_B = 8, OPC_DSP_CMP_GE_H = 9, OPC_DSP_CMP_GT_B = 10, OPC_DSP_CMP_GT_H = 11
+ , OPC_DSP_CMP_LE_B = 12, OPC_DSP_CMP_LE_H = 13, OPC_DSP_CMP_LT_B = 14, OPC_DSP_CMP_LT_H = 15
+} INSN_OPCODE_CMP;
+
+/* Enum declaration for all compare insn opcode enums.  */
+typedef enum insn_opcode_all {
+  OPC_DSP_ALL_EQ_B = 0, OPC_DSP_ALL_EQ_H = 1, OPC_DSP_ALL_NE_B = 2, OPC_DSP_ALL_NE_H = 3
+ , OPC_DSP_ALL_GE_B = 8, OPC_DSP_ALL_GE_H = 9, OPC_DSP_ALL_GT_B = 10, OPC_DSP_ALL_GT_H = 11
+ , OPC_DSP_ALL_LE_B = 12, OPC_DSP_ALL_LE_H = 13, OPC_DSP_ALL_LT_B = 14, OPC_DSP_ALL_LT_H = 15
+} INSN_OPCODE_ALL;
+
+/* Enum declaration for any compare insn opcode enums.  */
+typedef enum insn_opcode_any {
+  OPC_DSP_ANY_EQ_B = 0, OPC_DSP_ANY_EQ_H = 1, OPC_DSP_ANY_NE_B = 2, OPC_DSP_ANY_NE_H = 3
+ , OPC_DSP_ANY_GE_B = 8, OPC_DSP_ANY_GE_H = 9, OPC_DSP_ANY_GT_B = 10, OPC_DSP_ANY_GT_H = 11
+ , OPC_DSP_ANY_LE_B = 12, OPC_DSP_ANY_LE_H = 13, OPC_DSP_ANY_LT_B = 14, OPC_DSP_ANY_LT_H = 15
+} INSN_OPCODE_ANY;
+
+/* Enum declaration for add/sub insn opcode enums.  */
+typedef enum insn_opcode_addsub {
+  OPC_DSP_ADD_ADD_B, OPC_DSP_ADD_ADD_H, OPC_DSP_ADD_ADDS_B, OPC_DSP_ADD_ADDS_H
+ , OPC_DSP_ADD_ADDU_B, OPC_DSP_ADD_ADDU_H, OPC_DSP_ADD_ADDUS_B, OPC_DSP_ADD_ADDUS_H
+ , OPC_DSP_ADD_SUB_B, OPC_DSP_ADD_SUB_H, OPC_DSP_ADD_SUBS_B, OPC_DSP_ADD_SUBS_H
+ , OPC_DSP_ADD_SUBU_B, OPC_DSP_ADD_SUBU_H, OPC_DSP_ADD_SUBUS_B, OPC_DSP_ADD_SUBUS_H
+} INSN_OPCODE_ADDSUB;
+
+/* Enum declaration for select insn opcode enums.  */
+typedef enum insn_opcode_sel {
+  OPC_DSP_SEL_AVG_B = 0, OPC_DSP_SEL_AVG_H = 1, OPC_DSP_SEL_MIN_B = 2, OPC_DSP_SEL_MIN_H = 3
+ , OPC_DSP_SEL_AVGU_B = 4, OPC_DSP_SEL_AVGU_H = 5, OPC_DSP_SEL_MINU_B = 6, OPC_DSP_SEL_MINU_H = 7
+ , OPC_DSP_SEL_MERGE_B = 8, OPC_DSP_SEL_MERGE_H = 9, OPC_DSP_SEL_MAX_B = 10, OPC_DSP_SEL_MAX_H = 11
+ , OPC_DSP_SEL_MAXU_B = 14, OPC_DSP_SEL_MAXU_H = 15
+} INSN_OPCODE_SEL;
+
+/* Enum declaration for pack/shift insn opcode enums.  */
+typedef enum insn_opcode_pack {
+  OPC_DSP_PACK_PACK_B, OPC_DSP_PACK_PACK_H, OPC_DSP_PACK_PACKS_B, OPC_DSP_PACK_PACKS_H
+ , OPC_DSP_PACK_PACKUS_B, OPC_DSP_PACK_PACKUS_H, OPC_DSP_PACK_UNPACK_B, OPC_DSP_PACK_UNPACK_H
+ , OPC_DSP_PACK_RL_B, OPC_DSP_PACK_RL_H, OPC_DSP_PACK_SLL_B, OPC_DSP_PACK_SLL_H
+ , OPC_DSP_PACK_SRA_B, OPC_DSP_PACK_SRA_H, OPC_DSP_PACK_SRL_B, OPC_DSP_PACK_SRL_H
+} INSN_OPCODE_PACK;
+
+/* Enum declaration for logic insn opcode enums.  */
+typedef enum insn_opcode_logic {
+  OPC_DSP_LOGIC_NAND = 0, OPC_DSP_LOGIC_NOR = 2
+} INSN_OPCODE_LOGIC;
+
+/* Enum declaration for mul insn opcode enums.  */
+typedef enum insn_opcode_mul {
+  OPC_DSP_MUL_MADDS_H, OPC_DSP_MUL_MSUBS_H, OPC_DSP_MUL_MULS_H, OPC_DSP_MUL_MULH_H
+ , OPC_DSP_MUL_MADDUS_H, OPC_DSP_MUL_MSUBUS_H, OPC_DSP_MUL_MULUS_H, OPC_DSP_MUL_MULUH_H
+ , OPC_DSP_MUL_MULBB_H, OPC_DSP_MUL_MULBT_H, OPC_DSP_MUL_MULTB_H, OPC_DSP_MUL_MULTT_H
+ , OPC_DSP_MUL_MULUBB_H, OPC_DSP_MUL_MULUBT_H, OPC_DSP_MUL_MULUTB_H, OPC_DSP_MUL_MULUTT_H
+} INSN_OPCODE_MUL;
+
+/* Enum declaration for mul word insn opcode enums.  */
+typedef enum insn_opcode_mulw {
+  OPC_DSP_MULW_MULB_H, OPC_DSP_MULW_MULT_H, OPC_DSP_MULW_MULBH_H, OPC_DSP_MULW_MULTH_H
+ , OPC_DSP_MULW_MULUB_H, OPC_DSP_MULW_MULUT_H, OPC_DSP_MULW_MULUBH_H, OPC_DSP_MULW_MULUTH_H
+} INSN_OPCODE_MULW;
+
+/* Enum declaration for partial move insn opcode enums.  */
+typedef enum insn_opcode_mov0 {
+  OPC_DSP_MOV0_MOV00_B = 0, OPC_DSP_MOV0_MOV00_H = 1, OPC_DSP_MOV0_MOV01_B = 2, OPC_DSP_MOV0_MOV02_B = 4
+ , OPC_DSP_MOV0_MOV02_H = 5, OPC_DSP_MOV0_MOV03_B = 6, OPC_DSP_MOV0_MOV10_B = 8, OPC_DSP_MOV0_MOV11_B = 10
+ , OPC_DSP_MOV0_MOV12_B = 12, OPC_DSP_MOV0_MOV13_B = 14
+} INSN_OPCODE_MOV0;
+
+/* Enum declaration for partial move insn opcode enums.  */
+typedef enum insn_opcode_mov1 {
+  OPC_DSP_MOV1_MOV20_B = 0, OPC_DSP_MOV1_MOV20_H = 1, OPC_DSP_MOV1_MOV21_B = 2, OPC_DSP_MOV1_MOV22_B = 4
+ , OPC_DSP_MOV1_MOV22_H = 5, OPC_DSP_MOV1_MOV23_B = 6, OPC_DSP_MOV1_MOV30_B = 8, OPC_DSP_MOV1_MOV31_B = 10
+ , OPC_DSP_MOV1_MOV32_B = 12, OPC_DSP_MOV1_MOV33_B = 14
+} INSN_OPCODE_MOV1;
+
+/* Enum declaration for extension insn opcode enums.  */
+typedef enum insn_opcode_ext {
+  OPC_DSP_MISC_EXTBH = 0, OPC_DSP_MISC_EXTBW = 1, OPC_DSP_MISC_EXTHW = 3, OPC_DSP_MISC_EXTUBH = 4
+ , OPC_DSP_MISC_EXTUBW = 5, OPC_DSP_MISC_EXTUHW = 7, OPC_DSP_MISC_REVH = 8, OPC_DSP_MISC_REV = 9
+ , OPC_DSP_MISC_REVB = 10, OPC_DSP_MISC_REVBH = 11
+} INSN_OPCODE_EXT;
+
 /* Enum declaration for floating point reg/reg insn opcode enums.  */
 typedef enum insn_opcode_float_regreg {
   OPC_FLOAT_REGREG_ADD_S = 0, OPC_FLOAT_REGREG_SUB_S = 1, OPC_FLOAT_REGREG_MUL_S = 2, OPC_FLOAT_REGREG_DIV_S = 3
@@ -357,7 +449,7 @@ typedef enum insn_opcode_float_regreg {
 /* Enum declaration for machine type selection.  */
 typedef enum mach_attr {
   MACH_BASE, MACH_OR32, MACH_OR32ND, MACH_OR64
- , MACH_OR64ND, MACH_OR32DSP, MACH_MAX
+ , MACH_OR64ND, MACH_MAX
 } MACH_ATTR;
 
 /* Enum declaration for instruction set selection.  */
@@ -685,6 +777,10 @@ extern CGEN_KEYWORD or1k_cgen_opval_h_gpr;
 extern const CGEN_HW_ENTRY or1k_cgen_hw_table[];
 
 
+#ifndef opcodes_error_handler
+#define opcodes_error_handler(...) \
+  fprintf (stderr, __VA_ARGS__); fputc ('\n', stderr)
+#endif
 
    #ifdef __cplusplus
    }

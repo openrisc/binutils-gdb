@@ -560,6 +560,7 @@ Define a mode, all arguments specified.
     ; Not UINT on purpose.
     (dfm 'BI "one bit (0,1 not 0,-1)" '() 'INT 1 1 "BI" "'x'" #f #f #f)
 
+    (dfm 'NI "4 bit byte" '() 'INT 4 1 "NI" "'x'" #f #f #f)
     (dfm 'QI "8 bit byte" '() 'INT 8 1 "QI" "'x'" #f #f #f)
     (dfm 'HI "16 bit int" '() 'INT 16 2 "HI" "'x'" #f #f #f)
     (dfm 'SI "32 bit int" '() 'INT 32 4 "SI" "'x'" #f #f #f)
@@ -569,6 +570,8 @@ Define a mode, all arguments specified.
     (dfm 'TI "128 bit int" '(FN-SUPPORT) 'INT 128 16 "TI" "'T'" #f #f #f)
     (dfm 'OI "256 bit int" '(FN-SUPPORT) 'INT 256 32 "OI" "'O'" #f #f #f)
 
+    (dfm 'UNI "4 bit unsigned byte" '() 'UINT
+	 4 1 "UNI" "'x'" (mode:lookup 'NI) #f #f)
     (dfm 'UQI "8 bit unsigned byte" '() 'UINT
 	 8 1 "UQI" "'x'" (mode:lookup 'QI) #f #f)
     (dfm 'UHI "16 bit unsigned int" '() 'UINT

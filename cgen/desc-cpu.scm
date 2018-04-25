@@ -588,10 +588,6 @@ static const CGEN_IBASE @arch@_cgen_insn_table[MAX_INSNS] =
 (define (/gen-cpu-open)
   (string-append
    "\
-#ifndef opcodes_error_handler
-#define opcodes_error_handler(...) \\
-  fprintf (stderr, __VA_ARGS__); fputc ('\\n', stderr)
-#endif
 
 static const CGEN_MACH * lookup_mach_via_bfd_name (const CGEN_MACH *, const char *);
 static void build_hw_table      (CGEN_CPU_TABLE *);
@@ -1021,6 +1017,10 @@ extern \"C\" {
 	 (gen-extra-cpu.h (opc-file-path) (current-arch-name))
 	 ""))
    "
+#ifndef opcodes_error_handler
+#define opcodes_error_handler(...) \\
+  fprintf (stderr, __VA_ARGS__); fputc ('\\n', stderr)
+#endif
 
    #ifdef __cplusplus
    }

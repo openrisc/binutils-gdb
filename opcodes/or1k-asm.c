@@ -86,10 +86,10 @@ parse_disp26 (CGEN_CPU_DESC cd,
       if (**strp != ')')
 	errmsg = MISSING_CLOSING_PARENTHESIS;
       else
-      ++*strp;
+	++*strp;
     }
 
-      return errmsg;
+  return errmsg;
 }
 
 static const char *
@@ -227,7 +227,7 @@ parse_reloc(const char **strp)
     enum or1k_rtype typ;
 
     if (strncasecmp (str, "got(", 4) == 0)
-	{
+      {
 	*strp = str + 4;
 	return (RCLASS_GOT << RCLASS_SHIFT) | RTYPE_LO;
       }
@@ -240,56 +240,56 @@ parse_reloc(const char **strp)
       {
 	*strp = str + 8;
 	return (RCLASS_GOTTPOFF << RCLASS_SHIFT) | RTYPE_PO;
-	}
+      }
 
     if (strncasecmp (str, "gotpc", 5) == 0)
-	{
+      {
 	str += 5;
 	cls = RCLASS_GOTPC;
-	}
+      }
     else if (strncasecmp (str, "gotoff", 6) == 0)
-    {
+      {
 	str += 6;
 	cls = RCLASS_GOTOFF;
-    }
+      }
     else if (strncasecmp (str, "tlsgd", 5) == 0)
-    {
+      {
 	str += 5;
 	cls = RCLASS_TLSGD;
-    }
+      }
     else if (strncasecmp (str, "tlsldm", 6) == 0)
-    {
+      {
 	str += 6;
 	cls = RCLASS_TLSLDM;
-    }
+      }
     else if (strncasecmp (str, "dtpoff", 6) == 0)
-    {
+      {
 	str += 6;
 	cls = RCLASS_DTPOFF;
-    }
+      }
     else if (strncasecmp (str, "gottpoff", 8) == 0)
-    {
+      {
 	str += 8;
 	cls = RCLASS_GOTTPOFF;
-    }
+      }
     else if (strncasecmp (str, "tpoff", 5) == 0)
-    {
+      {
 	str += 5;
 	cls = RCLASS_TPOFF;
-    }
+      }
 
     if (strncasecmp (str, "hi(", 3) == 0)
-    {
+      {
 	str += 3;
 	typ = RTYPE_HI;
-    }
+      }
     else if (strncasecmp (str, "lo(", 3) == 0)
-    {
+      {
 	str += 3;
 	typ = RTYPE_LO;
-    }
+      }
     else if (strncasecmp (str, "ha(", 3) == 0)
-    {
+      {
 	str += 3;
 	typ = RTYPE_AHI;
       }
@@ -297,7 +297,7 @@ parse_reloc(const char **strp)
       {
 	str += 3;
 	typ = RTYPE_PO;
-    }
+      }
     else
       return -1;
 
@@ -317,7 +317,7 @@ parse_imm16 (CGEN_CPU_DESC cd, const char **strp, int opindex,
   bfd_vma ret;
 
   if (**strp == '#')
-      ++*strp;
+    ++*strp;
 
   reloc_code = parse_reloc (strp);
   reloc_type = reloc_code & RTYPE_MASK;
@@ -331,7 +331,7 @@ parse_imm16 (CGEN_CPU_DESC cd, const char **strp, int opindex,
 	    reloc_type |= 1;
 	  else
 	    return INVALID_STORE_RELOC;
-    }
+	}
       reloc = or1k_imm16_relocs[reloc_class][reloc_type];
     }
 
@@ -349,7 +349,7 @@ parse_imm16 (CGEN_CPU_DESC cd, const char **strp, int opindex,
 
       if (errmsg == NULL && result_type == CGEN_PARSE_OPERAND_RESULT_NUMBER)
 	switch (reloc_type)
-    {
+	  {
 	  case RTYPE_AHI:
 	    ret += 0x8000;
 	    /* FALLTHRU */
@@ -504,7 +504,9 @@ or1k_cgen_parse_operand (CGEN_CPU_DESC cd,
 
     default :
       /* xgettext:c-format */
-      fprintf (stderr, _("Unrecognized field %d while parsing.\n"), opindex);
+      opcodes_error_handler
+	(_("internal error: unrecognized field %d while parsing"),
+	 opindex);
       abort ();
   }
 
