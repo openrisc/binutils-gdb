@@ -483,6 +483,15 @@ static const CGEN_OPINST sfmt_ld_mulbh_h_ops[] ATTRIBUTE_UNUSED = {
   { END, (const char *)0, (enum cgen_hw_type)0, (enum cgen_mode)0, (enum cgen_operand_type)0, 0, 0 }
 };
 
+static const CGEN_OPINST sfmt_ld_move_b_ops[] ATTRIBUTE_UNUSED = {
+  { INPUT, "rA", HW_H_GPR, CGEN_MODE_UDI, OP_ENT (RA), 0, COND_REF },
+  { INPUT, "rB", HW_H_GPR, CGEN_MODE_UDI, OP_ENT (RB), 0, 0 },
+  { INPUT, "uimm2d", HW_H_UIMM2D, CGEN_MODE_UINT, OP_ENT (UIMM2D), 0, 0 },
+  { INPUT, "uimm2s", HW_H_UIMM2S, CGEN_MODE_UINT, OP_ENT (UIMM2S), 0, 0 },
+  { OUTPUT, "rD", HW_H_GPR, CGEN_MODE_UDI, OP_ENT (RD), 0, 0 },
+  { END, (const char *)0, (enum cgen_hw_type)0, (enum cgen_mode)0, (enum cgen_operand_type)0, 0, 0 }
+};
+
 static const CGEN_OPINST sfmt_lf_add_s_ops[] ATTRIBUTE_UNUSED = {
   { INPUT, "rASF", HW_H_FSR, CGEN_MODE_SF, OP_ENT (RASF), 0, 0 },
   { INPUT, "rBSF", HW_H_FSR, CGEN_MODE_SF, OP_ENT (RBSF), 0, 0 },
@@ -770,26 +779,8 @@ static const CGEN_OPINST *or1k_cgen_opinst_table[MAX_INSNS] = {
   & sfmt_ld_cmp_eq_b_ops[0],
   & sfmt_ld_mulbh_h_ops[0],
   & sfmt_ld_mulbh_h_ops[0],
-  & sfmt_ld_cmp_eq_b_ops[0],
-  & sfmt_ld_cmp_eq_b_ops[0],
-  & sfmt_ld_cmp_eq_b_ops[0],
-  & sfmt_ld_cmp_eq_b_ops[0],
-  & sfmt_ld_cmp_eq_b_ops[0],
-  & sfmt_ld_cmp_eq_b_ops[0],
-  & sfmt_ld_cmp_eq_b_ops[0],
-  & sfmt_ld_cmp_eq_b_ops[0],
-  & sfmt_ld_cmp_eq_b_ops[0],
-  & sfmt_ld_cmp_eq_b_ops[0],
-  & sfmt_ld_cmp_eq_b_ops[0],
-  & sfmt_ld_cmp_eq_b_ops[0],
-  & sfmt_ld_cmp_eq_b_ops[0],
-  & sfmt_ld_cmp_eq_b_ops[0],
-  & sfmt_ld_cmp_eq_b_ops[0],
-  & sfmt_ld_cmp_eq_b_ops[0],
-  & sfmt_ld_cmp_eq_b_ops[0],
-  & sfmt_ld_cmp_eq_b_ops[0],
-  & sfmt_ld_cmp_eq_b_ops[0],
-  & sfmt_ld_cmp_eq_b_ops[0],
+  & sfmt_ld_move_b_ops[0],
+  & sfmt_ld_move_b_ops[0],
   & sfmt_ld_unpack_b_ops[0],
   & sfmt_ld_unpack_b_ops[0],
   & sfmt_ld_unpack_b_ops[0],

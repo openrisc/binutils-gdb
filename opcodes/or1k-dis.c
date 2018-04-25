@@ -135,6 +135,12 @@ or1k_cgen_print_operand (CGEN_CPU_DESC cd,
     case OR1K_OPERAND_UIMM16_SPLIT :
       print_normal (cd, info, fields->f_uimm16_split, 0|(1<<CGEN_OPERAND_VIRTUAL), pc, length);
       break;
+    case OR1K_OPERAND_UIMM2D :
+      print_normal (cd, info, fields->f_uimm2d, 0, pc, length);
+      break;
+    case OR1K_OPERAND_UIMM2S :
+      print_normal (cd, info, fields->f_uimm2s, 0, pc, length);
+      break;
     case OR1K_OPERAND_UIMM6 :
       print_normal (cd, info, fields->f_uimm6, 0, pc, length);
       break;

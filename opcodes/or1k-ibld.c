@@ -648,6 +648,12 @@ or1k_cgen_insert_operand (CGEN_CPU_DESC cd,
           break;
       }
       break;
+    case OR1K_OPERAND_UIMM2D :
+      errmsg = insert_normal (cd, fields->f_uimm2d, 0, 0, 2, 2, 32, total_length, buffer);
+      break;
+    case OR1K_OPERAND_UIMM2S :
+      errmsg = insert_normal (cd, fields->f_uimm2s, 0, 0, 4, 2, 32, total_length, buffer);
+      break;
     case OR1K_OPERAND_UIMM6 :
       errmsg = insert_normal (cd, fields->f_uimm6, 0, 0, 5, 6, 32, total_length, buffer);
       break;
@@ -762,6 +768,12 @@ or1k_cgen_extract_operand (CGEN_CPU_DESC cd,
   FLD (f_uimm16_split) = ((UHI) (UINT) (((((FLD (f_imm16_25_5)) << (11))) | (FLD (f_imm16_10_11)))));
       }
       break;
+    case OR1K_OPERAND_UIMM2D :
+      length = extract_normal (cd, ex_info, insn_value, 0, 0, 2, 2, 32, total_length, pc, & fields->f_uimm2d);
+      break;
+    case OR1K_OPERAND_UIMM2S :
+      length = extract_normal (cd, ex_info, insn_value, 0, 0, 4, 2, 32, total_length, pc, & fields->f_uimm2s);
+      break;
     case OR1K_OPERAND_UIMM6 :
       length = extract_normal (cd, ex_info, insn_value, 0, 0, 5, 6, 32, total_length, pc, & fields->f_uimm6);
       break;
@@ -849,6 +861,12 @@ or1k_cgen_get_int_operand (CGEN_CPU_DESC cd ATTRIBUTE_UNUSED,
     case OR1K_OPERAND_UIMM16_SPLIT :
       value = fields->f_uimm16_split;
       break;
+    case OR1K_OPERAND_UIMM2D :
+      value = fields->f_uimm2d;
+      break;
+    case OR1K_OPERAND_UIMM2S :
+      value = fields->f_uimm2s;
+      break;
     case OR1K_OPERAND_UIMM6 :
       value = fields->f_uimm6;
       break;
@@ -917,6 +935,12 @@ or1k_cgen_get_vma_operand (CGEN_CPU_DESC cd ATTRIBUTE_UNUSED,
       break;
     case OR1K_OPERAND_UIMM16_SPLIT :
       value = fields->f_uimm16_split;
+      break;
+    case OR1K_OPERAND_UIMM2D :
+      value = fields->f_uimm2d;
+      break;
+    case OR1K_OPERAND_UIMM2S :
+      value = fields->f_uimm2s;
       break;
     case OR1K_OPERAND_UIMM6 :
       value = fields->f_uimm6;
@@ -994,6 +1018,12 @@ or1k_cgen_set_int_operand (CGEN_CPU_DESC cd ATTRIBUTE_UNUSED,
     case OR1K_OPERAND_UIMM16_SPLIT :
       fields->f_uimm16_split = value;
       break;
+    case OR1K_OPERAND_UIMM2D :
+      fields->f_uimm2d = value;
+      break;
+    case OR1K_OPERAND_UIMM2S :
+      fields->f_uimm2s = value;
+      break;
     case OR1K_OPERAND_UIMM6 :
       fields->f_uimm6 = value;
       break;
@@ -1059,6 +1089,12 @@ or1k_cgen_set_vma_operand (CGEN_CPU_DESC cd ATTRIBUTE_UNUSED,
       break;
     case OR1K_OPERAND_UIMM16_SPLIT :
       fields->f_uimm16_split = value;
+      break;
+    case OR1K_OPERAND_UIMM2D :
+      fields->f_uimm2d = value;
+      break;
+    case OR1K_OPERAND_UIMM2S :
+      fields->f_uimm2s = value;
       break;
     case OR1K_OPERAND_UIMM6 :
       fields->f_uimm6 = value;

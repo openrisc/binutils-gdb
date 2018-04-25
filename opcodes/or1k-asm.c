@@ -498,6 +498,12 @@ or1k_cgen_parse_operand (CGEN_CPU_DESC cd,
     case OR1K_OPERAND_UIMM16_SPLIT :
       errmsg = parse_uimm16_split (cd, strp, OR1K_OPERAND_UIMM16_SPLIT, (unsigned long *) (& fields->f_uimm16_split));
       break;
+    case OR1K_OPERAND_UIMM2D :
+      errmsg = cgen_parse_unsigned_integer (cd, strp, OR1K_OPERAND_UIMM2D, (unsigned long *) (& fields->f_uimm2d));
+      break;
+    case OR1K_OPERAND_UIMM2S :
+      errmsg = cgen_parse_unsigned_integer (cd, strp, OR1K_OPERAND_UIMM2S, (unsigned long *) (& fields->f_uimm2s));
+      break;
     case OR1K_OPERAND_UIMM6 :
       errmsg = cgen_parse_unsigned_integer (cd, strp, OR1K_OPERAND_UIMM6, (unsigned long *) (& fields->f_uimm6));
       break;

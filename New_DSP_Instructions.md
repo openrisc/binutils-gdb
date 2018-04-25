@@ -173,6 +173,7 @@
 |0x3F|D|A|B|res.|1|0|1|SRC|DST|S|
 
 move b[i] -> d[i], and other data from a
+half word transfer should be aligned
 
 - S : tranfer size
 0. byte
