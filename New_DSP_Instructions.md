@@ -2,14 +2,21 @@
 
 ## compare instructions
 
-|31 - 26|25 - 21|20 - 16|15 - 11|10 - 8|7|6|5 - 4|3 - 1|0|
-|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-|0x3F|D|A|B|res.|0|0|GRP|OP|S|
+|31 - 26|25 - 21|20 - 16|15 - 11|10 - 9|8|7|6 - 4|3|2|1|0|
+|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:||:-:|:-:|
+|0x3F|D|A|B|res.|1|0|OP|A|U|F|S|
+ 
+- U : sign/unsign
+0. signed except eq/ne
+1. signed except ne/ne
 
-- GRP : operation groups
-1. compare A and B and the results are stored in D
-2. compare A and B, if all true, set F flag
-3. compare A and B, if any true, set F flag
+- F : set F flag
+0. store result into rD
+1. set F flag
+
+- A : anding (it has valid iff F is 1)
+0. oring each sub results
+1. anding each sub results
 
 - OP : operation codes
 0. eq : true if equal

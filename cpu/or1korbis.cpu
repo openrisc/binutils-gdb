@@ -52,6 +52,9 @@
 (dnf f-op-9-4      "op-9-4"                    ((MACH ORBIS-MACHS)) 9 4) ;;
 (dnf f-op-7-8      "op-7-8"                    ((MACH ORBIS-MACHS)) 7 8)
 (dnf f-op-7-2      "op-7-2"                    ((MACH ORBIS-MACHS)) 7 2) ;; alu lower upper opc,shroti
+(dnf f-op-3-1      "op-3-1"                    ((MACH ORBIS-MACHS)) 3 1)
+(dnf f-op-2-1      "op-2-1"                    ((MACH ORBIS-MACHS)) 2 1)
+(dnf f-op-1-1      "op-1-1"                    ((MACH ORBIS-MACHS)) 1 1)
 (dnf f-op-0-1      "op-0-1"                    ((MACH ORBIS-MACHS)) 0 1)
 
 ; Reserved fields
@@ -68,6 +71,7 @@
 (dnf f-resv-10-7   "resv-10-7"                 ((MACH ORBIS-MACHS) RESERVED) 10 7)
 (dnf f-resv-10-3   "resv-10-3"                 ((MACH ORBIS-MACHS) RESERVED) 10 3)
 (dnf f-resv-10-1   "resv-10-1"                 ((MACH ORBIS-MACHS) RESERVED) 10 1)
+(dnf f-resv-8-1    "resv-8-1"                  ((MACH ORBIS-MACHS) RESERVED) 8 1)
 (dnf f-resv-7-4    "resv-7-4"                  ((MACH ORBIS-MACHS) RESERVED) 7 4)
 (dnf f-resv-5-2    "resv-5-2"                  ((MACH ORBIS-MACHS) RESERVED) 5 2)
 (dnf f-resv-3-1    "resv-3-1"                  ((MACH ORBIS-MACHS) RESERVED) 3 1)
@@ -1285,72 +1289,56 @@
 (define-normal-insn-enum insn-opcode-dsp
   "DSP insn opcode enums" ((MACH ORBIS-MACHS))
   OPC_DSP_ f-op-7-4
-  (("CMP"   #x1)
-   ("ALL"   #x2)
-   ("ANY"   #x3)
-   ("ADD"   #x4)    ;; add/sub
+  (("ADD"   #x4)    ;; add/sub
    ("SEL"   #x5)    ;; select
    ("PACK"  #x6)    ;; pack, shift
    ("LOGIC" #x7)    ;; logic
    ("MUL"   #x8)    ;; mul halfword
    ("MULW"  #x9)    ;; mul fullword with halfword
-;   ("MOV0"  #xA)    ;; partial move
-;   ("MOV1"  #xB)    ;; partial move
    ("MISC"  #xC)    ;; extension/reverse
+   )
+  )
+
+(define-normal-insn-enum insn-opcode-cmp-dst
+  "compare insn opcode enums" ((MACH ORBIS-MACHS))
+  OPC_DSP_CMP_DST_ f-op-1-1
+  (("D"  #x0)    ;; rD
+   ("F"  #x1)    ;; F flag
+   )
+  )
+(define-normal-insn-enum insn-opcode-cmp-sign
+  "compare insn opcode enums" ((MACH ORBIS-MACHS))
+  OPC_DSP_CMP_ f-op-2-1
+  (("SIGN"  #x0)
+   ("UNSIGN"  #x1)
+   )
+  )
+
+(define-normal-insn-enum insn-opcode-cmp-anding
+  "compare insn opcode enums" ((MACH ORBIS-MACHS))
+  OPC_DSP_CMP_ f-op-3-1
+  (("OR"  #x0)
+   ("AND"  #x1)
+   )
+  )
+
+(define-normal-insn-enum insn-opcode-cmp-size
+  "compare insn opcode enums" ((MACH ORBIS-MACHS))
+  OPC_DSP_SIZE_ f-op-0-1
+  (("BYTE"  #x0)
+   ("HALF"  #x1)
    )
   )
 
 (define-normal-insn-enum insn-opcode-cmp
   "compare insn opcode enums" ((MACH ORBIS-MACHS))
-  OPC_DSP_CMP_ f-op-3-4
-  (("EQ_B"  #x0)    ;; equal
-   ("EQ_H"  #x1)    ;;
-   ("NE_B"  #x2)    ;; not equal
-   ("NE_H"  #x3)    ;;
-   ("GE_B"  #x8)    ;; greater or equal
-   ("GE_H"  #x9)    ;;
-   ("GT_B"  #xA)    ;; greater
-   ("GT_H"  #xB)    ;;
-   ("LE_B"  #xC)    ;; less or equal
-   ("LE_H"  #xD)    ;;
-   ("LT_B"  #xE)    ;; less
-   ("LT_H"  #xF)    ;;
-   )
-  )
-
-(define-normal-insn-enum insn-opcode-all
-  "all compare insn opcode enums" ((MACH ORBIS-MACHS))
-  OPC_DSP_ALL_ f-op-3-4
-  (("EQ_B"  #x0)    ;; equal
-   ("EQ_H"  #x1)    ;;
-   ("NE_B"  #x2)    ;; not equal
-   ("NE_H"  #x3)    ;;
-   ("GE_B"  #x8)    ;; greater or equal
-   ("GE_H"  #x9)    ;;
-   ("GT_B"  #xA)    ;; greater
-   ("GT_H"  #xB)    ;;
-   ("LE_B"  #xC)    ;; less or equal
-   ("LE_H"  #xD)    ;;
-   ("LT_B"  #xE)    ;; less
-   ("LT_H"  #xF)    ;;
-   )
-  )
-
-(define-normal-insn-enum insn-opcode-any
-  "any compare insn opcode enums" ((MACH ORBIS-MACHS))
-  OPC_DSP_ANY_ f-op-3-4
-  (("EQ_B"  #x0)    ;; equal
-   ("EQ_H"  #x1)    ;;
-   ("NE_B"  #x2)    ;; not equal
-   ("NE_H"  #x3)    ;;
-   ("GE_B"  #x8)    ;; greater or equal
-   ("GE_H"  #x9)    ;;
-   ("GT_B"  #xA)    ;; greater
-   ("GT_H"  #xB)    ;;
-   ("LE_B"  #xC)    ;; less or equal
-   ("LE_H"  #xD)    ;;
-   ("LT_B"  #xE)    ;; less
-   ("LT_H"  #xF)    ;;
+  OPC_DSP_CMP_ f-op-7-4
+  (("EQ"  #x0)    ;; equal
+   ("NE"  #x1)    ;; not equal
+   ("GE"  #x4)    ;; greater or equal
+   ("GT"  #x5)    ;; greater
+   ("LE"  #x6)    ;; less or equal
+   ("LT"  #x7)    ;; less
    )
   )
 
@@ -1506,7 +1494,7 @@
         (.str "ld.cmp_" op_str ".b reg/reg/reg")
         ((MACH ORBIS-MACHS))
         (.str "ld.cmp_" op_str ".b $rD,$rA,$rB")
-        (+ OPC_DSP rD rA rB (f-resv-10-3 0) OPC_DSP_CMP (.sym OPC_DSP_CMP_ (.upcase (.str op_str "_b"))))
+        (+ OPC_DSP rD rA rB (f-resv-10-3 1) (.sym OPC_DSP_CMP_ (.upcase op_str)) (f-resv-3-1 0) OPC_DSP_CMP_SIGN OPC_DSP_CMP_DST_D OPC_DSP_SIZE_BYTE)
         (sequence ((QI d0) (QI d1) (QI d2) (QI d3))
           (if (op (subword QI rA 0) (subword QI rB 0)) (set QI d0 #xFF) (set QI d0 #x00))
           (if (op (subword QI rA 1) (subword QI rB 1)) (set QI d1 #xFF) (set QI d1 #x00))
@@ -1520,7 +1508,7 @@
         (.str "ld.cmp_" op_str ".h reg/reg/reg")
         ((MACH ORBIS-MACHS))
         (.str "ld.cmp_" op_str ".h $rD,$rA,$rB")
-        (+ OPC_DSP rD rA rB (f-resv-10-3 0) OPC_DSP_CMP (.sym OPC_DSP_CMP_ (.upcase (.str op_str "_h"))))
+        (+ OPC_DSP rD rA rB (f-resv-10-3 1) (.sym OPC_DSP_CMP_ (.upcase op_str)) (f-resv-3-1 0) OPC_DSP_CMP_SIGN OPC_DSP_CMP_DST_D OPC_DSP_SIZE_HALF)
         (sequence ((HI d0) (HI d1))
           (if (op (subword HI rA 0) (subword HI rB 0)) (set HI d0 #xFF) (set HI d0 #x00))
           (if (op (subword HI rA 1) (subword HI rB 1)) (set HI d1 #xFF) (set HI d1 #x00))
@@ -1532,7 +1520,7 @@
         (.str "ld.all_" op_str ".b reg/reg")
         ((MACH ORBIS-MACHS))
         (.str "ld.all_" op_str ".b $rA,$rB")
-        (+ OPC_DSP (f-resv-25-5 0) rA rB (f-resv-10-3 0) OPC_DSP_ALL (.sym OPC_DSP_ALL_ (.upcase (.str op_str "_b"))))
+        (+ OPC_DSP (f-resv-25-5 0) rA rB (f-resv-10-3 1) (.sym OPC_DSP_CMP_ (.upcase op_str)) OPC_DSP_CMP_AND OPC_DSP_CMP_SIGN OPC_DSP_CMP_DST_F OPC_DSP_SIZE_BYTE)
         (if (and (and 
           (op (subword QI rA 0) (subword QI rB 0))
           (op (subword QI rA 1) (subword QI rB 1)))
@@ -1546,7 +1534,7 @@
         (.str "ld.all_" op_str ".h reg/reg")
         ((MACH ORBIS-MACHS))
         (.str "ld.all_" op_str ".h $rA,$rB")
-        (+ OPC_DSP (f-resv-25-5 0) rA rB (f-resv-10-3 0) OPC_DSP_ALL (.sym OPC_DSP_ALL_ (.upcase (.str op_str "_h"))))
+        (+ OPC_DSP (f-resv-25-5 0) rA rB (f-resv-10-3 1) (.sym OPC_DSP_CMP_ (.upcase op_str)) OPC_DSP_CMP_AND OPC_DSP_CMP_SIGN OPC_DSP_CMP_DST_F OPC_DSP_SIZE_HALF)
         (if (and 
           (op (subword HI rA 0) (subword HI rB 0))
           (op (subword HI rA 1) (subword HI rB 1)))
@@ -1557,7 +1545,7 @@
         (.str "ld.any_" op_str ".b reg/reg")
         ((MACH ORBIS-MACHS))
         (.str "ld.any_" op_str ".b $rA,$rB")
-        (+ OPC_DSP (f-resv-25-5 0) rA rB (f-resv-10-3 0) OPC_DSP_ANY (.sym OPC_DSP_ANY_ (.upcase (.str op_str "_b"))))
+        (+ OPC_DSP (f-resv-25-5 0) rA rB (f-resv-10-3 1) (.sym OPC_DSP_CMP_ (.upcase op_str)) OPC_DSP_CMP_OR OPC_DSP_CMP_SIGN OPC_DSP_CMP_DST_F OPC_DSP_SIZE_BYTE)
         (if (or (or 
           (op (subword QI rA 0) (subword QI rB 0))
           (op (subword QI rA 1) (subword QI rB 1)))
@@ -1571,7 +1559,83 @@
         (.str "ld.any_" op_str ".h reg/reg")
         ((MACH ORBIS-MACHS))
         (.str "ld.any_" op_str ".h $rA,$rB")
-        (+ OPC_DSP (f-resv-25-5 0) rA rB (f-resv-10-3 0) OPC_DSP_ANY (.sym OPC_DSP_ANY_ (.upcase (.str op_str "_h"))))
+        (+ OPC_DSP (f-resv-25-5 0) rA rB (f-resv-10-3 1) (.sym OPC_DSP_CMP_ (.upcase op_str)) OPC_DSP_CMP_OR OPC_DSP_CMP_SIGN OPC_DSP_CMP_DST_F OPC_DSP_SIZE_HALF)
+        (if (or 
+          (op (subword HI rA 0) (subword HI rB 0))
+          (op (subword HI rA 1) (subword HI rB 1)))
+          (set sys-sr-f 1) (set sys-sr-f 0))
+        ()
+    )
+    (dni(.sym ld-cmpu- op_str -b)
+        (.str "ld.cmpu_" op_str ".b reg/reg/reg")
+        ((MACH ORBIS-MACHS))
+        (.str "ld.cmpu_" op_str ".b $rD,$rA,$rB")
+        (+ OPC_DSP rD rA rB (f-resv-10-3 1) (.sym OPC_DSP_CMP_ (.upcase op_str)) (f-resv-3-1 0) OPC_DSP_CMP_UNSIGN OPC_DSP_CMP_DST_D OPC_DSP_SIZE_BYTE)
+        (sequence ((QI d0) (QI d1) (QI d2) (QI d3))
+          (if (op (subword QI rA 0) (subword QI rB 0)) (set QI d0 #xFF) (set QI d0 #x00))
+          (if (op (subword QI rA 1) (subword QI rB 1)) (set QI d1 #xFF) (set QI d1 #x00))
+          (if (op (subword QI rA 2) (subword QI rB 2)) (set QI d2 #xFF) (set QI d2 #x00))
+          (if (op (subword QI rA 3) (subword QI rB 3)) (set QI d3 #xFF) (set QI d3 #x00))
+          (set SI rD (join SI QI d3 d2 d1 d0))
+        )
+        ()
+    )
+    (dni(.sym ld-cmpu- op_str -h)
+        (.str "ld.cmpu_" op_str ".h reg/reg/reg")
+        ((MACH ORBIS-MACHS))
+        (.str "ld.cmpu_" op_str ".h $rD,$rA,$rB")
+        (+ OPC_DSP rD rA rB (f-resv-10-3 1) (.sym OPC_DSP_CMP_ (.upcase op_str)) (f-resv-3-1 0) OPC_DSP_CMP_UNSIGN OPC_DSP_CMP_DST_D OPC_DSP_SIZE_HALF)
+        (sequence ((HI d0) (HI d1))
+          (if (op (subword HI rA 0) (subword HI rB 0)) (set HI d0 #xFF) (set HI d0 #x00))
+          (if (op (subword HI rA 1) (subword HI rB 1)) (set HI d1 #xFF) (set HI d1 #x00))
+          (set SI rD (join SI HI d1 d0))
+        )
+        ()
+    )
+    (dni(.sym ld-allu- op_str -b)
+        (.str "ld.allu_" op_str ".b reg/reg")
+        ((MACH ORBIS-MACHS))
+        (.str "ld.allu_" op_str ".b $rA,$rB")
+        (+ OPC_DSP (f-resv-25-5 0) rA rB (f-resv-10-3 1) (.sym OPC_DSP_CMP_ (.upcase op_str)) OPC_DSP_CMP_AND OPC_DSP_CMP_UNSIGN OPC_DSP_CMP_DST_F OPC_DSP_SIZE_BYTE)
+        (if (and (and 
+          (op (subword QI rA 0) (subword QI rB 0))
+          (op (subword QI rA 1) (subword QI rB 1)))
+          (and 
+          (op (subword QI rA 2) (subword QI rB 2))
+          (op (subword QI rA 3) (subword QI rB 3))))
+          (set sys-sr-f 1) (set sys-sr-f 0))
+        ()
+    )
+    (dni(.sym ld-allu- op_str -h)
+        (.str "ld.allu_" op_str ".h reg/reg")
+        ((MACH ORBIS-MACHS))
+        (.str "ld.allu_" op_str ".h $rA,$rB")
+        (+ OPC_DSP (f-resv-25-5 0) rA rB (f-resv-10-3 1) (.sym OPC_DSP_CMP_ (.upcase op_str)) OPC_DSP_CMP_AND OPC_DSP_CMP_UNSIGN OPC_DSP_CMP_DST_F OPC_DSP_SIZE_HALF)
+        (if (and 
+          (op (subword HI rA 0) (subword HI rB 0))
+          (op (subword HI rA 1) (subword HI rB 1)))
+          (set sys-sr-f 1) (set sys-sr-f 0))
+        ()
+    )
+    (dni(.sym ld-anyu- op_str -b)
+        (.str "ld.anyu_" op_str ".b reg/reg")
+        ((MACH ORBIS-MACHS))
+        (.str "ld.anyu_" op_str ".b $rA,$rB")
+        (+ OPC_DSP (f-resv-25-5 0) rA rB (f-resv-10-3 1) (.sym OPC_DSP_CMP_ (.upcase op_str)) OPC_DSP_CMP_OR OPC_DSP_CMP_UNSIGN OPC_DSP_CMP_DST_F OPC_DSP_SIZE_BYTE)
+        (if (or (or 
+          (op (subword QI rA 0) (subword QI rB 0))
+          (op (subword QI rA 1) (subword QI rB 1)))
+          (or 
+          (op (subword QI rA 2) (subword QI rB 2))
+          (op (subword QI rA 3) (subword QI rB 3))))
+          (set sys-sr-f 1) (set sys-sr-f 0))
+        ()
+    )
+    (dni(.sym ld-anyu- op_str -h)
+        (.str "ld.anyu_" op_str ".h reg/reg")
+        ((MACH ORBIS-MACHS))
+        (.str "ld.anyu_" op_str ".h $rA,$rB")
+        (+ OPC_DSP (f-resv-25-5 0) rA rB (f-resv-10-3 1) (.sym OPC_DSP_CMP_ (.upcase op_str)) OPC_DSP_CMP_OR OPC_DSP_CMP_UNSIGN OPC_DSP_CMP_DST_F OPC_DSP_SIZE_HALF)
         (if (or 
           (op (subword HI rA 0) (subword HI rB 0))
           (op (subword HI rA 1) (subword HI rB 1)))
@@ -2230,7 +2294,7 @@
     (.str "ld.move.b reg/reg/reg")
     ((MACH ORBIS-MACHS))
     (.str "ld.move.b $rD $uimm2d,$rA,$rB $uimm2s")
-    (+ OPC_DSP rD rA rB (f-resv-10-3 0) OPC_DSP_MOVE uimm2s uimm2d OPC_DSP_SIZE_B)
+    (+ OPC_DSP rD rA rB (f-resv-10-3 0) OPC_DSP_MOVE uimm2s uimm2d OPC_DSP_SIZE_BYTE)
     (sequence ((QI t) (QI d0) (QI d1) (QI d2) (QI d3))
       (set QI t (subword QI rB uimm2s))
       (set QI d0 (if (eq uimm2d 0) t (subword QI rA 0)))
@@ -2246,7 +2310,7 @@
     (.str "ld.move.h reg/reg/reg")
     ((MACH ORBIS-MACHS))
     (.str "ld.move.h $rD $uimm1d,$rA,$rB $uimm1s")
-    (+ OPC_DSP rD rA rB (f-resv-10-3 0) OPC_DSP_MOVE uimm1s (f-resv-3-1 0) uimm1d (f-resv-1-1 0) OPC_DSP_SIZE_H)
+    (+ OPC_DSP rD rA rB (f-resv-10-3 0) OPC_DSP_MOVE uimm1s (f-resv-3-1 0) uimm1d (f-resv-1-1 0) OPC_DSP_SIZE_HALF)
     (sequence ((HI t) (HI d0) (HI d1))
       (set HI t (subword QI rB uimm1s))
       (set HI d0 (if (eq uimm1d 0) t (subword HI rA 0)))

@@ -342,31 +342,35 @@ typedef enum insn_opcode_setflag {
 
 /* Enum declaration for DSP insn opcode enums.  */
 typedef enum insn_opcode_dsp {
-  OPC_DSP_CMP = 1, OPC_DSP_ALL = 2, OPC_DSP_ANY = 3, OPC_DSP_ADD = 4
- , OPC_DSP_SEL = 5, OPC_DSP_PACK = 6, OPC_DSP_LOGIC = 7, OPC_DSP_MUL = 8
- , OPC_DSP_MULW = 9, OPC_DSP_MISC = 12
+  OPC_DSP_ADD = 4, OPC_DSP_SEL = 5, OPC_DSP_PACK = 6, OPC_DSP_LOGIC = 7
+ , OPC_DSP_MUL = 8, OPC_DSP_MULW = 9, OPC_DSP_MISC = 12
 } INSN_OPCODE_DSP;
 
 /* Enum declaration for compare insn opcode enums.  */
+typedef enum insn_opcode_cmp_dst {
+  OPC_DSP_CMP_DST_D, OPC_DSP_CMP_DST_F
+} INSN_OPCODE_CMP_DST;
+
+/* Enum declaration for compare insn opcode enums.  */
+typedef enum insn_opcode_cmp_sign {
+  OPC_DSP_CMP_SIGN, OPC_DSP_CMP_UNSIGN
+} INSN_OPCODE_CMP_SIGN;
+
+/* Enum declaration for compare insn opcode enums.  */
+typedef enum insn_opcode_cmp_anding {
+  OPC_DSP_CMP_OR, OPC_DSP_CMP_AND
+} INSN_OPCODE_CMP_ANDING;
+
+/* Enum declaration for compare insn opcode enums.  */
+typedef enum insn_opcode_cmp_size {
+  OPC_DSP_SIZE_BYTE, OPC_DSP_SIZE_HALF
+} INSN_OPCODE_CMP_SIZE;
+
+/* Enum declaration for compare insn opcode enums.  */
 typedef enum insn_opcode_cmp {
-  OPC_DSP_CMP_EQ_B = 0, OPC_DSP_CMP_EQ_H = 1, OPC_DSP_CMP_NE_B = 2, OPC_DSP_CMP_NE_H = 3
- , OPC_DSP_CMP_GE_B = 8, OPC_DSP_CMP_GE_H = 9, OPC_DSP_CMP_GT_B = 10, OPC_DSP_CMP_GT_H = 11
- , OPC_DSP_CMP_LE_B = 12, OPC_DSP_CMP_LE_H = 13, OPC_DSP_CMP_LT_B = 14, OPC_DSP_CMP_LT_H = 15
+  OPC_DSP_CMP_EQ = 0, OPC_DSP_CMP_NE = 1, OPC_DSP_CMP_GE = 4, OPC_DSP_CMP_GT = 5
+ , OPC_DSP_CMP_LE = 6, OPC_DSP_CMP_LT = 7
 } INSN_OPCODE_CMP;
-
-/* Enum declaration for all compare insn opcode enums.  */
-typedef enum insn_opcode_all {
-  OPC_DSP_ALL_EQ_B = 0, OPC_DSP_ALL_EQ_H = 1, OPC_DSP_ALL_NE_B = 2, OPC_DSP_ALL_NE_H = 3
- , OPC_DSP_ALL_GE_B = 8, OPC_DSP_ALL_GE_H = 9, OPC_DSP_ALL_GT_B = 10, OPC_DSP_ALL_GT_H = 11
- , OPC_DSP_ALL_LE_B = 12, OPC_DSP_ALL_LE_H = 13, OPC_DSP_ALL_LT_B = 14, OPC_DSP_ALL_LT_H = 15
-} INSN_OPCODE_ALL;
-
-/* Enum declaration for any compare insn opcode enums.  */
-typedef enum insn_opcode_any {
-  OPC_DSP_ANY_EQ_B = 0, OPC_DSP_ANY_EQ_H = 1, OPC_DSP_ANY_NE_B = 2, OPC_DSP_ANY_NE_H = 3
- , OPC_DSP_ANY_GE_B = 8, OPC_DSP_ANY_GE_H = 9, OPC_DSP_ANY_GT_B = 10, OPC_DSP_ANY_GT_H = 11
- , OPC_DSP_ANY_LE_B = 12, OPC_DSP_ANY_LE_H = 13, OPC_DSP_ANY_LT_B = 14, OPC_DSP_ANY_LT_H = 15
-} INSN_OPCODE_ANY;
 
 /* Enum declaration for add/sub insn opcode enums.  */
 typedef enum insn_opcode_addsub {
@@ -491,10 +495,11 @@ typedef enum ifield_type {
  , OR1K_F_R2, OR1K_F_R3, OR1K_F_OP_25_2, OR1K_F_OP_25_5
  , OR1K_F_OP_16_1, OR1K_F_OP_7_5, OR1K_F_OP_7_4, OR1K_F_OP_7_3
  , OR1K_F_OP_3_4, OR1K_F_OP_9_2, OR1K_F_OP_9_4, OR1K_F_OP_7_8
- , OR1K_F_OP_7_2, OR1K_F_OP_0_1, OR1K_F_RESV_25_26, OR1K_F_RESV_25_10
- , OR1K_F_RESV_25_5, OR1K_F_RESV_23_8, OR1K_F_RESV_20_21, OR1K_F_RESV_20_5
- , OR1K_F_RESV_20_4, OR1K_F_RESV_15_8, OR1K_F_RESV_15_6, OR1K_F_RESV_10_11
- , OR1K_F_RESV_10_7, OR1K_F_RESV_10_3, OR1K_F_RESV_10_1, OR1K_F_RESV_7_4
+ , OR1K_F_OP_7_2, OR1K_F_OP_3_1, OR1K_F_OP_2_1, OR1K_F_OP_1_1
+ , OR1K_F_OP_0_1, OR1K_F_RESV_25_26, OR1K_F_RESV_25_10, OR1K_F_RESV_25_5
+ , OR1K_F_RESV_23_8, OR1K_F_RESV_20_21, OR1K_F_RESV_20_5, OR1K_F_RESV_20_4
+ , OR1K_F_RESV_15_8, OR1K_F_RESV_15_6, OR1K_F_RESV_10_11, OR1K_F_RESV_10_7
+ , OR1K_F_RESV_10_3, OR1K_F_RESV_10_1, OR1K_F_RESV_8_1, OR1K_F_RESV_7_4
  , OR1K_F_RESV_5_2, OR1K_F_RESV_3_1, OR1K_F_RESV_2_1, OR1K_F_RESV_1_1
  , OR1K_F_IMM16_25_5, OR1K_F_IMM16_10_11, OR1K_F_DISP26, OR1K_F_DISP21
  , OR1K_F_UIMM16, OR1K_F_SIMM16, OR1K_F_UIMM6, OR1K_F_UIMM2D
