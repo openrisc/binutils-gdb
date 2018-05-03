@@ -1347,18 +1347,18 @@
   OPC_DSP_ADD_ f-op-3-4
   (("ADD_B"   #x0)    ;; add
    ("ADD_H"   #x1)    ;;
-   ("ADDS_B"  #x2)    ;; add saturated
-   ("ADDS_H"  #x3)    ;;
+   ("SUB_B"   #x2)    ;; sub
+   ("SUB_H"   #x3)    ;;
    ("ADDU_B"  #x4)    ;; add unsigned
    ("ADDU_H"  #x5)    ;;
-   ("ADDUS_B" #x6)    ;; add unsigned saturated
-   ("ADDUS_H" #x7)    ;;
-   ("SUB_B"   #x8)    ;; sub
-   ("SUB_H"   #x9)    ;;
+   ("SUBU_B"  #x6)    ;; sub unsigned
+   ("SUBU_H"  #x7)    ;;
+   ("ADDS_B"  #x8)    ;; add saturated
+   ("ADDS_H"  #x9)    ;;
    ("SUBS_B"  #xA)    ;; sub saturated
    ("SUBS_H"  #xB)    ;;
-   ("SUBU_B"  #xC)    ;; sub unsigned
-   ("SUBU_H"  #xD)    ;;
+   ("ADDUS_B" #xC)    ;; add unsigned saturated
+   ("ADDUS_H" #xD)    ;;
    ("SUBUS_B" #xE)    ;; sub unsigned saturated
    ("SUBUS_H" #xF)    ;;
    )
@@ -1476,15 +1476,15 @@
   "extension insn opcode enums" ((MACH ORBIS-MACHS))
   OPC_DSP_MISC_ f-op-3-4
   (("EXTBH"   #x0)    ;; signed extension byte to halfword
-   ("EXTBW"   #x1)    ;; signed extension byte to word
+   ("EXTBW"   #x2)    ;; signed extension byte to word
    ("EXTHW"   #x3)    ;; signed extension halfword to word
    ("EXTUBH"  #x4)    ;; unsigned extension byte to halfword
-   ("EXTUBW"  #x5)    ;; unsigned extension byte to word
+   ("EXTUBW"  #x6)    ;; unsigned extension byte to word
    ("EXTUHW"  #x7)    ;; unsigned extension halfword to word
    ("REVH"    #x8)    ;; bit reverse for each halfword
    ("REV"     #x9)    ;; bit reverse
-   ("REVB"    #xA)    ;; byte reverse for each halfword
-   ("REVBH"   #xB)    ;; byte reverse
+   ("REVBH"   #xA)    ;; byte reverse for each halfword
+   ("REVB"    #xB)    ;; byte reverse
    )
   )
 
