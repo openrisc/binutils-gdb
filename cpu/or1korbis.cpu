@@ -1367,20 +1367,22 @@
 (define-normal-insn-enum insn-opcode-sel
   "select insn opcode enums" ((MACH ORBIS-MACHS))
   OPC_DSP_SEL_ f-op-3-4
-  (("AVG_B"   #x0)    ;; average
-   ("AVG_H"   #x1)    ;;
-   ("MIN_B"   #x2)    ;; min
-   ("MIN_H"   #x3)    ;;
-   ("AVGU_B"  #x4)    ;; average unsigned
-   ("AVGU_H"  #x5)    ;;
-   ("MINU_B"  #x6)    ;; min unsigned
-   ("MINU_H"  #x7)    ;;
-   ("MERGE_B" #x8)    ;; merge
-   ("MERGE_H" #x9)    ;;
-   ("MAX_B"   #xA)    ;; max
-   ("MAX_H"   #xB)    ;;
-   ("MAXU_B"  #xE)    ;; max unsigned
-   ("MAXU_H"  #xF)    ;;
+  (("AVG_B"    #x0)    ;; average
+   ("AVG_H"    #x1)    ;;
+   ("MIN_B"    #x2)    ;; min
+   ("MIN_H"    #x3)    ;;
+   ("AVGU_B"   #x4)    ;; average unsigned
+   ("AVGU_H"   #x5)    ;;
+   ("MINU_B"   #x6)    ;; min unsigned
+   ("MINU_H"   #x7)    ;;
+   ("MUX_GE_B" #x8)    ;; mux
+   ("MUX_GE_H" #x9)    ;;
+   ("MAX_B"    #xA)    ;; max
+   ("MAX_H"    #xB)    ;;
+   ("MUX_OV_B" #xC)    ;; mux
+   ("MUX_OV_H" #xD)    ;;
+   ("MAXU_B"   #xE)    ;; max unsigned
+   ("MAXU_H"   #xF)    ;;
    )
   )
 
@@ -1895,7 +1897,7 @@
 (dsp-sel-min-insn le "min")
 (dsp-sel-min-insn ge "max")
 
-(define-pmacro (dsp-sel-merge-insn op_str)
+(define-pmacro (dsp-sel-mux-insn op_str)
   (begin
     (dni(.sym ld- op_str -b)
         (.str "ld." op_str ".b reg/reg/reg")
@@ -1916,7 +1918,8 @@
   )
 )
 
-(dsp-sel-merge-insn "merge")
+(dsp-sel-mux-insn "mux_ge")
+(dsp-sel-mux-insn "mux_ov")
 
 (define-pmacro (dsp-pack-insn size op_str op2)
   (begin

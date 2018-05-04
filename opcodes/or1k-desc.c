@@ -2188,14 +2188,24 @@ static const CGEN_IBASE or1k_cgen_insn_table[MAX_INSNS] =
     OR1K_INSN_LD_MAXU_H, "ld-maxu-h", "ld.maxu.h", 32,
     { 0, { { { (1<<MACH_OR32)|(1<<MACH_OR32ND)|(1<<MACH_OR64)|(1<<MACH_OR64ND), 0 } } } }
   },
-/* ld.merge.b $rD,$rA,$rB */
+/* ld.mux_ge.b $rD,$rA,$rB */
   {
-    OR1K_INSN_LD_MERGE_B, "ld-merge-b", "ld.merge.b", 32,
+    OR1K_INSN_LD_MUX_GE_B, "ld-mux_ge-b", "ld.mux_ge.b", 32,
     { 0, { { { (1<<MACH_OR32)|(1<<MACH_OR32ND)|(1<<MACH_OR64)|(1<<MACH_OR64ND), 0 } } } }
   },
-/* ld.merge.h $rD,$rA,$rB */
+/* ld.mux_ge.h $rD,$rA,$rB */
   {
-    OR1K_INSN_LD_MERGE_H, "ld-merge-h", "ld.merge.h", 32,
+    OR1K_INSN_LD_MUX_GE_H, "ld-mux_ge-h", "ld.mux_ge.h", 32,
+    { 0, { { { (1<<MACH_OR32)|(1<<MACH_OR32ND)|(1<<MACH_OR64)|(1<<MACH_OR64ND), 0 } } } }
+  },
+/* ld.mux_ov.b $rD,$rA,$rB */
+  {
+    OR1K_INSN_LD_MUX_OV_B, "ld-mux_ov-b", "ld.mux_ov.b", 32,
+    { 0, { { { (1<<MACH_OR32)|(1<<MACH_OR32ND)|(1<<MACH_OR64)|(1<<MACH_OR64ND), 0 } } } }
+  },
+/* ld.mux_ov.h $rD,$rA,$rB */
+  {
+    OR1K_INSN_LD_MUX_OV_H, "ld-mux_ov-h", "ld.mux_ov.h", 32,
     { 0, { { { (1<<MACH_OR32)|(1<<MACH_OR32ND)|(1<<MACH_OR64)|(1<<MACH_OR64ND), 0 } } } }
   },
 /* ld.pack.b $rD,$rA,$rB */

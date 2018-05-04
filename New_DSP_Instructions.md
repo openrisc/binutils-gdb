@@ -56,23 +56,23 @@
 
 ## select instructions
 
-|31 - 26|25 - 21|20 - 16|15 - 11|10 - 8|7|6|5|4|3|2|1|0|
-|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-|0x3F|D|A|B|res.|0|1|0|1|OP|U|OP|S|
+|31 - 26|25 - 21|20 - 16|15 - 11|10 - 8|7|6|5|4|3 - 1|0|
+|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+|0x3F|D|A|B|res.|0|1|0|1|OP|S|
 
 - OP : operation codes
-0. average : make average of A and B for each operation size
-1. min : select min between A and B for each operation size
-2. merge : make merge using A and B, {A,B} or {A,B,A,B}
-3. max : select max between A and B for each operation size
+0. average signed : make average of A and B for each operation size
+1. min signed : select min between A and B for each operation size
+2. average unsigned : make average of A and B for each operation size
+3. min unsigned : select min between A and B for each operation size
+4. mux if ge : select A if ge for each operation size
+5. max signed : select max between A and B for each operation size
+6. mux if ov : select A if ge for each operation size
+7. max unsigned : select max between A and B for each operation size
 
 - S : operation size
 0. byte
 1. half word
-
-- U : sign
-0. signed
-1. unsigned
 
 ## pack/unpack instructions
 
@@ -118,13 +118,6 @@
 2. reserved
 3. reserved
 
-
-## permutation instruction
-
-|31 - 26|25 - 21|20 - 16|15 - 11|10 - 8|7 - 0|
-|:-:|:-:|:-:|:-:|:-:|:-:|
-|0x3F|D|A|B|res.|0x7E|
-
 ## basic multiplication instructions
 
 |31 - 26|25 - 21|20 - 16|15 - 11|10 - 8|7|6|5|4|3|2|1 - 0|
@@ -143,15 +136,17 @@
 
 ## half word multiplication instructions
 
-|31 - 26|25 - 21|20 - 16|15 - 11|10 - 8|7|6|5|4|3|2|1 - 0|
-|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-|0x3F|D|A|B|res.|1|0|0|0|1|U|OP|
+|31 - 26|25 - 21|20 - 16|15 - 11|10 - 8|7|6|5|4|3|2|1|0|
+|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+|0x3F|D|A|B|res.|1|0|0|0|1|U|X|Y|
 
-- OP : operation codes
-0. multiply lower half word of A and lower half word of B
-1. multiply lower half word of A and higher half word of B
-2. multiply higher half word of A and lower half word of B
-3. multiply higher half word of A and higher half word of B
+- X : selection of A
+0. use higher half word of A
+1. use lower half word of A
+
+- Y : selection of B
+0. use higher half word of B
+1. use lower half word of B
 
 - U : signed/unsigned
 0. signed
@@ -159,15 +154,17 @@
 
 ## word and half word multiplication instructions
 
-|31 - 26|25 - 21|20 - 16|15 - 11|10 - 8|7|6|5|4|3|2|1 - 0|
-|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-|0x3F|D|A|B|res.|1|0|0|1|0|U|OP|
+|31 - 26|25 - 21|20 - 16|15 - 11|10 - 8|7|6|5|4|3|2|1|0|
+|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+|0x3F|D|A|B|res.|1|0|0|1|0|U|H|Y|
 
-- OP : operation codes
-0. multiply A and lower half word of B and get lower word saturated
-1. multiply A and higher half word of B and get lower word saturated
-2. multiply A and lower half word of B and get higher word
-3. multiply A and higher half word of B and get higher word
+- Y : selection of B
+0. use higher half word of B
+1. use lower half word of B
+
+- H : output mux
+0. get saturated lower 32bit of result
+1. get higher 32bit of result
 
 - U : signed/unsigned
 0. signed

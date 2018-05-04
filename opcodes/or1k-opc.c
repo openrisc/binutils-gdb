@@ -1409,17 +1409,29 @@ static const CGEN_OPCODE or1k_cgen_insn_opcode_table[MAX_INSNS] =
     { { MNEM, ' ', OP (RD), ',', OP (RA), ',', OP (RB), 0 } },
     & ifmt_ld_add_b, { 0xfc00005f }
   },
-/* ld.merge.b $rD,$rA,$rB */
+/* ld.mux_ge.b $rD,$rA,$rB */
   {
     { 0, 0, 0, 0 },
     { { MNEM, ' ', OP (RD), ',', OP (RA), ',', OP (RB), 0 } },
     & ifmt_ld_add_b, { 0xfc000058 }
   },
-/* ld.merge.h $rD,$rA,$rB */
+/* ld.mux_ge.h $rD,$rA,$rB */
   {
     { 0, 0, 0, 0 },
     { { MNEM, ' ', OP (RD), ',', OP (RA), ',', OP (RB), 0 } },
     & ifmt_ld_add_b, { 0xfc000059 }
+  },
+/* ld.mux_ov.b $rD,$rA,$rB */
+  {
+    { 0, 0, 0, 0 },
+    { { MNEM, ' ', OP (RD), ',', OP (RA), ',', OP (RB), 0 } },
+    & ifmt_ld_add_b, { 0xfc00005c }
+  },
+/* ld.mux_ov.h $rD,$rA,$rB */
+  {
+    { 0, 0, 0, 0 },
+    { { MNEM, ' ', OP (RD), ',', OP (RA), ',', OP (RB), 0 } },
+    & ifmt_ld_add_b, { 0xfc00005d }
   },
 /* ld.pack.b $rD,$rA,$rB */
   {
