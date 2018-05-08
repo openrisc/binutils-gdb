@@ -457,6 +457,7 @@ static const CGEN_OPINST sfmt_ld_cmp_eq_b_ops[] ATTRIBUTE_UNUSED = {
 static const CGEN_OPINST sfmt_ld_all_eq_b_ops[] ATTRIBUTE_UNUSED = {
   { INPUT, "rA", HW_H_GPR, CGEN_MODE_UDI, OP_ENT (RA), 0, 0 },
   { INPUT, "rB", HW_H_GPR, CGEN_MODE_UDI, OP_ENT (RB), 0, 0 },
+  { OUTPUT, "rD", HW_H_GPR, CGEN_MODE_UDI, OP_ENT (RD), 0, 0 },
   { OUTPUT, "sys_sr_f", HW_H_SYS_SR_F, CGEN_MODE_UDI, 0, 0, COND_REF },
   { END, (const char *)0, (enum cgen_hw_type)0, (enum cgen_mode)0, (enum cgen_operand_type)0, 0, 0 }
 };
