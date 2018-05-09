@@ -59,6 +59,7 @@
 
 ; Reserved fields
 (dnf f-resv-25-26  "resv-25-26"                ((MACH ORBIS-MACHS) RESERVED) 25 26)
+(dnf f-resv-25-18  "resv-25-18"                ((MACH ORBIS-MACHS) RESERVED) 25 18)
 (dnf f-resv-25-10  "resv-25-10"                ((MACH ORBIS-MACHS) RESERVED) 25 10)
 (dnf f-resv-25-5   "resv-25-5"                 ((MACH ORBIS-MACHS) RESERVED) 25 5)
 (dnf f-resv-23-8   "resv-23-8"                 ((MACH ORBIS-MACHS) RESERVED) 23 8)
@@ -1487,8 +1488,12 @@
    ("REV"     #x9)    ;; bit reverse
    ("REVBH"   #xA)    ;; byte reverse for each halfword
    ("REVB"    #xB)    ;; byte reverse
-   )
+   ("ANY_GE"  #xC)    ;; set F if any GE is set
+   ("ALL_GE"  #xD)    ;; set F if all GEs are set
+   ("ANY_OV"  #xE)    ;; set F if any OV is set
+   ("ALL_OV"  #xF)    ;; set F if all OVs are set
   )
+)
 
 (define-pmacro (dsp-cmp-insn op op_str)
   (begin
@@ -2552,6 +2557,42 @@
         (subword QI rA 3)
       )
     )
+    ()
+)
+
+(dni(.sym ld-any-ge)
+    (.str "ld.any_ge")
+    ((MACH ORBIS-MACHS))
+    (.str "ld.any_ge")
+    (+ OPC_DSP (f-resv-25-18 0) OPC_DSP_MISC OPC_DSP_MISC_ANY_GE)
+    (set sys-sr-f 1)
+    ()
+)
+
+(dni(.sym ld-all-ge)
+    (.str "ld.all_ge")
+    ((MACH ORBIS-MACHS))
+    (.str "ld.all_ge")
+    (+ OPC_DSP (f-resv-25-18 0) OPC_DSP_MISC OPC_DSP_MISC_ALL_GE)
+    (set sys-sr-f 1)
+    ()
+)
+
+(dni(.sym ld-any-ov)
+    (.str "ld.any_ov")
+    ((MACH ORBIS-MACHS))
+    (.str "ld.any_ov")
+    (+ OPC_DSP (f-resv-25-18 0) OPC_DSP_MISC OPC_DSP_MISC_ANY_OV)
+    (set sys-sr-f 1)
+    ()
+)
+
+(dni(.sym ld-all-ov)
+    (.str "ld.all_ov")
+    ((MACH ORBIS-MACHS))
+    (.str "ld.all_ov")
+    (+ OPC_DSP (f-resv-25-18 0) OPC_DSP_MISC OPC_DSP_MISC_ALL_OV)
+    (set sys-sr-f 1)
     ()
 )
 

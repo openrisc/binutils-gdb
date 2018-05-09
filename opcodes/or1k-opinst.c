@@ -527,6 +527,11 @@ static const CGEN_OPINST sfmt_ld_move_h_ops[] ATTRIBUTE_UNUSED = {
   { END, (const char *)0, (enum cgen_hw_type)0, (enum cgen_mode)0, (enum cgen_operand_type)0, 0, 0 }
 };
 
+static const CGEN_OPINST sfmt_ld_any_ge_ops[] ATTRIBUTE_UNUSED = {
+  { OUTPUT, "sys_sr_f", HW_H_SYS_SR_F, CGEN_MODE_UDI, 0, 0, 0 },
+  { END, (const char *)0, (enum cgen_hw_type)0, (enum cgen_mode)0, (enum cgen_operand_type)0, 0, 0 }
+};
+
 static const CGEN_OPINST sfmt_lf_add_s_ops[] ATTRIBUTE_UNUSED = {
   { INPUT, "rASF", HW_H_FSR, CGEN_MODE_SF, OP_ENT (RASF), 0, 0 },
   { INPUT, "rBSF", HW_H_FSR, CGEN_MODE_SF, OP_ENT (RBSF), 0, 0 },
@@ -854,6 +859,10 @@ static const CGEN_OPINST *or1k_cgen_opinst_table[MAX_INSNS] = {
   & sfmt_ld_unpack_b_ops[0],
   & sfmt_ld_unpack_b_ops[0],
   & sfmt_ld_unpack_b_ops[0],
+  & sfmt_ld_any_ge_ops[0],
+  & sfmt_ld_any_ge_ops[0],
+  & sfmt_ld_any_ge_ops[0],
+  & sfmt_ld_any_ge_ops[0],
   & sfmt_lf_add_s_ops[0],
   & sfmt_lf_add_d_ops[0],
   & sfmt_lf_add_s_ops[0],

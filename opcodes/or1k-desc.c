@@ -958,6 +958,7 @@ const CGEN_IFLD or1k_cgen_ifld_table[] =
   { OR1K_F_OP_1_1, "f-op-1-1", 0, 32, 1, 1, { 0, { { { (1<<MACH_OR32)|(1<<MACH_OR32ND)|(1<<MACH_OR64)|(1<<MACH_OR64ND), 0 } } } }  },
   { OR1K_F_OP_0_1, "f-op-0-1", 0, 32, 0, 1, { 0, { { { (1<<MACH_OR32)|(1<<MACH_OR32ND)|(1<<MACH_OR64)|(1<<MACH_OR64ND), 0 } } } }  },
   { OR1K_F_RESV_25_26, "f-resv-25-26", 0, 32, 25, 26, { 0|A(RESERVED), { { { (1<<MACH_OR32)|(1<<MACH_OR32ND)|(1<<MACH_OR64)|(1<<MACH_OR64ND), 0 } } } }  },
+  { OR1K_F_RESV_25_18, "f-resv-25-18", 0, 32, 25, 18, { 0|A(RESERVED), { { { (1<<MACH_OR32)|(1<<MACH_OR32ND)|(1<<MACH_OR64)|(1<<MACH_OR64ND), 0 } } } }  },
   { OR1K_F_RESV_25_10, "f-resv-25-10", 0, 32, 25, 10, { 0|A(RESERVED), { { { (1<<MACH_OR32)|(1<<MACH_OR32ND)|(1<<MACH_OR64)|(1<<MACH_OR64ND), 0 } } } }  },
   { OR1K_F_RESV_25_5, "f-resv-25-5", 0, 32, 25, 5, { 0|A(RESERVED), { { { (1<<MACH_OR32)|(1<<MACH_OR32ND)|(1<<MACH_OR64)|(1<<MACH_OR64ND), 0 } } } }  },
   { OR1K_F_RESV_23_8, "f-resv-23-8", 0, 32, 23, 8, { 0|A(RESERVED), { { { (1<<MACH_OR32)|(1<<MACH_OR32ND)|(1<<MACH_OR64)|(1<<MACH_OR64ND), 0 } } } }  },
@@ -2426,6 +2427,26 @@ static const CGEN_IBASE or1k_cgen_insn_table[MAX_INSNS] =
 /* ld.revb $rD,$rA */
   {
     OR1K_INSN_LD_REVB, "ld-revb", "ld.revb", 32,
+    { 0, { { { (1<<MACH_OR32)|(1<<MACH_OR32ND)|(1<<MACH_OR64)|(1<<MACH_OR64ND), 0 } } } }
+  },
+/* ld.any_ge */
+  {
+    OR1K_INSN_LD_ANY_GE, "ld-any-ge", "ld.any_ge", 32,
+    { 0, { { { (1<<MACH_OR32)|(1<<MACH_OR32ND)|(1<<MACH_OR64)|(1<<MACH_OR64ND), 0 } } } }
+  },
+/* ld.all_ge */
+  {
+    OR1K_INSN_LD_ALL_GE, "ld-all-ge", "ld.all_ge", 32,
+    { 0, { { { (1<<MACH_OR32)|(1<<MACH_OR32ND)|(1<<MACH_OR64)|(1<<MACH_OR64ND), 0 } } } }
+  },
+/* ld.any_ov */
+  {
+    OR1K_INSN_LD_ANY_OV, "ld-any-ov", "ld.any_ov", 32,
+    { 0, { { { (1<<MACH_OR32)|(1<<MACH_OR32ND)|(1<<MACH_OR64)|(1<<MACH_OR64ND), 0 } } } }
+  },
+/* ld.all_ov */
+  {
+    OR1K_INSN_LD_ALL_OV, "ld-all-ov", "ld.all_ov", 32,
     { 0, { { { (1<<MACH_OR32)|(1<<MACH_OR32ND)|(1<<MACH_OR64)|(1<<MACH_OR64ND), 0 } } } }
   },
 /* lf.add.s $rDSF,$rASF,$rBSF */
