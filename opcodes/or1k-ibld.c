@@ -648,14 +648,39 @@ or1k_cgen_insert_operand (CGEN_CPU_DESC cd,
           break;
       }
       break;
+    case OR1K_OPERAND_UIMM1A :
+      errmsg = insert_normal (cd, fields->f_uimm1a, 0, 0, 1, 1, 32, total_length, buffer);
+      break;
+    case OR1K_OPERAND_UIMM1B :
+      errmsg = insert_normal (cd, fields->f_uimm1b, 0, 0, 0, 1, 32, total_length, buffer);
+      break;
+    case OR1K_OPERAND_UIMM1D :
+      errmsg = insert_normal (cd, fields->f_uimm1d, 0, 0, 2, 1, 32, total_length, buffer);
+      break;
+    case OR1K_OPERAND_UIMM1S :
+      errmsg = insert_normal (cd, fields->f_uimm1s, 0, 0, 4, 1, 32, total_length, buffer);
+      break;
+    case OR1K_OPERAND_UIMM1U :
+      errmsg = insert_normal (cd, fields->f_uimm1u, 0, 0, 2, 1, 32, total_length, buffer);
+      break;
+    case OR1K_OPERAND_UIMM2 :
+      errmsg = insert_normal (cd, fields->f_uimm2, 0, 0, 1, 2, 32, total_length, buffer);
+      break;
+    case OR1K_OPERAND_UIMM2D :
+      errmsg = insert_normal (cd, fields->f_uimm2d, 0, 0, 2, 2, 32, total_length, buffer);
+      break;
+    case OR1K_OPERAND_UIMM2S :
+      errmsg = insert_normal (cd, fields->f_uimm2s, 0, 0, 4, 2, 32, total_length, buffer);
+      break;
     case OR1K_OPERAND_UIMM6 :
       errmsg = insert_normal (cd, fields->f_uimm6, 0, 0, 5, 6, 32, total_length, buffer);
       break;
 
     default :
       /* xgettext:c-format */
-      fprintf (stderr, _("Unrecognized field %d while building insn.\n"),
-	       opindex);
+      opcodes_error_handler
+	(_("internal error: unrecognized field %d while building insn"),
+	 opindex);
       abort ();
   }
 
@@ -761,14 +786,39 @@ or1k_cgen_extract_operand (CGEN_CPU_DESC cd,
   FLD (f_uimm16_split) = ((UHI) (UINT) (((((FLD (f_imm16_25_5)) << (11))) | (FLD (f_imm16_10_11)))));
       }
       break;
+    case OR1K_OPERAND_UIMM1A :
+      length = extract_normal (cd, ex_info, insn_value, 0, 0, 1, 1, 32, total_length, pc, & fields->f_uimm1a);
+      break;
+    case OR1K_OPERAND_UIMM1B :
+      length = extract_normal (cd, ex_info, insn_value, 0, 0, 0, 1, 32, total_length, pc, & fields->f_uimm1b);
+      break;
+    case OR1K_OPERAND_UIMM1D :
+      length = extract_normal (cd, ex_info, insn_value, 0, 0, 2, 1, 32, total_length, pc, & fields->f_uimm1d);
+      break;
+    case OR1K_OPERAND_UIMM1S :
+      length = extract_normal (cd, ex_info, insn_value, 0, 0, 4, 1, 32, total_length, pc, & fields->f_uimm1s);
+      break;
+    case OR1K_OPERAND_UIMM1U :
+      length = extract_normal (cd, ex_info, insn_value, 0, 0, 2, 1, 32, total_length, pc, & fields->f_uimm1u);
+      break;
+    case OR1K_OPERAND_UIMM2 :
+      length = extract_normal (cd, ex_info, insn_value, 0, 0, 1, 2, 32, total_length, pc, & fields->f_uimm2);
+      break;
+    case OR1K_OPERAND_UIMM2D :
+      length = extract_normal (cd, ex_info, insn_value, 0, 0, 2, 2, 32, total_length, pc, & fields->f_uimm2d);
+      break;
+    case OR1K_OPERAND_UIMM2S :
+      length = extract_normal (cd, ex_info, insn_value, 0, 0, 4, 2, 32, total_length, pc, & fields->f_uimm2s);
+      break;
     case OR1K_OPERAND_UIMM6 :
       length = extract_normal (cd, ex_info, insn_value, 0, 0, 5, 6, 32, total_length, pc, & fields->f_uimm6);
       break;
 
     default :
       /* xgettext:c-format */
-      fprintf (stderr, _("Unrecognized field %d while decoding insn.\n"),
-	       opindex);
+      opcodes_error_handler
+	(_("internal error: unrecognized field %d while decoding insn"),
+	 opindex);
       abort ();
     }
 
@@ -847,14 +897,39 @@ or1k_cgen_get_int_operand (CGEN_CPU_DESC cd ATTRIBUTE_UNUSED,
     case OR1K_OPERAND_UIMM16_SPLIT :
       value = fields->f_uimm16_split;
       break;
+    case OR1K_OPERAND_UIMM1A :
+      value = fields->f_uimm1a;
+      break;
+    case OR1K_OPERAND_UIMM1B :
+      value = fields->f_uimm1b;
+      break;
+    case OR1K_OPERAND_UIMM1D :
+      value = fields->f_uimm1d;
+      break;
+    case OR1K_OPERAND_UIMM1S :
+      value = fields->f_uimm1s;
+      break;
+    case OR1K_OPERAND_UIMM1U :
+      value = fields->f_uimm1u;
+      break;
+    case OR1K_OPERAND_UIMM2 :
+      value = fields->f_uimm2;
+      break;
+    case OR1K_OPERAND_UIMM2D :
+      value = fields->f_uimm2d;
+      break;
+    case OR1K_OPERAND_UIMM2S :
+      value = fields->f_uimm2s;
+      break;
     case OR1K_OPERAND_UIMM6 :
       value = fields->f_uimm6;
       break;
 
     default :
       /* xgettext:c-format */
-      fprintf (stderr, _("Unrecognized field %d while getting int operand.\n"),
-		       opindex);
+      opcodes_error_handler
+	(_("internal error: unrecognized field %d while getting int operand"),
+	 opindex);
       abort ();
   }
 
@@ -915,14 +990,39 @@ or1k_cgen_get_vma_operand (CGEN_CPU_DESC cd ATTRIBUTE_UNUSED,
     case OR1K_OPERAND_UIMM16_SPLIT :
       value = fields->f_uimm16_split;
       break;
+    case OR1K_OPERAND_UIMM1A :
+      value = fields->f_uimm1a;
+      break;
+    case OR1K_OPERAND_UIMM1B :
+      value = fields->f_uimm1b;
+      break;
+    case OR1K_OPERAND_UIMM1D :
+      value = fields->f_uimm1d;
+      break;
+    case OR1K_OPERAND_UIMM1S :
+      value = fields->f_uimm1s;
+      break;
+    case OR1K_OPERAND_UIMM1U :
+      value = fields->f_uimm1u;
+      break;
+    case OR1K_OPERAND_UIMM2 :
+      value = fields->f_uimm2;
+      break;
+    case OR1K_OPERAND_UIMM2D :
+      value = fields->f_uimm2d;
+      break;
+    case OR1K_OPERAND_UIMM2S :
+      value = fields->f_uimm2s;
+      break;
     case OR1K_OPERAND_UIMM6 :
       value = fields->f_uimm6;
       break;
 
     default :
       /* xgettext:c-format */
-      fprintf (stderr, _("Unrecognized field %d while getting vma operand.\n"),
-		       opindex);
+      opcodes_error_handler
+	(_("internal error: unrecognized field %d while getting vma operand"),
+	 opindex);
       abort ();
   }
 
@@ -990,14 +1090,39 @@ or1k_cgen_set_int_operand (CGEN_CPU_DESC cd ATTRIBUTE_UNUSED,
     case OR1K_OPERAND_UIMM16_SPLIT :
       fields->f_uimm16_split = value;
       break;
+    case OR1K_OPERAND_UIMM1A :
+      fields->f_uimm1a = value;
+      break;
+    case OR1K_OPERAND_UIMM1B :
+      fields->f_uimm1b = value;
+      break;
+    case OR1K_OPERAND_UIMM1D :
+      fields->f_uimm1d = value;
+      break;
+    case OR1K_OPERAND_UIMM1S :
+      fields->f_uimm1s = value;
+      break;
+    case OR1K_OPERAND_UIMM1U :
+      fields->f_uimm1u = value;
+      break;
+    case OR1K_OPERAND_UIMM2 :
+      fields->f_uimm2 = value;
+      break;
+    case OR1K_OPERAND_UIMM2D :
+      fields->f_uimm2d = value;
+      break;
+    case OR1K_OPERAND_UIMM2S :
+      fields->f_uimm2s = value;
+      break;
     case OR1K_OPERAND_UIMM6 :
       fields->f_uimm6 = value;
       break;
 
     default :
       /* xgettext:c-format */
-      fprintf (stderr, _("Unrecognized field %d while setting int operand.\n"),
-		       opindex);
+      opcodes_error_handler
+	(_("internal error: unrecognized field %d while setting int operand"),
+	 opindex);
       abort ();
   }
 }
@@ -1055,14 +1180,39 @@ or1k_cgen_set_vma_operand (CGEN_CPU_DESC cd ATTRIBUTE_UNUSED,
     case OR1K_OPERAND_UIMM16_SPLIT :
       fields->f_uimm16_split = value;
       break;
+    case OR1K_OPERAND_UIMM1A :
+      fields->f_uimm1a = value;
+      break;
+    case OR1K_OPERAND_UIMM1B :
+      fields->f_uimm1b = value;
+      break;
+    case OR1K_OPERAND_UIMM1D :
+      fields->f_uimm1d = value;
+      break;
+    case OR1K_OPERAND_UIMM1S :
+      fields->f_uimm1s = value;
+      break;
+    case OR1K_OPERAND_UIMM1U :
+      fields->f_uimm1u = value;
+      break;
+    case OR1K_OPERAND_UIMM2 :
+      fields->f_uimm2 = value;
+      break;
+    case OR1K_OPERAND_UIMM2D :
+      fields->f_uimm2d = value;
+      break;
+    case OR1K_OPERAND_UIMM2S :
+      fields->f_uimm2s = value;
+      break;
     case OR1K_OPERAND_UIMM6 :
       fields->f_uimm6 = value;
       break;
 
     default :
       /* xgettext:c-format */
-      fprintf (stderr, _("Unrecognized field %d while setting vma operand.\n"),
-		       opindex);
+      opcodes_error_handler
+	(_("internal error: unrecognized field %d while setting vma operand"),
+	 opindex);
       abort ();
   }
 }

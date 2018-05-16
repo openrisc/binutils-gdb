@@ -447,6 +447,91 @@ static const CGEN_OPINST sfmt_l_macu_ops[] ATTRIBUTE_UNUSED = {
   { END, (const char *)0, (enum cgen_hw_type)0, (enum cgen_mode)0, (enum cgen_operand_type)0, 0, 0 }
 };
 
+static const CGEN_OPINST sfmt_ld_cmp_eq_b_ops[] ATTRIBUTE_UNUSED = {
+  { INPUT, "rA", HW_H_GPR, CGEN_MODE_UDI, OP_ENT (RA), 0, 0 },
+  { INPUT, "rB", HW_H_GPR, CGEN_MODE_UDI, OP_ENT (RB), 0, 0 },
+  { OUTPUT, "rD", HW_H_GPR, CGEN_MODE_UDI, OP_ENT (RD), 0, 0 },
+  { END, (const char *)0, (enum cgen_hw_type)0, (enum cgen_mode)0, (enum cgen_operand_type)0, 0, 0 }
+};
+
+static const CGEN_OPINST sfmt_ld_add_b_ops[] ATTRIBUTE_UNUSED = {
+  { INPUT, "rA", HW_H_GPR, CGEN_MODE_UDI, OP_ENT (RA), 0, 0 },
+  { INPUT, "rB", HW_H_GPR, CGEN_MODE_UDI, OP_ENT (RB), 0, 0 },
+  { OUTPUT, "rD", HW_H_GPR, CGEN_MODE_UDI, OP_ENT (RD), 0, 0 },
+  { END, (const char *)0, (enum cgen_hw_type)0, (enum cgen_mode)0, (enum cgen_operand_type)0, 0, 0 }
+};
+
+static const CGEN_OPINST sfmt_ld_unpack_b_ops[] ATTRIBUTE_UNUSED = {
+  { INPUT, "rA", HW_H_GPR, CGEN_MODE_UDI, OP_ENT (RA), 0, 0 },
+  { OUTPUT, "rD", HW_H_GPR, CGEN_MODE_UDI, OP_ENT (RD), 0, 0 },
+  { END, (const char *)0, (enum cgen_hw_type)0, (enum cgen_mode)0, (enum cgen_operand_type)0, 0, 0 }
+};
+
+static const CGEN_OPINST sfmt_ld_slb_ops[] ATTRIBUTE_UNUSED = {
+  { INPUT, "rA", HW_H_GPR, CGEN_MODE_UDI, OP_ENT (RA), 0, 0 },
+  { INPUT, "rB", HW_H_GPR, CGEN_MODE_UDI, OP_ENT (RB), 0, 0 },
+  { INPUT, "uimm2", HW_H_UIMM2, CGEN_MODE_UINT, OP_ENT (UIMM2), 0, 0 },
+  { OUTPUT, "rD", HW_H_GPR, CGEN_MODE_UDI, OP_ENT (RD), 0, 0 },
+  { END, (const char *)0, (enum cgen_hw_type)0, (enum cgen_mode)0, (enum cgen_operand_type)0, 0, 0 }
+};
+
+static const CGEN_OPINST sfmt_ld_madds_h_ops[] ATTRIBUTE_UNUSED = {
+  { INPUT, "mac_machi", HW_H_MAC_MACHI, CGEN_MODE_UDI, 0, 0, 0 },
+  { INPUT, "mac_maclo", HW_H_MAC_MACLO, CGEN_MODE_UDI, 0, 0, 0 },
+  { INPUT, "rA", HW_H_GPR, CGEN_MODE_UDI, OP_ENT (RA), 0, 0 },
+  { INPUT, "rB", HW_H_GPR, CGEN_MODE_UDI, OP_ENT (RB), 0, 0 },
+  { OUTPUT, "mac_machi", HW_H_MAC_MACHI, CGEN_MODE_UDI, 0, 0, 0 },
+  { OUTPUT, "mac_maclo", HW_H_MAC_MACLO, CGEN_MODE_UDI, 0, 0, 0 },
+  { END, (const char *)0, (enum cgen_hw_type)0, (enum cgen_mode)0, (enum cgen_operand_type)0, 0, 0 }
+};
+
+static const CGEN_OPINST sfmt_ld_mul_ops[] ATTRIBUTE_UNUSED = {
+  { INPUT, "rA", HW_H_GPR, CGEN_MODE_UDI, OP_ENT (RA), 0, 0 },
+  { INPUT, "rB", HW_H_GPR, CGEN_MODE_UDI, OP_ENT (RB), 0, 0 },
+  { INPUT, "uimm1a", HW_H_UIMM1, CGEN_MODE_UINT, OP_ENT (UIMM1A), 0, 0 },
+  { INPUT, "uimm1b", HW_H_UIMM1, CGEN_MODE_UINT, OP_ENT (UIMM1B), 0, 0 },
+  { OUTPUT, "rD", HW_H_GPR, CGEN_MODE_UDI, OP_ENT (RD), 0, 0 },
+  { END, (const char *)0, (enum cgen_hw_type)0, (enum cgen_mode)0, (enum cgen_operand_type)0, 0, 0 }
+};
+
+static const CGEN_OPINST sfmt_ld_muls_ops[] ATTRIBUTE_UNUSED = {
+  { INPUT, "rA", HW_H_GPR, CGEN_MODE_UDI, OP_ENT (RA), 0, 0 },
+  { INPUT, "rB", HW_H_GPR, CGEN_MODE_UDI, OP_ENT (RB), 0, 0 },
+  { INPUT, "uimm1b", HW_H_UIMM1, CGEN_MODE_UINT, OP_ENT (UIMM1B), 0, 0 },
+  { OUTPUT, "rD", HW_H_GPR, CGEN_MODE_UDI, OP_ENT (RD), 0, 0 },
+  { END, (const char *)0, (enum cgen_hw_type)0, (enum cgen_mode)0, (enum cgen_operand_type)0, 0, 0 }
+};
+
+static const CGEN_OPINST sfmt_ld_mulh_ops[] ATTRIBUTE_UNUSED = {
+  { INPUT, "rA", HW_H_GPR, CGEN_MODE_UDI, OP_ENT (RA), 0, 0 },
+  { INPUT, "rB", HW_H_GPR, CGEN_MODE_UDI, OP_ENT (RB), 0, 0 },
+  { INPUT, "uimm1b", HW_H_UIMM1, CGEN_MODE_UINT, OP_ENT (UIMM1B), 0, 0 },
+  { END, (const char *)0, (enum cgen_hw_type)0, (enum cgen_mode)0, (enum cgen_operand_type)0, 0, 0 }
+};
+
+static const CGEN_OPINST sfmt_ld_move_b_ops[] ATTRIBUTE_UNUSED = {
+  { INPUT, "rA", HW_H_GPR, CGEN_MODE_UDI, OP_ENT (RA), 0, COND_REF },
+  { INPUT, "rB", HW_H_GPR, CGEN_MODE_UDI, OP_ENT (RB), 0, 0 },
+  { INPUT, "uimm2d", HW_H_UIMM2, CGEN_MODE_UINT, OP_ENT (UIMM2D), 0, 0 },
+  { INPUT, "uimm2s", HW_H_UIMM2, CGEN_MODE_UINT, OP_ENT (UIMM2S), 0, 0 },
+  { OUTPUT, "rD", HW_H_GPR, CGEN_MODE_UDI, OP_ENT (RD), 0, 0 },
+  { END, (const char *)0, (enum cgen_hw_type)0, (enum cgen_mode)0, (enum cgen_operand_type)0, 0, 0 }
+};
+
+static const CGEN_OPINST sfmt_ld_move_h_ops[] ATTRIBUTE_UNUSED = {
+  { INPUT, "rA", HW_H_GPR, CGEN_MODE_UDI, OP_ENT (RA), 0, COND_REF },
+  { INPUT, "rB", HW_H_GPR, CGEN_MODE_UDI, OP_ENT (RB), 0, 0 },
+  { INPUT, "uimm1d", HW_H_UIMM1, CGEN_MODE_UINT, OP_ENT (UIMM1D), 0, 0 },
+  { INPUT, "uimm1s", HW_H_UIMM1, CGEN_MODE_UINT, OP_ENT (UIMM1S), 0, 0 },
+  { OUTPUT, "rD", HW_H_GPR, CGEN_MODE_UDI, OP_ENT (RD), 0, 0 },
+  { END, (const char *)0, (enum cgen_hw_type)0, (enum cgen_mode)0, (enum cgen_operand_type)0, 0, 0 }
+};
+
+static const CGEN_OPINST sfmt_ld_any_ge_ops[] ATTRIBUTE_UNUSED = {
+  { OUTPUT, "sys_sr_f", HW_H_SYS_SR_F, CGEN_MODE_UDI, 0, 0, 0 },
+  { END, (const char *)0, (enum cgen_hw_type)0, (enum cgen_mode)0, (enum cgen_operand_type)0, 0, 0 }
+};
+
 static const CGEN_OPINST sfmt_lf_add_s_ops[] ATTRIBUTE_UNUSED = {
   { INPUT, "rASF", HW_H_FSR, CGEN_MODE_SF, OP_ENT (RASF), 0, 0 },
   { INPUT, "rBSF", HW_H_FSR, CGEN_MODE_SF, OP_ENT (RBSF), 0, 0 },
@@ -626,7 +711,114 @@ static const CGEN_OPINST *or1k_cgen_opinst_table[MAX_INSNS] = {
   & sfmt_l_msync_ops[0],
   & sfmt_l_msync_ops[0],
   & sfmt_l_msync_ops[0],
-  & sfmt_l_msync_ops[0],
+  & sfmt_ld_cmp_eq_b_ops[0],
+  & sfmt_ld_cmp_eq_b_ops[0],
+  & sfmt_ld_cmp_eq_b_ops[0],
+  & sfmt_ld_cmp_eq_b_ops[0],
+  & sfmt_ld_cmp_eq_b_ops[0],
+  & sfmt_ld_cmp_eq_b_ops[0],
+  & sfmt_ld_cmp_eq_b_ops[0],
+  & sfmt_ld_cmp_eq_b_ops[0],
+  & sfmt_ld_cmp_eq_b_ops[0],
+  & sfmt_ld_cmp_eq_b_ops[0],
+  & sfmt_ld_cmp_eq_b_ops[0],
+  & sfmt_ld_cmp_eq_b_ops[0],
+  & sfmt_ld_cmp_eq_b_ops[0],
+  & sfmt_ld_cmp_eq_b_ops[0],
+  & sfmt_ld_cmp_eq_b_ops[0],
+  & sfmt_ld_cmp_eq_b_ops[0],
+  & sfmt_ld_cmp_eq_b_ops[0],
+  & sfmt_ld_cmp_eq_b_ops[0],
+  & sfmt_ld_cmp_eq_b_ops[0],
+  & sfmt_ld_cmp_eq_b_ops[0],
+  & sfmt_ld_add_b_ops[0],
+  & sfmt_ld_add_b_ops[0],
+  & sfmt_ld_add_b_ops[0],
+  & sfmt_ld_add_b_ops[0],
+  & sfmt_ld_add_b_ops[0],
+  & sfmt_ld_add_b_ops[0],
+  & sfmt_ld_add_b_ops[0],
+  & sfmt_ld_add_b_ops[0],
+  & sfmt_ld_add_b_ops[0],
+  & sfmt_ld_add_b_ops[0],
+  & sfmt_ld_add_b_ops[0],
+  & sfmt_ld_add_b_ops[0],
+  & sfmt_ld_add_b_ops[0],
+  & sfmt_ld_add_b_ops[0],
+  & sfmt_ld_add_b_ops[0],
+  & sfmt_ld_add_b_ops[0],
+  & sfmt_ld_add_b_ops[0],
+  & sfmt_ld_add_b_ops[0],
+  & sfmt_ld_add_b_ops[0],
+  & sfmt_ld_add_b_ops[0],
+  & sfmt_ld_add_b_ops[0],
+  & sfmt_ld_add_b_ops[0],
+  & sfmt_ld_add_b_ops[0],
+  & sfmt_ld_add_b_ops[0],
+  & sfmt_ld_add_b_ops[0],
+  & sfmt_ld_add_b_ops[0],
+  & sfmt_ld_add_b_ops[0],
+  & sfmt_ld_add_b_ops[0],
+  & sfmt_ld_add_b_ops[0],
+  & sfmt_ld_add_b_ops[0],
+  & sfmt_ld_add_b_ops[0],
+  & sfmt_ld_add_b_ops[0],
+  & sfmt_ld_add_b_ops[0],
+  & sfmt_ld_add_b_ops[0],
+  & sfmt_ld_add_b_ops[0],
+  & sfmt_ld_add_b_ops[0],
+  & sfmt_ld_add_b_ops[0],
+  & sfmt_ld_add_b_ops[0],
+  & sfmt_ld_unpack_b_ops[0],
+  & sfmt_ld_unpack_b_ops[0],
+  & sfmt_ld_add_b_ops[0],
+  & sfmt_ld_add_b_ops[0],
+  & sfmt_ld_add_b_ops[0],
+  & sfmt_ld_add_b_ops[0],
+  & sfmt_ld_add_b_ops[0],
+  & sfmt_ld_add_b_ops[0],
+  & sfmt_ld_add_b_ops[0],
+  & sfmt_ld_add_b_ops[0],
+  & sfmt_ld_add_b_ops[0],
+  & sfmt_ld_add_b_ops[0],
+  & sfmt_ld_slb_ops[0],
+  & sfmt_ld_add_b_ops[0],
+  & sfmt_ld_add_b_ops[0],
+  & sfmt_ld_add_b_ops[0],
+  & sfmt_ld_add_b_ops[0],
+  & sfmt_ld_madds_h_ops[0],
+  & sfmt_ld_madds_h_ops[0],
+  & sfmt_ld_madds_h_ops[0],
+  & sfmt_ld_madds_h_ops[0],
+  & sfmt_ld_add_b_ops[0],
+  & sfmt_ld_add_b_ops[0],
+  & sfmt_ld_add_b_ops[0],
+  & sfmt_ld_add_b_ops[0],
+  & sfmt_ld_mul_ops[0],
+  & sfmt_ld_mul_ops[0],
+  & sfmt_ld_muls_ops[0],
+  & sfmt_ld_mulh_ops[0],
+  & sfmt_ld_muls_ops[0],
+  & sfmt_ld_mulh_ops[0],
+  & sfmt_ld_move_b_ops[0],
+  & sfmt_ld_move_h_ops[0],
+  & sfmt_ld_unpack_b_ops[0],
+  & sfmt_ld_unpack_b_ops[0],
+  & sfmt_ld_unpack_b_ops[0],
+  & sfmt_ld_unpack_b_ops[0],
+  & sfmt_ld_unpack_b_ops[0],
+  & sfmt_ld_unpack_b_ops[0],
+  & sfmt_ld_unpack_b_ops[0],
+  & sfmt_ld_unpack_b_ops[0],
+  & sfmt_ld_unpack_b_ops[0],
+  & sfmt_ld_unpack_b_ops[0],
+  & sfmt_ld_unpack_b_ops[0],
+  & sfmt_ld_unpack_b_ops[0],
+  & sfmt_ld_unpack_b_ops[0],
+  & sfmt_ld_any_ge_ops[0],
+  & sfmt_ld_any_ge_ops[0],
+  & sfmt_ld_any_ge_ops[0],
+  & sfmt_ld_any_ge_ops[0],
   & sfmt_lf_add_s_ops[0],
   & sfmt_lf_add_d_ops[0],
   & sfmt_lf_add_s_ops[0],
