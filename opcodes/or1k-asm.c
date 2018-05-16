@@ -513,6 +513,9 @@ or1k_cgen_parse_operand (CGEN_CPU_DESC cd,
     case OR1K_OPERAND_UIMM1U :
       errmsg = cgen_parse_unsigned_integer (cd, strp, OR1K_OPERAND_UIMM1U, (unsigned long *) (& fields->f_uimm1u));
       break;
+    case OR1K_OPERAND_UIMM2 :
+      errmsg = cgen_parse_unsigned_integer (cd, strp, OR1K_OPERAND_UIMM2, (unsigned long *) (& fields->f_uimm2));
+      break;
     case OR1K_OPERAND_UIMM2D :
       errmsg = cgen_parse_unsigned_integer (cd, strp, OR1K_OPERAND_UIMM2D, (unsigned long *) (& fields->f_uimm2d));
       break;

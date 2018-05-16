@@ -663,6 +663,9 @@ or1k_cgen_insert_operand (CGEN_CPU_DESC cd,
     case OR1K_OPERAND_UIMM1U :
       errmsg = insert_normal (cd, fields->f_uimm1u, 0, 0, 2, 1, 32, total_length, buffer);
       break;
+    case OR1K_OPERAND_UIMM2 :
+      errmsg = insert_normal (cd, fields->f_uimm2, 0, 0, 1, 2, 32, total_length, buffer);
+      break;
     case OR1K_OPERAND_UIMM2D :
       errmsg = insert_normal (cd, fields->f_uimm2d, 0, 0, 2, 2, 32, total_length, buffer);
       break;
@@ -798,6 +801,9 @@ or1k_cgen_extract_operand (CGEN_CPU_DESC cd,
     case OR1K_OPERAND_UIMM1U :
       length = extract_normal (cd, ex_info, insn_value, 0, 0, 2, 1, 32, total_length, pc, & fields->f_uimm1u);
       break;
+    case OR1K_OPERAND_UIMM2 :
+      length = extract_normal (cd, ex_info, insn_value, 0, 0, 1, 2, 32, total_length, pc, & fields->f_uimm2);
+      break;
     case OR1K_OPERAND_UIMM2D :
       length = extract_normal (cd, ex_info, insn_value, 0, 0, 2, 2, 32, total_length, pc, & fields->f_uimm2d);
       break;
@@ -906,6 +912,9 @@ or1k_cgen_get_int_operand (CGEN_CPU_DESC cd ATTRIBUTE_UNUSED,
     case OR1K_OPERAND_UIMM1U :
       value = fields->f_uimm1u;
       break;
+    case OR1K_OPERAND_UIMM2 :
+      value = fields->f_uimm2;
+      break;
     case OR1K_OPERAND_UIMM2D :
       value = fields->f_uimm2d;
       break;
@@ -995,6 +1004,9 @@ or1k_cgen_get_vma_operand (CGEN_CPU_DESC cd ATTRIBUTE_UNUSED,
       break;
     case OR1K_OPERAND_UIMM1U :
       value = fields->f_uimm1u;
+      break;
+    case OR1K_OPERAND_UIMM2 :
+      value = fields->f_uimm2;
       break;
     case OR1K_OPERAND_UIMM2D :
       value = fields->f_uimm2d;
@@ -1093,6 +1105,9 @@ or1k_cgen_set_int_operand (CGEN_CPU_DESC cd ATTRIBUTE_UNUSED,
     case OR1K_OPERAND_UIMM1U :
       fields->f_uimm1u = value;
       break;
+    case OR1K_OPERAND_UIMM2 :
+      fields->f_uimm2 = value;
+      break;
     case OR1K_OPERAND_UIMM2D :
       fields->f_uimm2d = value;
       break;
@@ -1179,6 +1194,9 @@ or1k_cgen_set_vma_operand (CGEN_CPU_DESC cd ATTRIBUTE_UNUSED,
       break;
     case OR1K_OPERAND_UIMM1U :
       fields->f_uimm1u = value;
+      break;
+    case OR1K_OPERAND_UIMM2 :
+      fields->f_uimm2 = value;
       break;
     case OR1K_OPERAND_UIMM2D :
       fields->f_uimm2d = value;

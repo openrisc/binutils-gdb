@@ -150,6 +150,9 @@ or1k_cgen_print_operand (CGEN_CPU_DESC cd,
     case OR1K_OPERAND_UIMM1U :
       print_normal (cd, info, fields->f_uimm1u, 0, pc, length);
       break;
+    case OR1K_OPERAND_UIMM2 :
+      print_normal (cd, info, fields->f_uimm2, 0, pc, length);
+      break;
     case OR1K_OPERAND_UIMM2D :
       print_normal (cd, info, fields->f_uimm2d, 0, pc, length);
       break;

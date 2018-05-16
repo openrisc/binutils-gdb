@@ -343,13 +343,15 @@ typedef enum insn_opcode_setflag {
 /* Enum declaration for DSP insn opcode enums.  */
 typedef enum insn_opcode_dsp {
   OPC_DSP_ADD = 4, OPC_DSP_SEL = 5, OPC_DSP_PACK = 6, OPC_DSP_LOGIC = 7
- , OPC_DSP_MUL = 8, OPC_DSP_MULW = 9, OPC_DSP_MISC = 12
+ , OPC_DSP_ACC = 7, OPC_DSP_MUL = 8, OPC_DSP_MULW = 9, OPC_DSP_MISC = 12
+ , OPC_DSP_FLAG = 13
 } INSN_OPCODE_DSP;
 
 /* Enum declaration for compare insn opcode enums.  */
-typedef enum insn_opcode_cmp_dst {
-  OPC_DSP_CMP_DST_D, OPC_DSP_CMP_DST_F
-} INSN_OPCODE_CMP_DST;
+typedef enum insn_opcode_cmp_type {
+  OPC_DSP_CMP_OP2_EQ = 0, OPC_DSP_CMP_OP2_NE = 1, OPC_DSP_CMP_OP2_GE = 0, OPC_DSP_CMP_OP2_GT = 1
+ , OPC_DSP_CMP_OP2_LE = 2, OPC_DSP_CMP_OP2_LT = 3
+} INSN_OPCODE_CMP_TYPE;
 
 /* Enum declaration for compare insn opcode enums.  */
 typedef enum insn_opcode_cmp_sign {
@@ -357,20 +359,14 @@ typedef enum insn_opcode_cmp_sign {
 } INSN_OPCODE_CMP_SIGN;
 
 /* Enum declaration for compare insn opcode enums.  */
-typedef enum insn_opcode_cmp_anding {
-  OPC_DSP_CMP_OR, OPC_DSP_CMP_AND
-} INSN_OPCODE_CMP_ANDING;
+typedef enum insn_opcode_cmp_eq {
+  OPC_DSP_CMP_EQALITY, OPC_DSP_CMP_LEVEL
+} INSN_OPCODE_CMP_EQ;
 
 /* Enum declaration for compare insn opcode enums.  */
 typedef enum insn_opcode_cmp_size {
   OPC_DSP_SIZE_BYTE, OPC_DSP_SIZE_HALF
 } INSN_OPCODE_CMP_SIZE;
-
-/* Enum declaration for compare insn opcode enums.  */
-typedef enum insn_opcode_cmp {
-  OPC_DSP_CMP_EQ = 0, OPC_DSP_CMP_NE = 1, OPC_DSP_CMP_GE = 4, OPC_DSP_CMP_GT = 5
- , OPC_DSP_CMP_LE = 6, OPC_DSP_CMP_LT = 7
-} INSN_OPCODE_CMP;
 
 /* Enum declaration for add/sub insn opcode enums.  */
 typedef enum insn_opcode_addsub {
@@ -400,6 +396,16 @@ typedef enum insn_opcode_pack {
 typedef enum insn_opcode_logic {
   OPC_DSP_LOGIC_NAND = 0, OPC_DSP_LOGIC_NOR = 2
 } INSN_OPCODE_LOGIC;
+
+/* Enum declaration for logic insn opcode enums.  */
+typedef enum insn_opcode_slb {
+  OPC_DSP_LOGIC_SLB = 1
+} INSN_OPCODE_SLB;
+
+/* Enum declaration for acc insn opcode enums.  */
+typedef enum insn_opcode_acc {
+  OPC_DSP_ACC_S_B = 8, OPC_DSP_ACC_S_H = 9, OPC_DSP_ACC_US_B = 12, OPC_DSP_ACC_US_H = 13
+} INSN_OPCODE_ACC;
 
 /* Enum declaration for mul insn opcode enums.  */
 typedef enum insn_opcode_mul {
@@ -432,11 +438,16 @@ typedef enum insn_opcode_mul_size {
 
 /* Enum declaration for extension insn opcode enums.  */
 typedef enum insn_opcode_ext {
-  OPC_DSP_MISC_EXTBH = 0, OPC_DSP_MISC_EXTBW = 2, OPC_DSP_MISC_EXTHW = 3, OPC_DSP_MISC_EXTUBH = 4
- , OPC_DSP_MISC_EXTUBW = 6, OPC_DSP_MISC_EXTUHW = 7, OPC_DSP_MISC_REVH = 8, OPC_DSP_MISC_REV = 9
- , OPC_DSP_MISC_REVBH = 10, OPC_DSP_MISC_REVB = 11, OPC_DSP_MISC_ANY_GE = 12, OPC_DSP_MISC_ALL_GE = 13
- , OPC_DSP_MISC_ANY_OV = 14, OPC_DSP_MISC_ALL_OV = 15
+  OPC_DSP_MISC_EXTBH, OPC_DSP_MISC_EXTBH2, OPC_DSP_MISC_EXTBW, OPC_DSP_MISC_EXTHW
+ , OPC_DSP_MISC_EXTUBH, OPC_DSP_MISC_EXTUBH2, OPC_DSP_MISC_EXTUBW, OPC_DSP_MISC_EXTUHW
+ , OPC_DSP_MISC_REVH, OPC_DSP_MISC_REV, OPC_DSP_MISC_REVBH, OPC_DSP_MISC_REVB
+ , OPC_DSP_MISC_REVHW
 } INSN_OPCODE_EXT;
+
+/* Enum declaration for flag insn opcode enums.  */
+typedef enum insn_opcode_flag {
+  OPC_DSP_FLAG_ANY_GE, OPC_DSP_FLAG_ALL_GE, OPC_DSP_FLAG_ANY_OV, OPC_DSP_FLAG_ALL_OV
+} INSN_OPCODE_FLAG;
 
 /* Enum declaration for floating point reg/reg insn opcode enums.  */
 typedef enum insn_opcode_float_regreg {
@@ -495,18 +506,19 @@ typedef enum ifield_type {
   OR1K_F_NIL, OR1K_F_ANYOF, OR1K_F_OPCODE, OR1K_F_R1
  , OR1K_F_R2, OR1K_F_R3, OR1K_F_OP_25_2, OR1K_F_OP_25_5
  , OR1K_F_OP_16_1, OR1K_F_OP_7_5, OR1K_F_OP_7_4, OR1K_F_OP_7_3
- , OR1K_F_OP_3_4, OR1K_F_OP_9_2, OR1K_F_OP_9_4, OR1K_F_OP_7_8
- , OR1K_F_OP_7_2, OR1K_F_OP_3_1, OR1K_F_OP_2_1, OR1K_F_OP_1_1
- , OR1K_F_OP_0_1, OR1K_F_RESV_25_26, OR1K_F_RESV_25_18, OR1K_F_RESV_25_10
- , OR1K_F_RESV_25_5, OR1K_F_RESV_23_8, OR1K_F_RESV_20_21, OR1K_F_RESV_20_5
- , OR1K_F_RESV_20_4, OR1K_F_RESV_15_8, OR1K_F_RESV_15_6, OR1K_F_RESV_10_11
- , OR1K_F_RESV_10_7, OR1K_F_RESV_10_3, OR1K_F_RESV_10_1, OR1K_F_RESV_8_1
- , OR1K_F_RESV_7_4, OR1K_F_RESV_5_2, OR1K_F_RESV_3_1, OR1K_F_RESV_2_1
+ , OR1K_F_OP_4_5, OR1K_F_OP_4_2, OR1K_F_OP_3_4, OR1K_F_OP_9_2
+ , OR1K_F_OP_9_4, OR1K_F_OP_7_8, OR1K_F_OP_7_2, OR1K_F_OP_3_2
+ , OR1K_F_OP_3_1, OR1K_F_OP_2_1, OR1K_F_OP_1_1, OR1K_F_OP_0_1
+ , OR1K_F_RESV_25_26, OR1K_F_RESV_25_18, OR1K_F_RESV_25_10, OR1K_F_RESV_25_5
+ , OR1K_F_RESV_23_8, OR1K_F_RESV_20_21, OR1K_F_RESV_20_5, OR1K_F_RESV_20_4
+ , OR1K_F_RESV_15_8, OR1K_F_RESV_15_6, OR1K_F_RESV_10_11, OR1K_F_RESV_10_7
+ , OR1K_F_RESV_10_3, OR1K_F_RESV_10_1, OR1K_F_RESV_8_1, OR1K_F_RESV_7_4
+ , OR1K_F_RESV_7_3, OR1K_F_RESV_5_2, OR1K_F_RESV_3_1, OR1K_F_RESV_2_1
  , OR1K_F_RESV_1_1, OR1K_F_IMM16_25_5, OR1K_F_IMM16_10_11, OR1K_F_DISP26
  , OR1K_F_DISP21, OR1K_F_UIMM16, OR1K_F_SIMM16, OR1K_F_UIMM6
  , OR1K_F_UIMM2D, OR1K_F_UIMM2S, OR1K_F_UIMM1D, OR1K_F_UIMM1S
- , OR1K_F_UIMM1U, OR1K_F_UIMM1A, OR1K_F_UIMM1B, OR1K_F_UIMM16_SPLIT
- , OR1K_F_SIMM16_SPLIT, OR1K_F_MAX
+ , OR1K_F_UIMM1U, OR1K_F_UIMM1A, OR1K_F_UIMM1B, OR1K_F_UIMM2
+ , OR1K_F_UIMM16_SPLIT, OR1K_F_SIMM16_SPLIT, OR1K_F_MAX
 } IFIELD_TYPE;
 
 #define MAX_IFLD ((int) OR1K_F_MAX)
@@ -728,14 +740,15 @@ typedef enum cgen_operand_type {
  , OR1K_OPERAND_MAC_MACHI, OR1K_OPERAND_MAC_MACLO, OR1K_OPERAND_ATOMIC_RESERVE, OR1K_OPERAND_ATOMIC_ADDRESS
  , OR1K_OPERAND_UIMM6, OR1K_OPERAND_RD, OR1K_OPERAND_RA, OR1K_OPERAND_RB
  , OR1K_OPERAND_UIMM2D, OR1K_OPERAND_UIMM2S, OR1K_OPERAND_UIMM1D, OR1K_OPERAND_UIMM1S
- , OR1K_OPERAND_UIMM1U, OR1K_OPERAND_UIMM1A, OR1K_OPERAND_UIMM1B, OR1K_OPERAND_DISP26
- , OR1K_OPERAND_DISP21, OR1K_OPERAND_SIMM16, OR1K_OPERAND_UIMM16, OR1K_OPERAND_SIMM16_SPLIT
- , OR1K_OPERAND_UIMM16_SPLIT, OR1K_OPERAND_RDSF, OR1K_OPERAND_RASF, OR1K_OPERAND_RBSF
- , OR1K_OPERAND_RDDF, OR1K_OPERAND_RADF, OR1K_OPERAND_RBDF, OR1K_OPERAND_MAX
+ , OR1K_OPERAND_UIMM1U, OR1K_OPERAND_UIMM1A, OR1K_OPERAND_UIMM1B, OR1K_OPERAND_UIMM2
+ , OR1K_OPERAND_DISP26, OR1K_OPERAND_DISP21, OR1K_OPERAND_SIMM16, OR1K_OPERAND_UIMM16
+ , OR1K_OPERAND_SIMM16_SPLIT, OR1K_OPERAND_UIMM16_SPLIT, OR1K_OPERAND_RDSF, OR1K_OPERAND_RASF
+ , OR1K_OPERAND_RBSF, OR1K_OPERAND_RDDF, OR1K_OPERAND_RADF, OR1K_OPERAND_RBDF
+ , OR1K_OPERAND_MAX
 } CGEN_OPERAND_TYPE;
 
 /* Number of operands types.  */
-#define MAX_OPERANDS 39
+#define MAX_OPERANDS 40
 
 /* Maximum number of operands referenced by any insn.  */
 #define MAX_OPERAND_INSTANCES 10
